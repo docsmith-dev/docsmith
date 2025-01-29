@@ -1,13 +1,6 @@
 import React, { forwardRef, useCallback, useState } from "react";
 import { useDocsData } from "../hooks/useDocsData";
-
-interface TreeItem {
-  type: 'group' | 'doc';
-  name: string;
-  label?: string;
-  slug?: string;
-  items?: TreeItem[];
-}
+import {TreeItem} from "@docsmith/core";
 
 interface RenderGroupProps {
   item: TreeItem;

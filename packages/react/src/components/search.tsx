@@ -6,12 +6,7 @@ import React, {
   type ReactElement
 } from "react";
 import { useDocsData } from "../hooks/useDocsData";
-
-interface Doc {
-  content: string;
-  slug: string;
-  name: string;
-}
+import {Doc} from "@docsmith/core";
 
 interface SearchProps extends HTMLAttributes<HTMLDivElement> {
   renderInput?: (props: { inputProps: InputProps }) => ReactElement;
