@@ -2,4 +2,4 @@
 title: Getting Started with Docsmith
 ---
 
-# Hello
+# Hello, Docsmith!
