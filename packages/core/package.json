@@ -16,9 +16,10 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.0.0",
