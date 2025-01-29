@@ -10,7 +10,7 @@ interface DocsmithPluginOptions {
 
 export default function createPlugin(options: DocsmithPluginOptions = {}): Plugin {
   const { folders = ["docs"], exclude } = options;
-  let viteServer: ViteDevServer;
+  // let viteServer: ViteDevServer;
   let watcher: chokidar.FSWatcher;
 
   return {
@@ -22,7 +22,7 @@ export default function createPlugin(options: DocsmithPluginOptions = {}): Plugi
     },
 
     configureServer(server: ViteDevServer) {
-      viteServer = server;
+      // viteServer = server;
 
       // Set up watcher for file changes
       const watchPatterns = folders.map((folder) =>

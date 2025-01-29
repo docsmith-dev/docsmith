@@ -13,8 +13,10 @@ export class Docsmith {
   private markdownProcessor = createMarkdownProcessor();
 
   constructor(private readonly options: { folders?: string[] } = {}) {
-    this.options.folders = options.folders ?? ["docs"];
-  }
+    // Use nullish coalescing and ensure folders is defined
+    this.options = {
+      folders: options.folders ?? ["docs"]
+    };  }
 
   async initialize(rootDir: string) {
     await this.loadConfigs(rootDir);
@@ -62,11 +64,12 @@ export class Docsmith {
       }
     };
 
-    for (const folder of this.options.folders) {
+    // Ensure folders is defined before iteration
+    const folders = this.options.folders ?? ["docs"];
+    for (const folder of folders) {
       await loadDirectoryConfigs(path.resolve(rootDir, folder), this.globalConfig);
     }
   }
-
   private getConfigForPath(itemPath: string): DocsmithConfig {
     const pathParts = itemPath.split(path.sep);
     let currentPath = "";
@@ -110,15 +113,25 @@ export class Docsmith {
   }
 
   private async processAllFiles(rootDir: string) {
-    for (const folder of this.options.folders) {
+    const folders = this.options.folders ?? ["docs"];
+
+    for (const folder of folders) {
       const folderPath = path.resolve(rootDir, folder);
-      const files = await fs.promises.readdir(folderPath, {
-        recursive: true,
-      });
-      for (const file of files) {
-        if (file.endsWith(".md")) {
-          await this.processFile(rootDir, path.join(folderPath, file));
+      try {
+        const files = await fs.promises.readdir(folderPath, {
+          recursive: true,
+        });
+
+        // Ensure files is defined before proceeding
+        if (!files) continue;
+
+        for (const file of files) {
+          if (file.endsWith(".md")) {
+            await this.processFile(rootDir, path.join(folderPath, file));
+          }
         }
+      } catch (error) {
+        console.error(`Error processing files in ${folderPath}:`, error);
       }
     }
   }
