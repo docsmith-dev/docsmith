@@ -4,7 +4,10 @@
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r dev",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "core": "pnpm --filter '@docsmith/core'",
+    "react": "pnpm --filter '@docsmith/react'",
+    "examples:react": "pnpm --filter './examples/react-app'"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
