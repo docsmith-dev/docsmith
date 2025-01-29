@@ -3,10 +3,10 @@ import React, {
   useState,
   ChangeEvent,
   HTMLAttributes,
-  type ReactElement
+  type ReactElement,
 } from "react";
 import { useDocsData } from "../hooks/useDocsData";
-import {Doc} from "@docsmith/core";
+import { Doc } from "@docsmith/core";
 
 interface SearchProps extends HTMLAttributes<HTMLDivElement> {
   renderInput?: (props: { inputProps: InputProps }) => ReactElement;
@@ -34,22 +34,30 @@ interface ResultProps {
 }
 
 export const Search = forwardRef<HTMLDivElement, SearchProps>(
-  ({ renderInput, renderResults, renderResult, onQueryChange, ...props }, ref) => {
+  (
+    { renderInput, renderResults, renderResult, onQueryChange, ...props },
+    ref,
+  ) => {
     const { docs } = useDocsData();
     const [query, setQuery] = useState("");
 
-    const results = query.length > 0
-      ? docs.filter(({ content }) =>
-        content.toLowerCase().includes(query.toLowerCase())
-      )
-      : [];
+    const results =
+      query.length > 0
+        ? docs.filter(({ content }) =>
+            content.toLowerCase().includes(query.toLowerCase()),
+          )
+        : [];
 
     const handleQueryChange = (newQuery: string) => {
       setQuery(newQuery);
       onQueryChange?.(newQuery);
     };
 
-    const defaultRenderInput = ({ inputProps }: { inputProps: InputProps }): ReactElement => (
+    const defaultRenderInput = ({
+      inputProps,
+    }: {
+      inputProps: InputProps;
+    }): ReactElement => (
       <input
         {...inputProps}
         type="search"
@@ -61,9 +69,9 @@ export const Search = forwardRef<HTMLDivElement, SearchProps>(
     );
 
     const defaultRenderResult = ({
-                                   result,
-                                   index,
-                                 }: {
+      result,
+      index,
+    }: {
       result: Doc;
       index: number;
     }): ReactElement => (
@@ -78,16 +86,17 @@ export const Search = forwardRef<HTMLDivElement, SearchProps>(
     );
 
     const defaultRenderResults = ({
-                                    results,
-                                    resultProps,
-                                  }: {
+      results,
+      resultProps,
+    }: {
       results: Doc[];
       resultProps: ResultProps;
     }): ReactElement => (
       <ul {...resultProps}>
-        {results.map((result, index) =>
-          renderResult?.({ result, index }) ??
-          defaultRenderResult({ result, index })
+        {results.map(
+          (result, index) =>
+            renderResult?.({ result, index }) ??
+            defaultRenderResult({ result, index }),
         )}
       </ul>
     );
@@ -111,17 +120,17 @@ export const Search = forwardRef<HTMLDivElement, SearchProps>(
         {renderInput?.({ inputProps }) ?? defaultRenderInput({ inputProps })}
         {results.length > 0 &&
           (renderResults?.({
-              results,
-              resultProps,
-              query,
-            }) ??
+            results,
+            resultProps,
+            query,
+          }) ??
             defaultRenderResults({
               results,
               resultProps,
             }))}
       </div>
     );
-  }
+  },
 );
 
 Search.displayName = "Search";

@@ -1,5 +1,5 @@
-import path from 'path';
-import {Breadcrumb} from "../types.ts";
+import path from "path";
+import { Breadcrumb } from "../types.ts";
 
 export function generateBreadcrumbs(relativePath: string) {
   const parts = relativePath.split(path.sep);
@@ -12,7 +12,7 @@ export function generateBreadcrumbs(relativePath: string) {
       : part.replace(".md", "");
     breadcrumbs.push({
       name: part.replace(".md", ""),
-      slug: currentSlug
+      slug: currentSlug,
     });
   });
 

@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useState } from "react";
 import { useDocsData } from "../hooks/useDocsData";
-import {TreeItem} from "@docsmith/core";
+import { TreeItem } from "@docsmith/core";
 
 interface RenderGroupProps {
   item: TreeItem;
@@ -26,10 +26,10 @@ export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
       new Set(
         defaultExpanded
           ? tree
-            .filter((item: TreeItem) => item.type === "group")
-            .map((item: TreeItem) => item.name)
-          : []
-      )
+              .filter((item: TreeItem) => item.type === "group")
+              .map((item: TreeItem) => item.name)
+          : [],
+      ),
     );
 
     const toggleGroup = useCallback((groupName: string) => {
@@ -44,7 +44,12 @@ export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
       });
     }, []);
 
-    const defaultRenderGroup = ({ item, children, isExpanded, onToggle }: RenderGroupProps) => (
+    const defaultRenderGroup = ({
+      item,
+      children,
+      isExpanded,
+      onToggle,
+    }: RenderGroupProps) => (
       <li key={item.name}>
         <button
           onClick={() => onToggle(item.name)}
@@ -98,7 +103,7 @@ export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
         <ul>{tree.map((item) => renderTreeItem(item))}</ul>
       </nav>
     );
-  }
+  },
 );
 
 TableOfContents.displayName = "TableOfContents";

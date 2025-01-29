@@ -4,7 +4,4 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 
 export const createMarkdownProcessor = () =>
-  rehype()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeStringify);
+  rehype().use(remarkParse).use(remarkRehype).use(rehypeStringify);

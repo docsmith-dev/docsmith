@@ -1,17 +1,17 @@
-import type { Plugin } from 'vite';
-import { docsmith } from './docsmith';
+import type { Plugin } from "vite";
+import { docsmith } from "./docsmith";
 
 export function createVirtualModule(): Plugin {
   return {
-    name: 'docsmith:virtual',
+    name: "docsmith:virtual",
     resolveId(id: string) {
-      if (id === 'virtual:docsmith') {
-        return '\0virtual:docsmith';
+      if (id === "virtual:docsmith") {
+        return "\0virtual:docsmith";
       }
       return null;
     },
     load(id: string) {
-      if (id === '\0virtual:docsmith') {
+      if (id === "\0virtual:docsmith") {
         const docsData = docsmith.getDocsData();
         return `
           export const docs = ${JSON.stringify(docsData.docs)};
@@ -22,6 +22,6 @@ export function createVirtualModule(): Plugin {
         `;
       }
       return null;
-    }
+    },
   };
 }

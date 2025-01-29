@@ -8,7 +8,7 @@ export interface Doc {
 }
 
 export interface TreeItem {
-  type: 'group' | 'doc';
+  type: "group" | "doc";
   name: string;
   items?: TreeItem[];
   slug?: string;

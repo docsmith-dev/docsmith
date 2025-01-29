@@ -1,7 +1,10 @@
-import path from 'path';
-import type { Doc, TreeItem } from '../types';
+import path from "path";
+import type { Doc, TreeItem } from "../types";
 
-export function buildTree(files: Doc[], getConfigForPath: (path: string) => any): TreeItem[] {
+export function buildTree(
+  files: Doc[],
+  getConfigForPath: (path: string) => any,
+): TreeItem[] {
   const root: TreeItem = { name: "root", items: [], type: "group" };
 
   files.forEach((file) => {
@@ -29,7 +32,7 @@ export function buildTree(files: Doc[], getConfigForPath: (path: string) => any)
       } else {
         // This is a directory
         let child = currentNode.items?.find(
-          (item) => item.type === "group" && item.name === part
+          (item) => item.type === "group" && item.name === part,
         );
         if (!child) {
           child = {
