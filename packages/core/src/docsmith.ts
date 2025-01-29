@@ -2,7 +2,6 @@ import matter from "gray-matter";
 import fs from "fs";
 import path from "path";
 import type { Doc, DocsData, DocsmithConfig } from "./types";
-import { createMarkdownProcessor } from "./utils/processor";
 import { generateBreadcrumbs } from "./utils/breadcrumbs";
 import { buildTree } from "./utils/tree";
 
@@ -10,7 +9,6 @@ export class Docsmith {
   private docsMap = new Map<string, Doc>();
   private globalConfig: DocsmithConfig = {};
   private directoryConfigs = new Map<string, DocsmithConfig>();
-  private markdownProcessor = createMarkdownProcessor();
 
   constructor(private readonly options: { folders?: string[] } = {}) {
     this.options = {
@@ -105,19 +103,15 @@ export class Docsmith {
   async processFile(rootDir: string, filePath: string) {
     const content = await fs.promises.readFile(filePath, "utf-8");
     const { content: markdownContent, data } = matter(content);
-    const processedContent =
-      await this.markdownProcessor.process(markdownContent);
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
 
-    const breadcrumbs = generateBreadcrumbs(relativePath);
-
     this.docsMap.set(relativePath, {
-      content: processedContent.toString(),
+      content: markdownContent,  // Just store raw markdown
       frontmatter: data,
       slug: relativePath.replace(/\.md$/, ""),
       path: relativePath,
       name: path.basename(relativePath, ".md"),
-      breadcrumbs,
+      breadcrumbs: generateBreadcrumbs(relativePath),
     });
   }
 
