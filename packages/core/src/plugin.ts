@@ -1,5 +1,5 @@
 // packages/core/src/plugin.ts
-import { Plugin } from 'vite';
+import type { Plugin, ViteDevServer, ResolvedConfig } from 'vite';
 import { createFilter } from "@rollup/pluginutils";
 import matter from "gray-matter";
 import chokidar from "chokidar";
@@ -10,22 +10,22 @@ import { createMarkdownProcessor } from './utils/processor';
 import { generateBreadcrumbs } from './utils/breadcrumbs';
 import { buildTree } from './utils/tree';
 
-interface HeadlessDocsOptions {
+interface DocsmithOptions {
   folders?: string[];
   include?: string | RegExp | Array<string | RegExp>;
   exclude?: string | RegExp | Array<string | RegExp>;
 }
 
-export default function headlessDocs(options: HeadlessDocsOptions = {}): Plugin {
+export default function docsmith(options: DocsmithOptions = {}): Plugin {
   const { folders = ["docs"], include, exclude } = options;
 
   const includePatterns = folders.map((folder) => `${folder}/**/*.md`);
   const filterInclude = include || includePatterns;
   const filter = createFilter(filterInclude, exclude);
   const docsMap = new Map<string, Doc>();
-  let config: any;
+  let config: ResolvedConfig;
   let watcher: chokidar.FSWatcher;
-  let viteServer: any;
+  let viteServer: ViteDevServer;
   let globalConfig = {};
   let directoryConfigs = new Map<string, any>();
 
@@ -38,7 +38,7 @@ export default function headlessDocs(options: HeadlessDocsOptions = {}): Plugin 
         return JSON.parse(content);
       } catch (error) {
         console.warn(
-          `Failed to load config at ${configPath}: ${error.message}`
+          `Failed to load config at ${configPath}: ${(error as Error).message}`
         );
         return {};
       }
@@ -132,11 +132,11 @@ export default function headlessDocs(options: HeadlessDocsOptions = {}): Plugin 
   }
 
   return {
-    name: "docsmith",
+    name: "docsmith" as const,
 
-    async configResolved(resolvedConfig) {
+    configResolved(resolvedConfig: ResolvedConfig) {
       config = resolvedConfig;
-      await loadConfigs();
+      return loadConfigs();
     },
 
     async buildStart() {
@@ -180,7 +180,7 @@ export default function headlessDocs(options: HeadlessDocsOptions = {}): Plugin 
       });
     },
 
-    configureServer(server) {
+    configureServer(server: ViteDevServer) {
       viteServer = server;
     },
 
@@ -190,15 +190,15 @@ export default function headlessDocs(options: HeadlessDocsOptions = {}): Plugin 
       }
     },
 
-    resolveId(source) {
-      if (source === "virtual:headless-docs") {
+    resolveId(source: string) {
+      if (source === "virtual:docsmith") {
         return source;
       }
       return null;
     },
 
-    load(id) {
-      if (id === "virtual:headless-docs") {
+    load(id: string) {
+      if (id === "virtual:docsmith") {
         const docsData: DocsData = {
           docs: Array.from(docsMap.values()),
           tree: buildTree(Array.from(docsMap.values()), getConfigForPath),
