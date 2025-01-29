@@ -22,6 +22,7 @@
     "react-dom": "^18.0.0",
     "@docsmith/core": "workspace:*"
   },
+  "license": "MIT",
   "dependencies": {
     "@remix-run/react": "^2.0.0",
     "unified": "^10.1.2",
