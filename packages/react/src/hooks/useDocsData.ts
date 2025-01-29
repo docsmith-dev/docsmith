@@ -1,16 +1,16 @@
-import type {DocsData} from "@docsmith/core";
-import type {Doc} from "@docsmith/core/src";
+import { docsmith } from '@docsmith/core';
+import { useState, useEffect } from 'react';
+import type { DocsData } from '@docsmith/core';
 
-declare module 'virtual:docsmith' {
-  export const docs: DocsData['docs'];
-  export const tree: DocsData['tree'];
-  export function getDoc(slug: string): Doc | null;
-}
+export function useDocsData(): DocsData {
+  const [data, setData] = useState<DocsData>({ docs: [], tree: [] });
 
-export function useDocsData() {
-  return {
-    docs: docs,
-    tree: tree,
-  };
+  useEffect(() => {
+    docsmith.initialize(process.cwd()).then(() => {
+      setData(docsmith.getDocsData());
+    });
+  }, []);
+
+  return data;
 }
 

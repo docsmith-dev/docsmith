@@ -22,7 +22,7 @@ export interface DocsData {
   tree: TreeItem[];
 }
 
-export interface DirectoryConfig {
+export interface DocsmithConfig {
   order?: string[];
   directoryLabels?: Record<string, string>;
   [key: string]: any;
