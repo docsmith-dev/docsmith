@@ -13,11 +13,10 @@ export class Docsmith {
   private markdownProcessor = createMarkdownProcessor();
 
   constructor(private readonly options: { folders?: string[] } = {}) {
-    // Use nullish coalescing and ensure folders is defined
     this.options = {
       folders: options.folders ?? ["docs"]
-    };  }
-
+    };
+  }
   async initialize(rootDir: string) {
     await this.loadConfigs(rootDir);
     await this.processAllFiles(rootDir);
@@ -94,7 +93,7 @@ export class Docsmith {
     return currentConfig;
   }
 
-  private async processFile(rootDir: string, filePath: string) {
+  async processFile(rootDir: string, filePath: string) {
     const content = await fs.promises.readFile(filePath, "utf-8");
     const { content: markdownContent, data } = matter(content);
     const processedContent = await this.markdownProcessor.process(markdownContent);
