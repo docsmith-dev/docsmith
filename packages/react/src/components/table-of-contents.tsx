@@ -1,21 +1,45 @@
-import React, {forwardRef, useCallback, useState} from "react";
-import {useDocsData} from "../hooks/useDocsData";
+import React, { forwardRef, useCallback, useState } from "react";
+import { useDocsData } from "../hooks/useDocsData";
 
+interface TreeItem {
+  type: 'group' | 'doc';
+  name: string;
+  label?: string;
+  slug?: string;
+  items?: TreeItem[];
+}
 
-export const TableOfContents = forwardRef(
-  ({renderGroup, renderDoc, defaultExpanded = true, ...props}, ref) => {
-    const {tree} = useDocsData();
-    const [expandedGroups, setExpandedGroups] = useState(
+interface RenderGroupProps {
+  item: TreeItem;
+  children: React.ReactNode;
+  isExpanded: boolean;
+  onToggle: (groupName: string) => void;
+}
+
+interface RenderDocProps {
+  item: TreeItem;
+}
+
+interface TableOfContentsProps {
+  renderGroup?: (props: RenderGroupProps) => React.ReactElement;
+  renderDoc?: (props: RenderDocProps) => React.ReactElement;
+  defaultExpanded?: boolean;
+}
+
+export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
+  ({ renderGroup, renderDoc, defaultExpanded = true, ...props }, ref) => {
+    const { tree } = useDocsData();
+    const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
       new Set(
         defaultExpanded
           ? tree
-            .filter((item) => item.type === "group")
-            .map((item) => item.name)
+            .filter((item: TreeItem) => item.type === "group")
+            .map((item: TreeItem) => item.name)
           : []
       )
     );
 
-    const toggleGroup = useCallback((groupName) => {
+    const toggleGroup = useCallback((groupName: string) => {
       setExpandedGroups((prev) => {
         const next = new Set(prev);
         if (next.has(groupName)) {
@@ -27,7 +51,7 @@ export const TableOfContents = forwardRef(
       });
     }, []);
 
-    const defaultRenderGroup = ({item, children, isExpanded, onToggle}) => (
+    const defaultRenderGroup = ({ item, children, isExpanded, onToggle }: RenderGroupProps) => (
       <li key={item.name}>
         <button
           onClick={() => onToggle(item.name)}
@@ -48,7 +72,7 @@ export const TableOfContents = forwardRef(
       </li>
     );
 
-    const defaultRenderDoc = ({item}) => (
+    const defaultRenderDoc = ({ item }: RenderDocProps) => (
       <li key={item.slug}>
         <a
           href={item.slug}
@@ -59,11 +83,11 @@ export const TableOfContents = forwardRef(
       </li>
     );
 
-    const renderTreeItem = (item) => {
+    const renderTreeItem = (item: TreeItem) => {
       if (item.type === "group") {
         const isExpanded = expandedGroups.has(item.name);
         const groupChildren = (
-          <ul>{item.items.map((subItem) => renderTreeItem(subItem))}</ul>
+          <ul>{item.items?.map((subItem) => renderTreeItem(subItem))}</ul>
         );
 
         return (renderGroup || defaultRenderGroup)({
@@ -73,7 +97,7 @@ export const TableOfContents = forwardRef(
           onToggle: toggleGroup,
         });
       }
-      return (renderDoc || defaultRenderDoc)({item});
+      return (renderDoc || defaultRenderDoc)({ item });
     };
 
     return (

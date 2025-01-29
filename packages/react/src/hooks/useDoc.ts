@@ -9,7 +9,7 @@ export function useDoc(slug?: string): Doc | null {
     import('virtual:docsmith').then((module) => {
       // Find the doc by slug if provided, otherwise return null
       const foundDoc = slug
-        ? module.docs.find((d: Doc) => d.slug === slug)
+        ? module.docs.find((d: Doc) => d.slug === slug) || null
         : null;
       setDoc(foundDoc);
     });
