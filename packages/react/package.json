@@ -1,7 +1,6 @@
 {
   "name": "@docsmith/react",
   "version": "0.1.0",
-  "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -9,23 +8,27 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@docsmith/core": "workspace:*"
+    "build": "tsup --config tsup.config.ts",
+    "dev": "tsup --config tsup.config.ts --watch",
+    "clean": "rm -rf dist"
   },
   "peerDependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "@docsmith/core": "workspace:*"
+  },
+  "dependencies": {
+    "@remix-run/react": "^2.0.0",
+    "unified": "^10.1.2",
+    "rehype-parse": "^8.0.4",
+    "rehype-react": "^7.1.2",
+    "rehype-slug": "^5.1.0",
+    "rehype-autolink-headings": "^6.1.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "typescript": "^5.0.0"
   }
 }
