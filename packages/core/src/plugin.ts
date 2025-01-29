@@ -1,6 +1,6 @@
 // packages/core/src/plugin.ts
 import type { Plugin, ViteDevServer, ResolvedConfig } from 'vite';
-import { createFilter } from "@rollup/pluginutils";
+// import { createFilter } from "@rollup/pluginutils";
 import matter from "gray-matter";
 import chokidar from "chokidar";
 import fs from "fs";
@@ -10,6 +10,12 @@ import { createMarkdownProcessor } from './utils/processor';
 import { generateBreadcrumbs } from './utils/breadcrumbs';
 import { buildTree } from './utils/tree';
 
+interface DocsmithConfig {
+  order?: string[];
+  directoryLabels?: Record<string, string>;
+  [key: string]: unknown;
+}
+
 interface DocsmithOptions {
   folders?: string[];
   include?: string | RegExp | Array<string | RegExp>;
@@ -17,22 +23,20 @@ interface DocsmithOptions {
 }
 
 export default function docsmith(options: DocsmithOptions = {}): Plugin {
-  const { folders = ["docs"], include, exclude } = options;
+  const { folders = ["docs"], exclude } = options;
 
-  const includePatterns = folders.map((folder) => `${folder}/**/*.md`);
-  const filterInclude = include || includePatterns;
-  const filter = createFilter(filterInclude, exclude);
+  // const includePatterns = folders.map((folder) => `${folder}/**/*.md`);
   const docsMap = new Map<string, Doc>();
   let config: ResolvedConfig;
   let watcher: chokidar.FSWatcher;
   let viteServer: ViteDevServer;
-  let globalConfig = {};
-  let directoryConfigs = new Map<string, any>();
+  let globalConfig: DocsmithConfig = {};
+  let directoryConfigs = new Map<string, DocsmithConfig>();
 
   const markdownProcessor = createMarkdownProcessor();
 
   async function loadConfigs() {
-    const loadConfig = async (configPath: string) => {
+    const loadConfig = async (configPath: string): Promise<DocsmithConfig> => {
       try {
         const content = await fs.promises.readFile(configPath, "utf-8");
         return JSON.parse(content);
@@ -49,7 +53,7 @@ export default function docsmith(options: DocsmithOptions = {}): Plugin {
     );
 
     // Recursively load directory configs
-    const loadDirectoryConfigs = async (dir: string, parentConfig = {}) => {
+    const loadDirectoryConfigs = async (dir: string, parentConfig: DocsmithConfig = {}) => {
       const configPath = path.join(dir, "_directory.config.json");
       const relativeDir = path.relative(path.join(config.root, "docs"), dir);
       let currentConfig = await loadConfig(configPath);
@@ -60,8 +64,8 @@ export default function docsmith(options: DocsmithOptions = {}): Plugin {
         ...currentConfig,
         order: [...(parentConfig.order || []), ...(currentConfig.order || [])],
         directoryLabels: {
-          ...parentConfig.directoryLabels,
-          ...currentConfig.directoryLabels,
+          ...(parentConfig.directoryLabels || {}),
+          ...(currentConfig.directoryLabels || {}),
         },
       };
 
@@ -86,7 +90,7 @@ export default function docsmith(options: DocsmithOptions = {}): Plugin {
     }
   }
 
-  function getConfigForPath(itemPath: string) {
+  function getConfigForPath(itemPath: string): DocsmithConfig {
     const pathParts = itemPath.split(path.sep);
     let currentPath = "";
     let currentConfig = { ...globalConfig };
@@ -95,7 +99,15 @@ export default function docsmith(options: DocsmithOptions = {}): Plugin {
       currentPath = path.join(currentPath, part);
       const dirConfig = directoryConfigs.get(currentPath);
       if (dirConfig) {
-        currentConfig = { ...currentConfig, ...dirConfig };
+        currentConfig = {
+          ...currentConfig,
+          ...dirConfig,
+          order: [...(currentConfig.order || []), ...(dirConfig.order || [])],
+          directoryLabels: {
+            ...(currentConfig.directoryLabels || {}),
+            ...(dirConfig.directoryLabels || {}),
+          },
+        };
       }
     }
 

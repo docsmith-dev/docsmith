@@ -27,3 +27,8 @@ export interface DirectoryConfig {
   directoryLabels?: Record<string, string>;
   [key: string]: any;
 }
+
+export interface Breadcrumb {
+  name: string;
+  slug: string;
+}
