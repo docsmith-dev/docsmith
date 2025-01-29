@@ -1,52 +1,62 @@
-// packages/core/src/plugin.ts
 import type { Plugin } from "vite";
-import chokidar from "chokidar";
-import path from "path";
-import { docsmith } from "./docsmith";
-import { createVirtualModule } from "./virtualModule";
+import { Docsmith } from "./docsmith";
 
 interface DocsmithPluginOptions {
   folders?: string[];
   exclude?: string | RegExp | Array<string | RegExp>;
 }
 
-export function createPlugin(options: DocsmithPluginOptions = {}): Plugin[] {
-  const { folders = ["docs"], exclude } = options;
-  let watcher: chokidar.FSWatcher;
-
-  const mainPlugin: Plugin = {
+function createMainPlugin(docsmith: Docsmith): Plugin {
+  return {
     name: "docsmith",
 
-    async configResolved(config) {
-      // Initialize docsmith with the project root
-      await docsmith.initialize(config.root);
-    },
-
     configureServer(server) {
-      // Set up watcher for file changes
-      const watchPatterns = folders.map((folder) =>
-        path.resolve(server.config.root, folder, "**/*.md"),
-      );
-
-      watcher = chokidar.watch(watchPatterns, {
-        ignored: exclude,
-        persistent: true,
+      server.httpServer?.once('listening', async () => {
+        await docsmith.initialize(server.config.root);
       });
 
-      watcher.on("change", async (filePath) => {
-        // Re-process the changed file
-        await docsmith.processFile(server.config.root, filePath);
-        server.ws.send({ type: "full-reload" });
+      server.watcher.on('change', async (filePath) => {
+        if (filePath.endsWith('.md')) {
+          await docsmith.processFile(server.config.root, filePath);
+          const mod = server.moduleGraph.getModuleById('\0virtual:docsmith');
+          if (mod) {
+            server.moduleGraph.invalidateModule(mod);
+          }
+        }
       });
-    },
+    }
+  };
+}
 
-    async closeBundle() {
-      if (watcher) {
-        await watcher.close();
+function createVirtualModulePlugin(docsmith: Docsmith): Plugin {
+  return {
+    name: "docsmith:virtual",
+
+    resolveId(id) {
+      if (id === 'virtual:docsmith') {
+        return '\0virtual:docsmith';
       }
     },
-  };
 
-  // Return both plugins
-  return [mainPlugin, createVirtualModule()];
+    load(id) {
+      if (id === '\0virtual:docsmith') {
+        const data = docsmith.getDocsData();
+        return `
+          export const docs = ${JSON.stringify(data.docs)};
+          export const tree = ${JSON.stringify(data.tree)};
+          export function getDoc(slug) {
+            return docs.find(doc => doc.slug === slug) ?? null;
+          }
+        `;
+      }
+    }
+  };
+}
+
+export function createPlugin(options: DocsmithPluginOptions = {}): Plugin[] {
+  const docsmith = new Docsmith(options);
+  return [
+    createMainPlugin(docsmith),
+    createVirtualModulePlugin(docsmith)
+  ];
 }

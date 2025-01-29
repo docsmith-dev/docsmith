@@ -153,5 +153,3 @@ export class Docsmith {
     return this.docsMap.get(slug) || null;
   }
 }
-
-export const docsmith = new Docsmith();
