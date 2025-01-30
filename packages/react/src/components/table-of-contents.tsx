@@ -11,16 +11,30 @@ interface RenderGroupProps {
 
 interface RenderDocProps {
   item: TreeItem;
+  isActive?: boolean;
+  onClick?: (item: TreeItem) => void;
 }
 
 interface TableOfContentsProps {
   renderGroup?: (props: RenderGroupProps) => React.ReactElement;
   renderDoc?: (props: RenderDocProps) => React.ReactElement;
   defaultExpanded?: boolean;
+  isActiveDoc?: (item: TreeItem) => boolean;
+  onDocClick?: (item: TreeItem) => void;
 }
 
 export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
-  ({ renderGroup, renderDoc, defaultExpanded = true, ...props }, ref) => {
+  (
+    {
+      renderGroup,
+      renderDoc,
+      defaultExpanded = true,
+      isActiveDoc = (item) => location.pathname === item.slug,
+      onDocClick,
+      ...props
+    },
+    ref,
+  ) => {
     const { tree } = useDocsData();
     const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
       new Set(
@@ -70,14 +84,16 @@ export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
       </li>
     );
 
-    const defaultRenderDoc = ({ item }: RenderDocProps) => (
+    const defaultRenderDoc = ({ item, isActive, onClick }: RenderDocProps) => (
       <li key={item.slug}>
-        <a
-          href={item.slug}
-          aria-current={location.pathname === item.slug ? "page" : undefined}
+        <button
+          onClick={() => onClick?.(item)}
+          className={isActive ? "active" : undefined}
+          role="link"
+          type="button"
         >
           {item.label || item.name}
-        </a>
+        </button>
       </li>
     );
 
@@ -95,7 +111,11 @@ export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
           onToggle: toggleGroup,
         });
       }
-      return (renderDoc || defaultRenderDoc)({ item });
+      return (renderDoc || defaultRenderDoc)({
+        item,
+        isActive: isActiveDoc(item),
+        onClick: onDocClick,
+      });
     };
 
     return (

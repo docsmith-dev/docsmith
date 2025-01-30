@@ -3,7 +3,7 @@ export interface Doc {
   frontmatter: Record<string, any>;
   slug: string;
   path: string;
-  name: string;
+  title: string;
   breadcrumbs: Array<{ name: string; slug: string }>;
 }
 

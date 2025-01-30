@@ -81,7 +81,7 @@ export const Search = forwardRef<HTMLDivElement, SearchProps>(
         aria-selected="false"
         id={`search-result-${index}`}
       >
-        {result.name}
+        {result.title}
       </li>
     );
 

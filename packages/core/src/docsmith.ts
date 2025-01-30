@@ -106,11 +106,11 @@ export class Docsmith {
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
 
     this.docsMap.set(relativePath, {
-      content: markdownContent,  // Just store raw markdown
+      content: markdownContent, // Just store raw markdown
       frontmatter: data,
       slug: relativePath.replace(/\.md$/, ""),
       path: relativePath,
-      name: path.basename(relativePath, ".md"),
+      title: path.basename(relativePath, ".md"),
       breadcrumbs: generateBreadcrumbs(relativePath),
     });
   }

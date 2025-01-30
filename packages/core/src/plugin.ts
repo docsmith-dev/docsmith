@@ -11,14 +11,14 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
     name: "docsmith",
 
     configureServer(server) {
-      server.httpServer?.once('listening', async () => {
+      server.httpServer?.once("listening", async () => {
         await docsmith.initialize(server.config.root);
       });
 
-      server.watcher.on('change', async (filePath) => {
-        if (filePath.endsWith('.md')) {
+      server.watcher.on("change", async (filePath) => {
+        if (filePath.endsWith(".md")) {
           await docsmith.processFile(server.config.root, filePath);
-          const mod = server.moduleGraph.getModuleById('\0virtual:docsmith');
+          const mod = server.moduleGraph.getModuleById("\0virtual:docsmith");
           if (mod) {
             server.moduleGraph.invalidateModule(mod);
           }
@@ -29,7 +29,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
     // Add build-time processing
     async buildStart() {
       await docsmith.initialize(process.cwd());
-    }
+    },
   };
 }
 
@@ -38,13 +38,13 @@ function createVirtualModulePlugin(docsmith: Docsmith): Plugin {
     name: "docsmith:virtual",
 
     resolveId(id) {
-      if (id === 'virtual:docsmith') {
-        return '\0virtual:docsmith';
+      if (id === "virtual:docsmith") {
+        return "\0virtual:docsmith";
       }
     },
 
     load(id) {
-      if (id === '\0virtual:docsmith') {
+      if (id === "\0virtual:docsmith") {
         const data = docsmith.getDocsData();
         return `
           export const docs = ${JSON.stringify(data.docs)};
@@ -60,18 +60,15 @@ function createVirtualModulePlugin(docsmith: Docsmith): Plugin {
     generateBundle() {
       const data = docsmith.getDocsData();
       this.emitFile({
-        type: 'asset',
-        fileName: 'docsmith-data.json',
-        source: JSON.stringify(data)
+        type: "asset",
+        fileName: "docsmith-data.json",
+        source: JSON.stringify(data),
       });
-    }
+    },
   };
 }
 
 export function createPlugin(options: DocsmithPluginOptions = {}): Plugin[] {
   const docsmith = new Docsmith(options);
-  return [
-    createMainPlugin(docsmith),
-    createVirtualModulePlugin(docsmith)
-  ];
+  return [createMainPlugin(docsmith), createVirtualModulePlugin(docsmith)];
 }
