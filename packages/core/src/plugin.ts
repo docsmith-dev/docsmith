@@ -24,6 +24,11 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
           }
         }
       });
+    },
+
+    // Add build-time processing
+    async buildStart() {
+      await docsmith.initialize(process.cwd());
     }
   };
 }
@@ -49,6 +54,16 @@ function createVirtualModulePlugin(docsmith: Docsmith): Plugin {
           }
         `;
       }
+    },
+
+    // Add build-time code generation
+    generateBundle() {
+      const data = docsmith.getDocsData();
+      this.emitFile({
+        type: 'asset',
+        fileName: 'docsmith-data.json',
+        source: JSON.stringify(data)
+      });
     }
   };
 }

@@ -5,13 +5,23 @@ export function useDocsData(): DocsData {
   const [data, setData] = useState<DocsData>({ docs: [], tree: [] });
 
   useEffect(() => {
-    // Import is inside useEffect where we can use async
-    import("virtual:docsmith").then((module) => {
-      setData({
-        docs: module.docs,
-        tree: module.tree,
-      });
-    });
+    const loadData = async () => {
+      try {
+        // Try development mode first
+        const module = await import("virtual:docsmith");
+        setData({
+          docs: module.docs,
+          tree: module.tree,
+        });
+      } catch {
+        // Fall back to production mode
+        const response = await fetch("/docsmith-data.json");
+        const jsonData = await response.json();
+        setData(jsonData);
+      }
+    };
+
+    loadData();
   }, []);
 
   return data;

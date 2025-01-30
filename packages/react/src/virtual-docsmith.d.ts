@@ -5,3 +5,8 @@ declare module "virtual:docsmith" {
   export const tree: TreeItem[];
   export function getDoc(slug: string): Doc | null;
 }
+
+// Add production module type
+declare module "@docsmith/virtual" {
+  export * from "virtual:docsmith";
+}
