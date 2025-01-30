@@ -1,6 +1,10 @@
-import { useDocsData, useDoc, TableOfContents, Search } from "@docsmith/react";
+import { useDoc, TableOfContents, Search } from "@docsmith/react";
 import { useState } from "react";
 import { TreeItem, Doc } from "@docsmith/core";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github.css";
 
 export function App() {
   const [currentSlug, setCurrentSlug] = useState<string | null>(null);
@@ -13,7 +17,7 @@ export function App() {
   return (
     <div>
       <aside>
-        <Search/>
+        <Search />
 
         <TableOfContents
           onDocClick={handleDocSelect}
@@ -31,7 +35,12 @@ export function App() {
                 <p>{currentDoc.frontmatter.description}</p>
               )}
             </header>
-            <div dangerouslySetInnerHTML={{ __html: currentDoc.content }} />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight]}
+            >
+              {currentDoc.content}
+            </ReactMarkdown>
           </article>
         ) : (
           <div>
