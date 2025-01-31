@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm -r dev",
+    "dev": "pnpm --parallel -r run dev",
     "clean": "pnpm -r clean",
     "core": "pnpm --filter '@docsmith/core'",
     "vite": "pnpm --filter '@docsmith/vite'",
