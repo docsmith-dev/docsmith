@@ -2,6 +2,10 @@ import * as React from "react";
 import { DocHeading } from "@docsmith/core";
 import { useDoc } from "../hooks/useDoc";
 
+interface NestedHeading extends DocHeading {
+  children: NestedHeading[];
+}
+
 interface OnThisPageBaseProps {
   children: (props: OnThisPageRenderProps) => React.ReactNode;
   minLevel?: number;
@@ -12,8 +16,31 @@ type OnThisPageProps = OnThisPageBaseProps &
   Omit<React.ComponentPropsWithoutRef<"nav">, keyof OnThisPageBaseProps>;
 
 interface OnThisPageRenderProps {
-  headings: DocHeading[];
+  headings: NestedHeading[];
   activeId: string | null;
+}
+
+function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
+  const result: NestedHeading[] = [];
+  const stack: NestedHeading[] = [];
+
+  headings.forEach((heading) => {
+    const nestedHeading = { ...heading, children: [] };
+
+    while (stack.length > 0 && stack[stack.length - 1].level >= heading.level) {
+      stack.pop();
+    }
+
+    if (stack.length === 0) {
+      result.push(nestedHeading);
+    } else {
+      stack[stack.length - 1].children.push(nestedHeading);
+    }
+
+    stack.push(nestedHeading);
+  });
+
+  return result;
 }
 
 export function OnThisPage({
@@ -26,15 +53,18 @@ export function OnThisPage({
   const doc = useDoc();
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
-  const filteredHeadings = React.useMemo(() => {
-    return (
+  const nestedHeadings = React.useMemo(() => {
+    const filteredHeadings =
       doc?.headings?.filter(
         (heading) => heading.level >= minLevel && heading.level <= maxLevel,
-      ) ?? []
-    );
+      ) ?? [];
+
+    return createHeadingTree(filteredHeadings);
   }, [doc?.headings, minLevel, maxLevel]);
 
   React.useEffect(() => {
+    if (!doc?.headings?.length) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -46,50 +76,46 @@ export function OnThisPage({
       { rootMargin: "0px 0px -80% 0px" },
     );
 
-    const elements = filteredHeadings.map((heading) =>
-      document.getElementById(heading.id),
-    );
+    const elements = doc.headings
+      .map((heading) => document.getElementById(heading.id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    elements.forEach((element) => {
-      if (element) observer.observe(element);
-    });
+    elements.forEach((element) => observer.observe(element));
 
     return () => {
-      elements.forEach((element) => {
-        if (element) observer.unobserve(element);
-      });
+      elements.forEach((element) => observer.unobserve(element));
+      observer.disconnect();
     };
-  }, [filteredHeadings]);
+  }, [doc?.headings]);
+
+  // Don't render if there are no headings
+  if (!doc?.headings?.length) {
+    return null;
+  }
 
   return (
     <nav className={className} aria-label="On this page" {...props}>
-      {children({ headings: filteredHeadings, activeId })}
+      {children({ headings: nestedHeadings, activeId })}
     </nav>
   );
 }
-OnThisPage.displayName = "OnThisPage";
 
 interface OnThisPageListProps extends React.ComponentPropsWithoutRef<"ul"> {
   children: React.ReactNode;
 }
 
-export function OnThisPageList({
-  children,
-  className,
-  ...props
-}: OnThisPageListProps) {
+export function OnThisPageList({ children, ...props }: OnThisPageListProps) {
   return (
-    <ul className={className} role="list" {...props}>
+    <ul role="list" {...props}>
       {children}
     </ul>
   );
 }
-OnThisPageList.displayName = "OnThisPageList";
 
 interface OnThisPageItemBaseProps {
-  heading: DocHeading;
+  heading: NestedHeading;
   active?: boolean;
-  onClick?: (heading: DocHeading) => void;
+  as?: React.ElementType;
   children?: React.ReactNode;
 }
 
@@ -99,77 +125,35 @@ type OnThisPageItemProps = OnThisPageItemBaseProps &
 export function OnThisPageItem({
   heading,
   active,
-  onClick,
-  className,
+  as: Component = "a",
   children,
   ...props
 }: OnThisPageItemProps) {
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    document.getElementById(heading.id)?.scrollIntoView({ behavior: "smooth" });
-    onClick?.(heading);
-  };
-
   return (
-    <li
-      className={className}
-      style={{ paddingLeft: `${(heading.level - 2) * 16}px` }}
-      {...props}
-    >
-      <a
+    <li {...props}>
+      <Component
         href={`#${heading.id}`}
-        onClick={handleClick}
+        onClick={(e: React.MouseEvent) => {
+          e.preventDefault();
+          document.getElementById(heading.id)?.scrollIntoView({
+            behavior: "smooth",
+          });
+        }}
         aria-current={active ? "location" : undefined}
       >
         {children || heading.text}
-      </a>
-    </li>
-  );
-}
-OnThisPageItem.displayName = "OnThisPageItem";
-
-interface OnThisPageTreeBaseProps {
-  minLevel?: number;
-  maxLevel?: number;
-  onHeadingClick?: (heading: DocHeading) => void;
-  isActiveHeading?: (heading: DocHeading, activeId: string | null) => boolean;
-}
-
-type OnThisPageTreeProps = OnThisPageTreeBaseProps &
-  Omit<React.ComponentPropsWithoutRef<"nav">, keyof OnThisPageTreeBaseProps>;
-
-export function OnThisPageTree({
-  minLevel = 2,
-  maxLevel = 3,
-  onHeadingClick,
-  isActiveHeading,
-  className,
-  ...props
-}: OnThisPageTreeProps) {
-  return (
-    <OnThisPage
-      minLevel={minLevel}
-      maxLevel={maxLevel}
-      className={className}
-      {...props}
-    >
-      {({ headings, activeId }) => (
+      </Component>
+      {heading.children.length > 0 && (
         <OnThisPageList>
-          {headings.map((heading) => (
+          {heading.children.map((childHeading) => (
             <OnThisPageItem
-              key={heading.id}
-              heading={heading}
-              active={
-                isActiveHeading
-                  ? isActiveHeading(heading, activeId)
-                  : heading.id === activeId
-              }
-              onClick={onHeadingClick}
+              key={childHeading.id}
+              heading={childHeading}
+              as={Component}
             />
           ))}
         </OnThisPageList>
       )}
-    </OnThisPage>
+    </li>
   );
 }
-OnThisPageTree.displayName = "OnThisPageTree";

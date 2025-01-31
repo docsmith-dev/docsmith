@@ -20,5 +20,4 @@ export {
   OnThisPage,
   OnThisPageItem,
   OnThisPageList,
-  OnThisPageTree,
 } from "./components/on-this-page";

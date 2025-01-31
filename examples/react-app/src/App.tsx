@@ -124,6 +124,7 @@ export function App() {
             <p>Search or select a document from the sidebar to get started.</p>
           </div>
         )}{" "}
+        <pre>{JSON.stringify(currentDoc, null, 2)}</pre>
         {currentDoc &&
           currentDoc.headings &&
           currentDoc.headings.length > 0 && (
@@ -131,16 +132,6 @@ export function App() {
               <div>
                 <h2>On This Page</h2>
 
-                {/* Option 1: Simple usage */}
-                <OnThisPageTree
-                  minLevel={2}
-                  maxLevel={3}
-                  onHeadingClick={(heading) => {
-                    console.log(`Clicked heading: ${heading.text}`);
-                  }}
-                />
-
-                {/* Option 2: Composable usage */}
                 <OnThisPage>
                   {({ headings, activeId }) => (
                     <OnThisPageList>
@@ -149,10 +140,10 @@ export function App() {
                           key={heading.id}
                           heading={heading}
                           active={heading.id === activeId}
-                          onClick={(heading) => {
-                            console.log(`Clicked: ${heading.text}`);
-                          }}
-                        />
+                          as={"a"} // For custom routing components
+                        >
+                          {heading.text}
+                        </OnThisPageItem>
                       ))}
                     </OnThisPageList>
                   )}
