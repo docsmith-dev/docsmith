@@ -1,129 +1,106 @@
-import React, { forwardRef, useCallback, useState } from "react";
-import { useDocsData } from "../hooks/useDocsData";
-import { TreeItem } from "@docsmith/core";
+import React, { createContext, useContext, type ReactNode } from "react";
+import type { TreeItem } from "@docsmith/core";
 
-interface RenderGroupProps {
-  item: TreeItem;
-  children: React.ReactNode;
-  isExpanded: boolean;
-  onToggle: (groupName: string) => void;
+// Context to handle active state and selection
+interface TableOfContentsContextValue {
+  currentItem?: string;
+  onItemSelect?: (item: TreeItem) => void;
 }
 
-interface RenderDocProps {
-  item: TreeItem;
-  isActive?: boolean;
-  onClick?: (item: TreeItem) => void;
+const TableOfContentsContext = createContext<TableOfContentsContextValue>({});
+
+export function useTableOfContents() {
+  return useContext(TableOfContentsContext);
 }
 
-interface TableOfContentsProps {
-  renderGroup?: (props: RenderGroupProps) => React.ReactElement;
-  renderDoc?: (props: RenderDocProps) => React.ReactElement;
-  defaultExpanded?: boolean;
-  isActiveDoc?: (item: TreeItem) => boolean;
-  onDocClick?: (item: TreeItem) => void;
+// Root Component
+interface TableOfContentsProps extends React.HTMLAttributes<HTMLElement> {
+  children: ReactNode;
+  currentItem?: string;
+  onItemSelect?: (item: TreeItem) => void;
 }
 
-export const TableOfContents = forwardRef<HTMLElement, TableOfContentsProps>(
-  (
-    {
-      renderGroup,
-      renderDoc,
-      defaultExpanded = true,
-      isActiveDoc = (item) => location.pathname === item.slug,
-      onDocClick,
-      ...props
-    },
-    ref,
-  ) => {
-    const { tree } = useDocsData();
-    const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-      new Set(
-        defaultExpanded
-          ? tree
-              .filter((item: TreeItem) => item.type === "group")
-              .map((item: TreeItem) => item.name)
-          : [],
-      ),
-    );
-
-    const toggleGroup = useCallback((groupName: string) => {
-      setExpandedGroups((prev) => {
-        const next = new Set(prev);
-        if (next.has(groupName)) {
-          next.delete(groupName);
-        } else {
-          next.add(groupName);
-        }
-        return next;
-      });
-    }, []);
-
-    const defaultRenderGroup = ({
-      item,
-      children,
-      isExpanded,
-      onToggle,
-    }: RenderGroupProps) => (
-      <li key={item.name}>
-        <button
-          onClick={() => onToggle(item.name)}
-          aria-expanded={isExpanded}
-          aria-controls={`group-${item.name}`}
-          type="button"
-        >
-          {item.label || item.name}
-        </button>
-        <div
-          id={`group-${item.name}`}
-          role="region"
-          aria-labelledby={`group-${item.name}-button`}
-          hidden={!isExpanded}
-        >
-          {children}
-        </div>
-      </li>
-    );
-
-    const defaultRenderDoc = ({ item, isActive, onClick }: RenderDocProps) => (
-      <li key={item.slug}>
-        <button
-          onClick={() => onClick?.(item)}
-          className={isActive ? "active" : undefined}
-          role="link"
-          type="button"
-        >
-          {item.label || item.name}
-        </button>
-      </li>
-    );
-
-    const renderTreeItem = (item: TreeItem) => {
-      if (item.type === "group") {
-        const isExpanded = expandedGroups.has(item.name);
-        const groupChildren = (
-          <ul>{item.items?.map((subItem) => renderTreeItem(subItem))}</ul>
-        );
-
-        return (renderGroup || defaultRenderGroup)({
-          item,
-          children: groupChildren,
-          isExpanded,
-          onToggle: toggleGroup,
-        });
-      }
-      return (renderDoc || defaultRenderDoc)({
-        item,
-        isActive: isActiveDoc(item),
-        onClick: onDocClick,
-      });
-    };
-
+export const TableOfContents = React.forwardRef<HTMLElement, TableOfContentsProps>(
+  ({ children, currentItem, onItemSelect, ...props }, ref) => {
     return (
-      <nav ref={ref} aria-label="Table of contents" {...props}>
-        <ul>{tree.map((item) => renderTreeItem(item))}</ul>
-      </nav>
+      <TableOfContentsContext.Provider value={{ currentItem, onItemSelect }}>
+        <nav ref={ref} aria-label="Table of contents" {...props}>
+          <ul>{children}</ul>
+        </nav>
+      </TableOfContentsContext.Provider>
     );
-  },
+  }
 );
 
 TableOfContents.displayName = "TableOfContents";
+
+// List Component
+interface TableOfContentsListProps extends React.HTMLAttributes<HTMLUListElement> {
+  children: ReactNode;
+}
+
+export const TableOfContentsList = React.forwardRef<HTMLUListElement, TableOfContentsListProps>(
+  ({ children, ...props }, ref) => {
+    return <ul ref={ref} {...props}>{children}</ul>;
+  }
+);
+
+TableOfContentsList.displayName = "TableOfContentsList";
+
+// Item Component
+interface TableOfContentsItemProps extends React.HTMLAttributes<HTMLLIElement> {
+  children: ReactNode;
+}
+
+export const TableOfContentsItem = React.forwardRef<HTMLLIElement, TableOfContentsItemProps>(
+  ({ children, ...props }, ref) => {
+    return <li ref={ref} {...props}>{children}</li>;
+  }
+);
+
+TableOfContentsItem.displayName = "TableOfContentsItem";
+
+// Link Component
+interface TableOfContentsLinkProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+  item: TreeItem;
+}
+
+export const TableOfContentsLink = React.forwardRef<HTMLButtonElement, TableOfContentsLinkProps>(
+  ({ item, children, ...props }, ref) => {
+    const { currentItem, onItemSelect } = useTableOfContents();
+
+    return (
+      <button
+        ref={ref}
+        onClick={() => onItemSelect?.(item)}
+        aria-current={currentItem === item.slug ? "page" : undefined}
+        role="link"
+        type="button"
+        {...props}
+      >
+        {children || item.label || item.name}
+      </button>
+    );
+  }
+);
+
+TableOfContentsLink.displayName = "TableOfContentsLink";
+
+// Group Component
+interface TableOfContentsGroupProps extends React.HTMLAttributes<HTMLDetailsElement> {
+  children: ReactNode;
+  label: string;
+}
+
+export const TableOfContentsGroup = React.forwardRef<HTMLDetailsElement, TableOfContentsGroupProps>(
+  ({ children, label, ...props }, ref) => {
+    return (
+      <details ref={ref} {...props}>
+        <summary>{label}</summary>
+        {children}
+      </details>
+    );
+  }
+);
+
+TableOfContentsGroup.displayName = "TableOfContentsGroup";
