@@ -4,6 +4,7 @@ import path from "path";
 import type { Doc, DocsData, DocsmithConfig } from "./types";
 import { generateBreadcrumbs } from "./utils/breadcrumbs";
 import { buildTree } from "./utils/tree";
+import { extractHeadings } from "./utils/headings.ts";
 
 export class Docsmith {
   private docsMap = new Map<string, Doc>();
@@ -104,7 +105,7 @@ export class Docsmith {
     const content = await fs.promises.readFile(filePath, "utf-8");
     const { content: markdownContent, data } = matter(content);
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
-
+    const headings = await extractHeadings(markdownContent);
     this.docsMap.set(relativePath, {
       content: markdownContent, // Just store raw markdown
       frontmatter: data,
@@ -112,6 +113,7 @@ export class Docsmith {
       path: relativePath,
       title: path.basename(relativePath, ".md"),
       breadcrumbs: generateBreadcrumbs(relativePath),
+      headings,
     });
   }
 

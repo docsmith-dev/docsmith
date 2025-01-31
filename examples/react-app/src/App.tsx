@@ -6,15 +6,15 @@ import {
   SearchInput,
   SearchResults,
   SearchResultItem,
-} from "@docsmith/react";
-import { useState } from "react";
-import { useDocsData } from "@docsmith/react";
-import {
   TableOfContents,
   TableOfContentsList,
   TableOfContentsItem,
   TableOfContentsLink,
   TableOfContentsGroup,
+  OnThisPageTree,
+  OnThisPage,
+  OnThisPageList,
+  OnThisPageItem,
 } from "@docsmith/react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -123,7 +123,43 @@ export function App() {
             <h1>Welcome to Documentation</h1>
             <p>Search or select a document from the sidebar to get started.</p>
           </div>
-        )}
+        )}{" "}
+        {currentDoc &&
+          currentDoc.headings &&
+          currentDoc.headings.length > 0 && (
+            <aside>
+              <div>
+                <h2>On This Page</h2>
+
+                {/* Option 1: Simple usage */}
+                <OnThisPageTree
+                  minLevel={2}
+                  maxLevel={3}
+                  onHeadingClick={(heading) => {
+                    console.log(`Clicked heading: ${heading.text}`);
+                  }}
+                />
+
+                {/* Option 2: Composable usage */}
+                <OnThisPage>
+                  {({ headings, activeId }) => (
+                    <OnThisPageList>
+                      {headings.map((heading) => (
+                        <OnThisPageItem
+                          key={heading.id}
+                          heading={heading}
+                          active={heading.id === activeId}
+                          onClick={(heading) => {
+                            console.log(`Clicked: ${heading.text}`);
+                          }}
+                        />
+                      ))}
+                    </OnThisPageList>
+                  )}
+                </OnThisPage>
+              </div>
+            </aside>
+          )}
       </main>
     </div>
   );

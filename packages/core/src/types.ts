@@ -1,3 +1,10 @@
+export interface DocHeading {
+  id: string;
+  text: string;
+  level: number;
+  slug: string;
+}
+
 export interface Doc {
   content: string;
   frontmatter: Record<string, any>;
@@ -5,6 +12,7 @@ export interface Doc {
   path: string;
   title: string;
   breadcrumbs: Array<{ name: string; slug: string }>;
+  headings: DocHeading[];
 }
 
 export interface TreeItem {

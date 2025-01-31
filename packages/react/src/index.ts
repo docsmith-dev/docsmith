@@ -16,3 +16,9 @@ export {
   TableOfContentsGroupLabel,
   TableOfContentsGroupContent,
 } from "./components/table-of-contents";
+export {
+  OnThisPage,
+  OnThisPageItem,
+  OnThisPageList,
+  OnThisPageTree,
+} from "./components/on-this-page";
