@@ -7,5 +7,7 @@ export {
   TableOfContentsGroup,
   TableOfContentsItem,
   TableOfContentsLink,
-  TableOfContentsList
+  TableOfContentsList,
+  TableOfContentsGroupLabel,
+  TableOfContentsGroupContent,
 } from "./components/table-of-contents";

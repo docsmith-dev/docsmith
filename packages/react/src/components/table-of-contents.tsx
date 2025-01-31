@@ -1,106 +1,155 @@
-import React, { createContext, useContext, type ReactNode } from "react";
+import * as React from "react";
 import type { TreeItem } from "@docsmith/core";
+import { useDocsData } from "../hooks/useDocsData";
 
-// Context to handle active state and selection
-interface TableOfContentsContextValue {
-  currentItem?: string;
-  onItemSelect?: (item: TreeItem) => void;
+interface RenderProps {
+  tree: TreeItem[];
+  currentPath?: string;
 }
 
-const TableOfContentsContext = createContext<TableOfContentsContextValue>({});
-
-export function useTableOfContents() {
-  return useContext(TableOfContentsContext);
+// Root component with render props
+interface TableOfContentsProps
+  extends Omit<React.ComponentPropsWithoutRef<"nav">, "children"> {
+  currentPath?: string;
+  children: (props: RenderProps) => React.ReactNode;
 }
 
-// Root Component
-interface TableOfContentsProps extends React.HTMLAttributes<HTMLElement> {
-  children: ReactNode;
-  currentItem?: string;
-  onItemSelect?: (item: TreeItem) => void;
+export function TableOfContents({
+  currentPath,
+  children,
+  className,
+  ...props
+}: TableOfContentsProps) {
+  const { tree } = useDocsData();
+
+  return (
+    <nav className={className} aria-label="Table of contents" {...props}>
+      {children({ tree, currentPath })}
+    </nav>
+  );
 }
-
-export const TableOfContents = React.forwardRef<HTMLElement, TableOfContentsProps>(
-  ({ children, currentItem, onItemSelect, ...props }, ref) => {
-    return (
-      <TableOfContentsContext.Provider value={{ currentItem, onItemSelect }}>
-        <nav ref={ref} aria-label="Table of contents" {...props}>
-          <ul>{children}</ul>
-        </nav>
-      </TableOfContentsContext.Provider>
-    );
-  }
-);
-
 TableOfContents.displayName = "TableOfContents";
 
-// List Component
-interface TableOfContentsListProps extends React.HTMLAttributes<HTMLUListElement> {
-  children: ReactNode;
+// Group container
+// Group container using details/summary
+interface TableOfContentsGroupProps
+  extends React.ComponentPropsWithoutRef<"details"> {
+  children: React.ReactNode;
+  defaultOpen?: boolean;
 }
 
-export const TableOfContentsList = React.forwardRef<HTMLUListElement, TableOfContentsListProps>(
-  ({ children, ...props }, ref) => {
-    return <ul ref={ref} {...props}>{children}</ul>;
-  }
-);
+export function TableOfContentsGroup({
+  children,
+  className,
+  defaultOpen = true,
+  ...props
+}: TableOfContentsGroupProps) {
+  return (
+    <details className={className} open={defaultOpen} {...props}>
+      {children}
+    </details>
+  );
+}
+TableOfContentsGroup.displayName = "TableOfContentsGroup";
 
+// Group label as summary
+interface TableOfContentsGroupLabelProps
+  extends React.ComponentPropsWithoutRef<"summary"> {
+  children: React.ReactNode;
+}
+
+export function TableOfContentsGroupLabel({
+  children,
+  className,
+  ...props
+}: TableOfContentsGroupLabelProps) {
+  return (
+    <summary className={className} role="button" {...props}>
+      {children}
+    </summary>
+  );
+}
+TableOfContentsGroupLabel.displayName = "TableOfContentsGroupLabel";
+
+// Group content container
+interface TableOfContentsGroupContentProps
+  extends React.ComponentPropsWithoutRef<"div"> {
+  children: React.ReactNode;
+}
+
+export function TableOfContentsGroupContent({
+  children,
+  className,
+  ...props
+}: TableOfContentsGroupContentProps) {
+  return (
+    <div className={className} role="region" {...props}>
+      {children}
+    </div>
+  );
+}
+TableOfContentsGroupContent.displayName = "TableOfContentsGroupContent";
+// List container
+interface TableOfContentsListProps
+  extends React.ComponentPropsWithoutRef<"ul"> {
+  children: React.ReactNode;
+}
+
+export function TableOfContentsList({
+  children,
+  className,
+  ...props
+}: TableOfContentsListProps) {
+  return (
+    <ul className={className} role="list" {...props}>
+      {children}
+    </ul>
+  );
+}
 TableOfContentsList.displayName = "TableOfContentsList";
 
-// Item Component
-interface TableOfContentsItemProps extends React.HTMLAttributes<HTMLLIElement> {
-  children: ReactNode;
+// List item
+interface TableOfContentsItemProps
+  extends React.ComponentPropsWithoutRef<"li"> {
+  children: React.ReactNode;
 }
 
-export const TableOfContentsItem = React.forwardRef<HTMLLIElement, TableOfContentsItemProps>(
-  ({ children, ...props }, ref) => {
-    return <li ref={ref} {...props}>{children}</li>;
-  }
-);
-
+export function TableOfContentsItem({
+  children,
+  className,
+  ...props
+}: TableOfContentsItemProps) {
+  return (
+    <li className={className} role="listitem" {...props}>
+      {children}
+    </li>
+  );
+}
 TableOfContentsItem.displayName = "TableOfContentsItem";
 
-// Link Component
-interface TableOfContentsLinkProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+// Link
+interface TableOfContentsLinkProps
+  extends React.ComponentPropsWithoutRef<"div"> {
   item: TreeItem;
+  // Instead of asChild, we can just make it accept any element type
+  as?: React.ElementType;
+  children?: React.ReactNode;
 }
 
-export const TableOfContentsLink = React.forwardRef<HTMLButtonElement, TableOfContentsLinkProps>(
-  ({ item, children, ...props }, ref) => {
-    const { currentItem, onItemSelect } = useTableOfContents();
-
-    return (
-      <button
-        ref={ref}
-        onClick={() => onItemSelect?.(item)}
-        aria-current={currentItem === item.slug ? "page" : undefined}
-        role="link"
-        type="button"
-        {...props}
-      >
-        {children || item.label || item.name}
-      </button>
-    );
-  }
-);
-
-TableOfContentsLink.displayName = "TableOfContentsLink";
-
-// Group Component
-interface TableOfContentsGroupProps extends React.HTMLAttributes<HTMLDetailsElement> {
-  children: ReactNode;
-  label: string;
+export function TableOfContentsLink({
+  item,
+  as: Component = "div", // Default to div if no element type specified
+  children,
+  className,
+  ...props
+}: TableOfContentsLinkProps) {
+  return (
+    <Component
+      className={className}
+      aria-current={location.pathname === item.slug ? "page" : undefined}
+      {...props}
+    >
+      {children || item.label || item.name}
+    </Component>
+  );
 }
-
-export const TableOfContentsGroup = React.forwardRef<HTMLDetailsElement, TableOfContentsGroupProps>(
-  ({ children, label, ...props }, ref) => {
-    return (
-      <details ref={ref} {...props}>
-        <summary>{label}</summary>
-        {children}
-      </details>
-    );
-  }
-);
-
-TableOfContentsGroup.displayName = "TableOfContentsGroup";

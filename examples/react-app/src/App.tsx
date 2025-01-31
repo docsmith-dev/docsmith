@@ -1,4 +1,9 @@
-import { useDoc, Search } from "@docsmith/react";
+import {
+  useDoc,
+  Search,
+  TableOfContentsGroupContent,
+  TableOfContentsGroupLabel,
+} from "@docsmith/react";
 import { useState } from "react";
 import { useDocsData } from "@docsmith/react";
 import {
@@ -22,26 +27,54 @@ export function App() {
     <div>
       <aside>
         <Search />
-        <TableOfContents activeItem={currentSlug ?? undefined} onItemSelect={(item) => setCurrentSlug(item.slug)}>
-          {tree.map(item => (
-            item.type === 'group' ? (
-              <TableOfContentsItem key={item.name}>
-                <TableOfContentsGroup label={item.label || item.name}>
-                  <TableOfContentsList>
-                    {item.items?.map(subItem => (
-                      <TableOfContentsItem key={subItem.slug}>
-                        <TableOfContentsLink item={subItem} />
-                      </TableOfContentsItem>
-                    ))}
+        <TableOfContents currentPath={location.pathname}>
+          {({ tree }) => (
+            <>
+              {tree.map((section) => {
+                if (section.type === "group" && section.items) {
+                  console.log("items", section.items);
+                  return (
+                    <TableOfContentsGroup key={section.name}>
+                      <TableOfContentsGroupLabel>
+                        {section.label}
+                      </TableOfContentsGroupLabel>
+                      <TableOfContentsGroupContent>
+                        <TableOfContentsList>
+                          {section.items.map((item) => (
+                            <TableOfContentsItem key={item.slug}>
+                              <TableOfContentsLink item={item} asChild>
+                                <a href={item.slug}>
+                                  {item.icon && (
+                                    <item.icon className="mr-2 h-4 w-4" />
+                                  )}
+                                  <span>{item.label}</span>
+                                </a>
+                              </TableOfContentsLink>
+                            </TableOfContentsItem>
+                          ))}
+                        </TableOfContentsList>
+                      </TableOfContentsGroupContent>
+                    </TableOfContentsGroup>
+                  );
+                }
+
+                return (
+                  <TableOfContentsList key={section.name}>
+                    <TableOfContentsItem>
+                      <TableOfContentsLink item={section} asChild>
+                        <a href={section.slug}>
+                          {section.icon && (
+                            <section.icon className="mr-2 h-4 w-4" />
+                          )}
+                          <span>{section.label}</span>
+                        </a>
+                      </TableOfContentsLink>
+                    </TableOfContentsItem>
                   </TableOfContentsList>
-                </TableOfContentsGroup>
-              </TableOfContentsItem>
-            ) : (
-              <TableOfContentsItem key={item.slug}>
-                <TableOfContentsLink item={item} />
-              </TableOfContentsItem>
-            )
-          ))}
+                );
+              })}
+            </>
+          )}
         </TableOfContents>
       </aside>
 
