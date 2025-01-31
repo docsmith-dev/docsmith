@@ -11,7 +11,6 @@ import {
   TableOfContentsItem,
   TableOfContentsLink,
   TableOfContentsGroup,
-  OnThisPageTree,
   OnThisPage,
   OnThisPageList,
   OnThisPageItem,
@@ -124,7 +123,6 @@ export function App() {
             <p>Search or select a document from the sidebar to get started.</p>
           </div>
         )}{" "}
-        <pre>{JSON.stringify(currentDoc, null, 2)}</pre>
         {currentDoc &&
           currentDoc.headings &&
           currentDoc.headings.length > 0 && (
@@ -132,8 +130,10 @@ export function App() {
               <div>
                 <h2>On This Page</h2>
 
-                <OnThisPage>
-                  {({ headings, activeId }) => (
+                <OnThisPage doc={currentDoc}>
+                  {({ headings, activeId }) => {
+                    return (
+
                     <OnThisPageList>
                       {headings.map((heading) => (
                         <OnThisPageItem
@@ -146,7 +146,7 @@ export function App() {
                         </OnThisPageItem>
                       ))}
                     </OnThisPageList>
-                  )}
+                  )}}
                 </OnThisPage>
               </div>
             </aside>

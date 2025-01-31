@@ -1,6 +1,5 @@
 import * as React from "react";
-import { DocHeading } from "@docsmith/core";
-import { useDoc } from "../hooks/useDoc";
+import {Doc, DocHeading} from "@docsmith/core";
 
 interface NestedHeading extends DocHeading {
   children: NestedHeading[];
@@ -10,6 +9,7 @@ interface OnThisPageBaseProps {
   children: (props: OnThisPageRenderProps) => React.ReactNode;
   minLevel?: number;
   maxLevel?: number;
+  doc: Doc;
 }
 
 type OnThisPageProps = OnThisPageBaseProps &
@@ -44,13 +44,13 @@ function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
 }
 
 export function OnThisPage({
+  doc,
   children,
   className,
   minLevel = 2,
   maxLevel = 3,
   ...props
 }: OnThisPageProps) {
-  const doc = useDoc();
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
   const nestedHeadings = React.useMemo(() => {
@@ -61,6 +61,7 @@ export function OnThisPage({
 
     return createHeadingTree(filteredHeadings);
   }, [doc?.headings, minLevel, maxLevel]);
+
 
   React.useEffect(() => {
     if (!doc?.headings?.length) return;
@@ -87,6 +88,7 @@ export function OnThisPage({
       observer.disconnect();
     };
   }, [doc?.headings]);
+
 
   // Don't render if there are no headings
   if (!doc?.headings?.length) {
