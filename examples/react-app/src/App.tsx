@@ -19,9 +19,8 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 
 export function App() {
-  const [currentSlug, setCurrentSlug] = useState<string | null>(null);
+  const currentSlug = window.location.pathname.replace('/', '')
   const currentDoc = useDoc(currentSlug);
-  const { tree } = useDocsData();
 
   return (
     <div>
@@ -32,7 +31,6 @@ export function App() {
             <>
               {tree.map((section) => {
                 if (section.type === "group" && section.items) {
-                  console.log("items", section.items);
                   return (
                     <TableOfContentsGroup key={section.name}>
                       <TableOfContentsGroupLabel>
