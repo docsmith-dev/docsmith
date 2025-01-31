@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": false,
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public",
@@ -13,8 +13,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup --config tsup.config.ts",
-    "dev": "tsup --config tsup.config.ts --watch",
+    "build": "tsc && tsc --module ESNext --outDir dist/esm",
+    "dev": "tsc --watch",
     "clean": "rm -rf dist"
   },
   "peerDependencies": {
@@ -23,14 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@docsmith/core": "workspace:*",
-    "@docsmith/vite": "workspace:*",
-    "@remix-run/react": "^2.0.0",
-    "unified": "^10.1.2",
-    "rehype-parse": "^8.0.4",
-    "rehype-react": "^7.1.2",
-    "rehype-slug": "^5.1.0",
-    "rehype-autolink-headings": "^6.1.1"
+    "@docsmith/core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
