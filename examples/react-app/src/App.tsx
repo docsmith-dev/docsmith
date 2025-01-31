@@ -2,7 +2,10 @@ import {
   useDoc,
   Search,
   TableOfContentsGroupContent,
-  TableOfContentsGroupLabel, SearchInput, SearchResults, SearchResultItem,
+  TableOfContentsGroupLabel,
+  SearchInput,
+  SearchResults,
+  SearchResultItem,
 } from "@docsmith/react";
 import { useState } from "react";
 import { useDocsData } from "@docsmith/react";
@@ -19,7 +22,7 @@ import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
 
 export function App() {
-  const currentSlug = window.location.pathname.replace('/', '')
+  const currentSlug = window.location.pathname.replace("/", "");
   const currentDoc = useDoc(currentSlug);
 
   return (
@@ -39,13 +42,9 @@ export function App() {
 
               <SearchResults className="custom-results-list">
                 {docs.map((doc) => (
-                  <SearchResultItem
-                    key={doc.slug}
-                    doc={doc}
-                  >
+                  <SearchResultItem key={doc.slug} doc={doc}>
                     <div>
                       <a href={doc.slug}>{doc.title}</a>
-                      {/*<p>{doc.excerpt}</p>*/}
                     </div>
                   </SearchResultItem>
                 ))}
