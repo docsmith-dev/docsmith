@@ -1,136 +1,166 @@
-import React, {
-  forwardRef,
-  useState,
-  ChangeEvent,
-  HTMLAttributes,
-  type ReactElement,
-} from "react";
-import { useDocsData } from "../hooks/useDocsData";
-import { Doc } from "@docsmith/core";
+import * as React from "react"
+import type { Doc } from "@docsmith/core"
+import { useDocsData } from "../hooks/useDocsData"
 
-interface SearchProps extends HTMLAttributes<HTMLDivElement> {
-  renderInput?: (props: { inputProps: InputProps }) => ReactElement;
-  renderResults?: (props: {
-    results: Doc[];
-    resultProps: ResultProps;
-    query: string;
-  }) => ReactElement;
-  renderResult?: (props: { result: Doc; index: number }) => ReactElement;
-  onQueryChange?: (query: string) => void;
+// Root Search component with render props
+interface SearchProps {
+  currentPath?: string
+  children: (props: SearchRenderProps) => React.ReactNode
+  filterResults?: (docs: Doc[], query: string) => Doc[]
+  className?: string
 }
 
-interface InputProps {
-  role: string;
-  "aria-label": string;
-  "aria-controls": string;
-  "aria-expanded": boolean;
-  "aria-activedescendant": string | undefined;
+interface SearchRenderProps {
+  docs: Doc[]
+  query: string
+  setQuery: React.Dispatch<React.SetStateAction<string>>
 }
 
-interface ResultProps {
-  id: string;
-  role: string;
-  "aria-label": string;
+export function Search({
+                         currentPath,
+                         children,
+                         className,
+                         filterResults,
+                       }: SearchProps) {
+  const { docs } = useDocsData()
+  const [query, setQuery] = React.useState("")
+
+  // Default filter method
+  const defaultFilterResults = (docs: Doc[], query: string) =>
+    query.length > 0
+      ? docs.filter(({ content, title }) =>
+        content.toLowerCase().includes(query.toLowerCase()) ||
+        title.toLowerCase().includes(query.toLowerCase())
+      )
+      : []
+
+  // Use custom filter if provided, otherwise use default
+  const filteredDocs = (filterResults || defaultFilterResults)(docs, query)
+
+  return (
+    <div
+      className={className}
+      role="search"
+      aria-label="Documentation search"
+    >
+      {children({
+        docs: filteredDocs,
+        query,
+        setQuery
+      })}
+    </div>
+  )
+}
+Search.displayName = "Search"
+
+// Search Input Component
+interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  query: string
+  setQuery: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const Search = forwardRef<HTMLDivElement, SearchProps>(
-  (
-    { renderInput, renderResults, renderResult, onQueryChange, ...props },
-    ref,
-  ) => {
-    const { docs } = useDocsData();
-    const [query, setQuery] = useState("");
+export function SearchInput({
+                              query,
+                              setQuery,
+                              className,
+                              ...props
+                            }: SearchInputProps) {
+  return (
+    <input
+      type="search"
+      role="searchbox"
+      aria-label="Search documentation"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search docs..."
+      className={className}
+      {...props}
+    />
+  )
+}
+SearchInput.displayName = "SearchInput"
 
-    const results =
-      query.length > 0
-        ? docs.filter(({ content }) =>
-            content.toLowerCase().includes(query.toLowerCase()),
-          )
-        : [];
+// Search Results Container
+interface SearchResultsProps extends React.HTMLAttributes<HTMLUListElement> {
+  children: React.ReactNode
+}
 
-    const handleQueryChange = (newQuery: string) => {
-      setQuery(newQuery);
-      onQueryChange?.(newQuery);
-    };
+export function SearchResults({
+                                children,
+                                className,
+                                ...props
+                              }: SearchResultsProps) {
+  return (
+    <ul
+      role="listbox"
+      aria-label="Search results"
+      className={className}
+      {...props}
+    >
+      {children}
+    </ul>
+  )
+}
+SearchResults.displayName = "SearchResults"
 
-    const defaultRenderInput = ({
-      inputProps,
-    }: {
-      inputProps: InputProps;
-    }): ReactElement => (
-      <input
-        {...inputProps}
-        type="search"
-        value={query}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          handleQueryChange(e.target.value)
+// Search Result Item
+interface SearchResultItemProps extends React.LiHTMLAttributes<HTMLLIElement> {
+  doc: Doc
+  active?: boolean
+}
+
+export function SearchResultItem({
+                                   doc,
+                                   active,
+                                   className,
+                                   children,
+                                   ...props
+                                 }: SearchResultItemProps) {
+  return (
+    <li
+      role="option"
+      aria-selected={active}
+      className={className}
+      {...props}
+    >
+      {children || doc.title}
+    </li>
+  )
+}
+SearchResultItem.displayName = "SearchResultItem"
+
+// Keyboard Navigation Hook
+export function useSearchKeyboardNavigation(
+  results: Doc[],
+  onSelect?: (doc: Doc) => void
+) {
+  const [activeIndex, setActiveIndex] = React.useState(-1)
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault()
+        setActiveIndex(prev =>
+          prev < results.length - 1 ? prev + 1 : prev
+        )
+        break
+      case 'ArrowUp':
+        event.preventDefault()
+        setActiveIndex(prev =>
+          prev > 0 ? prev - 1 : prev
+        )
+        break
+      case 'Enter':
+        if (activeIndex !== -1 && results[activeIndex]) {
+          onSelect?.(results[activeIndex])
         }
-      />
-    );
+        break
+    }
+  }
 
-    const defaultRenderResult = ({
-      result,
-      index,
-    }: {
-      result: Doc;
-      index: number;
-    }): ReactElement => (
-      <li
-        key={result.slug}
-        role="option"
-        aria-selected="false"
-        id={`search-result-${index}`}
-      >
-        {result.title}
-      </li>
-    );
-
-    const defaultRenderResults = ({
-      results,
-      resultProps,
-    }: {
-      results: Doc[];
-      resultProps: ResultProps;
-    }): ReactElement => (
-      <ul {...resultProps}>
-        {results.map(
-          (result, index) =>
-            renderResult?.({ result, index }) ??
-            defaultRenderResult({ result, index }),
-        )}
-      </ul>
-    );
-
-    const inputProps: InputProps = {
-      role: "searchbox",
-      "aria-label": "Search documentation",
-      "aria-controls": "search-results",
-      "aria-expanded": results.length > 0,
-      "aria-activedescendant": undefined,
-    };
-
-    const resultProps: ResultProps = {
-      id: "search-results",
-      role: "listbox",
-      "aria-label": "Search results",
-    };
-
-    return (
-      <div ref={ref} role="search" aria-label="Documentation search" {...props}>
-        {renderInput?.({ inputProps }) ?? defaultRenderInput({ inputProps })}
-        {results.length > 0 &&
-          (renderResults?.({
-            results,
-            resultProps,
-            query,
-          }) ??
-            defaultRenderResults({
-              results,
-              resultProps,
-            }))}
-      </div>
-    );
-  },
-);
-
-Search.displayName = "Search";
+  return {
+    activeIndex,
+    handleKeyDown,
+    setActiveIndex
+  }
+}

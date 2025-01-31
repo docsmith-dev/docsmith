@@ -2,7 +2,7 @@ import {
   useDoc,
   Search,
   TableOfContentsGroupContent,
-  TableOfContentsGroupLabel,
+  TableOfContentsGroupLabel, SearchInput, SearchResults, SearchResultItem,
 } from "@docsmith/react";
 import { useState } from "react";
 import { useDocsData } from "@docsmith/react";
@@ -25,7 +25,34 @@ export function App() {
   return (
     <div>
       <aside>
-        <Search />
+        <Search>
+          {({ docs, query, setQuery }) => (
+            <div className="search-container">
+              <div className="search-header">
+                <SearchInput
+                  query={query}
+                  setQuery={setQuery}
+                  className="custom-input"
+                />
+                <span>{docs.length} results</span>
+              </div>
+
+              <SearchResults className="custom-results-list">
+                {docs.map((doc) => (
+                  <SearchResultItem
+                    key={doc.slug}
+                    doc={doc}
+                  >
+                    <div>
+                      <a href={doc.slug}>{doc.title}</a>
+                      {/*<p>{doc.excerpt}</p>*/}
+                    </div>
+                  </SearchResultItem>
+                ))}
+              </SearchResults>
+            </div>
+          )}
+        </Search>
         <TableOfContents currentPath={location.pathname}>
           {({ tree }) => (
             <>
