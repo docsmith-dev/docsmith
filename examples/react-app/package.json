@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@docsmith/core": "workspace:*",
+    "@docsmith/vite": "workspace:*",
     "@docsmith/react": "workspace:*",
     "highlight.js": "^11.11.1",
     "react": "^18.2.0",

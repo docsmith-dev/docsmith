@@ -6,6 +6,7 @@
     "dev": "pnpm -r dev",
     "clean": "pnpm -r clean",
     "core": "pnpm --filter '@docsmith/core'",
+    "vite": "pnpm --filter '@docsmith/vite'",
     "react": "pnpm --filter '@docsmith/react'",
     "examples:react": "pnpm --filter './examples/react-app'"
   },

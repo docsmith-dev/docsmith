@@ -19,11 +19,12 @@
   },
   "peerDependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "@docsmith/core": "workspace:*"
+    "react-dom": "^18.0.0"
   },
   "license": "MIT",
   "dependencies": {
+    "@docsmith/core": "workspace:*",
+    "@docsmith/vite": "workspace:*",
     "@remix-run/react": "^2.0.0",
     "unified": "^10.1.2",
     "rehype-parse": "^8.0.4",

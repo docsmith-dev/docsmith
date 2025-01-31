@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { Docsmith } from "./docsmith";
+import {Docsmith} from "@docsmith/core";
 
 interface DocsmithPluginOptions {
   folders?: string[];
