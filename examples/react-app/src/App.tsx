@@ -4,7 +4,6 @@ import { DocsDoc } from "./components/docs-doc";
 import { DocsTableOfContents } from "./components/docs-table-of-contents";
 import { DocsSearch } from "./components/docs-search";
 import { DocsOnThisPage } from "./components/docs-on-this-page";
-import "./styles.css"; // Import your custom CSS file
 
 export function App() {
   const currentSlug = window.location.pathname.replace("/", "");
