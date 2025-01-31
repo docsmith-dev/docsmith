@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Doc, DocHeading} from "@docsmith/core";
+import { Doc, DocHeading } from "@docsmith/core";
 
 interface NestedHeading extends DocHeading {
   children: NestedHeading[];
@@ -62,7 +62,6 @@ export function OnThisPage({
     return createHeadingTree(filteredHeadings);
   }, [doc?.headings, minLevel, maxLevel]);
 
-
   React.useEffect(() => {
     if (!doc?.headings?.length) return;
 
@@ -88,7 +87,6 @@ export function OnThisPage({
       observer.disconnect();
     };
   }, [doc?.headings]);
-
 
   // Don't render if there are no headings
   if (!doc?.headings?.length) {

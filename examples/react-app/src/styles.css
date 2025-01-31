@@ -1,0 +1,21 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+}
+
+aside {
+    width: 300px;
+    margin-left: 20px;
+}
+
+main {
+    margin-left: 330px;
+}
+
+/* Add more styles as needed */
