@@ -36,6 +36,30 @@ export interface DocsmithConfig {
   [key: string]: any;
 }
 
+export interface DocsmithPlugin {
+  name: string;
+  hooks?: {
+    // Pre-parsing: Raw markdown string manipulation
+    beforeParse?: (content: string) => Promise<string> | string;
+
+    // Post-parsing: After frontmatter and markdown are separated
+    afterParse?: (content: string) => Promise<string> | string;
+
+    // Allows modifying the doc object after it's fully built
+    transformDoc?: (doc: Doc) => Promise<Doc>;
+
+    // Allows restructuring the navigation tree
+    transformTree?: (tree: TreeItem[]) => TreeItem[];
+  };
+}
+
+
+export interface DocsmithOptions {
+  folders?: string[];
+  plugins?: DocsmithPlugin[];
+}
+
+
 export interface Breadcrumb {
   name: string;
   slug: string;

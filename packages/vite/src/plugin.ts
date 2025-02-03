@@ -1,13 +1,9 @@
 import type { Plugin } from "vite";
 import type { ViteDevServer } from "vite";
-import { Docsmith } from "@docsmith/core";
+import {Docsmith, DocsmithOptions} from "@docsmith/core";
 import path from "path";
 import fs from "fs";
 
-interface DocsmithPluginOptions {
-  folders?: string[];
-  exclude?: string | RegExp | Array<string | RegExp>;
-}
 
 function createRuntimeCode(
   data: ReturnType<typeof Docsmith.prototype.getDocsData>
@@ -156,7 +152,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
   };
 }
 
-export function createPlugin(options: DocsmithPluginOptions = {}): Plugin[] {
+export function createPlugin(options: DocsmithOptions = {}): Plugin[] {
   const docsmith = new Docsmith(options);
   return [createMainPlugin(docsmith)];
 }

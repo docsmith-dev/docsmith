@@ -1,7 +1,13 @@
 import matter from "gray-matter";
 import fs from "fs";
 import path from "path";
-import type { Doc, DocsData, DocsmithConfig } from "./types";
+import type {
+  Doc,
+  DocsData,
+  DocsmithConfig,
+  DocsmithOptions,
+  DocsmithPlugin, TreeItem
+} from "./types";
 import { generateBreadcrumbs } from "./utils/breadcrumbs";
 import { buildTree } from "./utils/tree";
 import { extractHeadings } from "./utils/headings.ts";
@@ -10,12 +16,57 @@ export class Docsmith {
   private docsMap = new Map<string, Doc>();
   private globalConfig: DocsmithConfig = {};
   private directoryConfigs = new Map<string, DocsmithConfig>();
-
-  constructor(private readonly options: { folders?: string[] } = {}) {
+  private plugins: DocsmithPlugin[] = [];
+  //
+  constructor(private readonly options: DocsmithOptions = {}) {
     this.options = {
       folders: options.folders ?? ["docs"],
     };
+    this.plugins = this.options.plugins ?? [];
   }
+
+  private async runBeforeParse(content: string): Promise<string> {
+    let result = content;
+    for (const plugin of this.plugins) {
+      if (plugin.hooks?.beforeParse) {
+        // Convert both sync and async results to Promises
+        result = await Promise.resolve(plugin.hooks.beforeParse(result));
+      }
+    }
+    return result;
+  }
+
+  private async runAfterParse(content: string): Promise<string> {
+    let result = content;
+    for (const plugin of this.plugins) {
+      if (plugin.hooks?.afterParse) {
+        result = await Promise.resolve(plugin.hooks.afterParse(result));
+      }
+    }
+    return result;
+  }
+
+  private async runTransformDoc(doc: Doc): Promise<Doc> {
+    let result = doc;
+    for (const plugin of this.plugins) {
+      if (plugin.hooks?.transformDoc) {
+        result = await plugin.hooks.transformDoc(result);
+      }
+    }
+    return result;
+  }
+
+  private runTransformTree(tree: TreeItem[]): TreeItem[] {
+    let result = tree;
+    for (const plugin of this.plugins) {
+      if (plugin.hooks?.transformTree) {
+        // transformTree is sync-only so no Promise handling needed
+        result = plugin.hooks.transformTree(result);
+      }
+    }
+    return result;
+  }
+
   async initialize(rootDir: string) {
     await this.loadConfigs(rootDir);
     await this.processAllFiles(rootDir);
@@ -102,19 +153,30 @@ export class Docsmith {
   }
 
   async processFile(rootDir: string, filePath: string) {
-    const content = await fs.promises.readFile(filePath, "utf-8");
+    let content = await fs.promises.readFile(filePath, "utf-8");
+
+    content = await this.runBeforeParse(content);
+
     const { content: markdownContent, data } = matter(content);
+
+    const processedContent = await this.runAfterParse(markdownContent);
+
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
-    const headings = await extractHeadings(markdownContent);
-    this.docsMap.set(relativePath, {
-      content: markdownContent, // Just store raw markdown
+    const headings = await extractHeadings(processedContent);
+
+    let doc: Doc = {
+      content: processedContent,
       frontmatter: data,
       slug: relativePath.replace(/\.md$/, ""),
       path: relativePath,
       title: path.basename(relativePath, ".md"),
       breadcrumbs: generateBreadcrumbs(relativePath),
       headings,
-    });
+    };
+
+    doc = await this.runTransformDoc(doc);
+
+    this.docsMap.set(relativePath, doc);
   }
 
   private async processAllFiles(rootDir: string) {
@@ -142,12 +204,17 @@ export class Docsmith {
   }
 
   getDocsData(): DocsData {
+    const docs = Array.from(this.docsMap.values());
+    let tree = buildTree(
+      docs,
+      this.getConfigForPath.bind(this)
+    );
+
+    tree = this.runTransformTree(tree);
+
     return {
-      docs: Array.from(this.docsMap.values()),
-      tree: buildTree(
-        Array.from(this.docsMap.values()),
-        this.getConfigForPath.bind(this)
-      ),
+      docs,
+      tree,
     };
   }
 
