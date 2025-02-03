@@ -125,7 +125,6 @@ export function TableOfContentsItem({
 }
 TableOfContentsItem.displayName = "TableOfContentsItem";
 
-// Link
 interface TableOfContentsLinkProps
   extends React.ComponentPropsWithoutRef<"div"> {
   item: TreeItem;

@@ -9,7 +9,7 @@
     "vite": "pnpm --filter '@docsmith/vite'",
     "react": "pnpm --filter '@docsmith/react'",
     "runtime": "pnpm --filter '@docsmith/runtime'",
-    "examples:remix": "pnpm --filter 'examples/remix'"
+    "examples:react-router": "pnpm --filter 'examples/react-router'"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
