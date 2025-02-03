@@ -10,6 +10,10 @@ interface OnThisPageBaseProps {
   minLevel?: number;
   maxLevel?: number;
   doc: Doc;
+  // New: accept activeId as a prop
+  activeId: string | null;
+  // New: optional callback for heading intersection
+  onHeadingIntersect?: (headingId: string) => void;
 }
 
 type OnThisPageProps = OnThisPageBaseProps &
@@ -49,31 +53,32 @@ export function OnThisPage({
   className,
   minLevel = 2,
   maxLevel = 3,
+  activeId,
+  onHeadingIntersect,
   ...props
 }: OnThisPageProps) {
-  const [activeId, setActiveId] = React.useState<string | null>(null);
-
   const nestedHeadings = React.useMemo(() => {
     const filteredHeadings =
       doc?.headings?.filter(
-        (heading) => heading.level >= minLevel && heading.level <= maxLevel,
+        (heading) => heading.level >= minLevel && heading.level <= maxLevel
       ) ?? [];
 
     return createHeadingTree(filteredHeadings);
   }, [doc?.headings, minLevel, maxLevel]);
 
+  // Only set up intersection observer if we have a callback
   React.useEffect(() => {
-    if (!doc?.headings?.length) return;
+    if (!doc?.headings?.length || !onHeadingIntersect) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
+            onHeadingIntersect(entry.target.id);
           }
         });
       },
-      { rootMargin: "0px 0px -80% 0px" },
+      { rootMargin: "0px 0px -80% 0px" }
     );
 
     const elements = doc.headings
@@ -86,9 +91,8 @@ export function OnThisPage({
       elements.forEach((element) => observer.unobserve(element));
       observer.disconnect();
     };
-  }, [doc?.headings]);
+  }, [doc?.headings, onHeadingIntersect]);
 
-  // Don't render if there are no headings
   if (!doc?.headings?.length) {
     return null;
   }
@@ -100,6 +104,7 @@ export function OnThisPage({
   );
 }
 
+// OnThisPageList stays the same
 interface OnThisPageListProps extends React.ComponentPropsWithoutRef<"ul"> {
   children: React.ReactNode;
 }
@@ -112,6 +117,7 @@ export function OnThisPageList({ children, ...props }: OnThisPageListProps) {
   );
 }
 
+// OnThisPageItem stays the same
 interface OnThisPageItemBaseProps {
   heading: NestedHeading;
   active?: boolean;

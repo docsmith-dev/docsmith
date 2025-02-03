@@ -1,5 +1,5 @@
 declare module "virtual:docsmith" {
-  import type { Doc, TreeItem } from "@docsmith/core";
+  import type { Doc, TreeItem } from "./types";
 
   export const docs: Doc[];
   export const tree: TreeItem[];

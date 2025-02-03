@@ -1,27 +1,25 @@
 import * as React from "react";
 import type { TreeItem } from "@docsmith/core";
-import { useDocsData } from "../hooks/useDocsData";
 
 interface RenderProps {
   tree: TreeItem[];
   currentPath?: string;
 }
 
-// Root component with render props
-interface TableOfContentsProps
-  extends Omit<React.ComponentPropsWithoutRef<"nav">, "children"> {
+interface TableOfContentsProps {
+  tree: TreeItem[];
+  className?: string;
   currentPath?: string;
   children: (props: RenderProps) => React.ReactNode;
 }
 
 export function TableOfContents({
+  tree,
   currentPath,
   children,
   className,
   ...props
 }: TableOfContentsProps) {
-  const { tree } = useDocsData();
-
   return (
     <nav className={className} aria-label="Table of contents" {...props}>
       {children({ tree, currentPath })}

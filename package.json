@@ -8,7 +8,9 @@
     "core": "pnpm --filter '@docsmith/core'",
     "vite": "pnpm --filter '@docsmith/vite'",
     "react": "pnpm --filter '@docsmith/react'",
-    "examples:react": "pnpm --filter './examples/react-app'"
+    "runtime": "pnpm --filter '@docsmith/runtime'",
+    "examples:react-spa": "pnpm --filter 'examples/react-spa'",
+    "examples:remix": "pnpm --filter 'examples/remix'"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",

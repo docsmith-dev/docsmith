@@ -33,13 +33,13 @@ export class Docsmith {
     };
 
     this.globalConfig = await loadConfig(
-      path.join(rootDir, "docs", "docs.config.json"),
+      path.join(rootDir, "docs", "docs.config.json")
     );
 
     // Recursively load directory configs
     const loadDirectoryConfigs = async (
       dir: string,
-      parentConfig: DocsmithConfig = {},
+      parentConfig: DocsmithConfig = {}
     ) => {
       const configPath = path.join(dir, "_directory.config.json");
       const relativeDir = path.relative(path.join(rootDir, "docs"), dir);
@@ -62,7 +62,7 @@ export class Docsmith {
         if (subdir.isDirectory()) {
           await loadDirectoryConfigs(
             path.join(dir, subdir.name),
-            currentConfig,
+            currentConfig
           );
         }
       }
@@ -73,7 +73,7 @@ export class Docsmith {
     for (const folder of folders) {
       await loadDirectoryConfigs(
         path.resolve(rootDir, folder),
-        this.globalConfig,
+        this.globalConfig
       );
     }
   }
@@ -146,7 +146,7 @@ export class Docsmith {
       docs: Array.from(this.docsMap.values()),
       tree: buildTree(
         Array.from(this.docsMap.values()),
-        this.getConfigForPath.bind(this),
+        this.getConfigForPath.bind(this)
       ),
     };
   }

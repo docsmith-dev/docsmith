@@ -3,7 +3,7 @@ import type { Doc, TreeItem } from "../types";
 
 export function buildTree(
   files: Doc[],
-  getConfigForPath: (path: string) => any,
+  getConfigForPath: (path: string) => any
 ): TreeItem[] {
   const root: TreeItem = { name: "root", items: [], type: "group" };
 
@@ -32,7 +32,7 @@ export function buildTree(
       } else {
         // This is a directory
         let child = currentNode.items?.find(
-          (item) => item.type === "group" && item.name === part,
+          (item) => item.type === "group" && item.name === part
         );
         if (!child) {
           child = {

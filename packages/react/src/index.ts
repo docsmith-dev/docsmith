@@ -1,6 +1,3 @@
-export { useDocsData } from "./hooks/useDocsData";
-export { useDoc } from "./hooks/useDoc";
-
 export {
   Search,
   SearchInput,

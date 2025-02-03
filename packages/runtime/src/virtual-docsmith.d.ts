@@ -3,8 +3,6 @@ declare module "virtual:docsmith" {
 
   export const docs: Doc[];
   export const tree: TreeItem[];
-  export function getDoc(slug: string): Doc | null;
-  export function getTree(): TreeItem[];
 }
 
 declare module "@docsmith/virtual" {
