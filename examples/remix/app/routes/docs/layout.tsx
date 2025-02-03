@@ -1,4 +1,10 @@
-import {Link, Outlet, useLoaderData, useLocation, useNavigate} from "react-router";
+import {
+  Link,
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "react-router";
 import {
   TableOfContents,
   TableOfContentsGroup,
@@ -6,26 +12,27 @@ import {
   TableOfContentsGroupContent,
   TableOfContentsList,
   TableOfContentsItem,
-  TableOfContentsLink, Search, SearchInput, SearchResults, SearchResultItem,
+  TableOfContentsLink,
+  Search,
+  SearchInput,
+  SearchResults,
+  SearchResultItem,
 } from "@docsmith/react";
-import {
-  getTree,
-  getDocs,
-} from "@docsmith/runtime"
-import {useState} from "react";
+import { getTree, getDocs } from "@docsmith/runtime";
+import { useState } from "react";
 
 export const loader = async () => {
   return {
     docs: getDocs(),
     tree: getTree(),
-  }
-}
+  };
+};
 
 export default function DocsLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { tree, docs } = useLoaderData<typeof loader>();
-  const [query, setQuery]= useState("");
+  const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
 
   return (
@@ -43,10 +50,7 @@ export default function DocsLayout() {
       >
         {({ docs: results, query, setQuery, activeIndex, handleKeyDown }) => (
           <div onKeyDown={handleKeyDown}>
-            <SearchInput
-              query={query}
-              onQueryChange={setQuery}
-            />
+            <SearchInput query={query} onQueryChange={setQuery} />
             <SearchResults>
               {results.map((doc, index) => (
                 <SearchResultItem
@@ -77,7 +81,11 @@ export default function DocsLayout() {
                         <TableOfContentsList>
                           {section.items.map((item) => (
                             <TableOfContentsItem key={item.slug}>
-                              <TableOfContentsLink item={item} asChild isCurrent={item.slug === location.pathname}>
+                              <TableOfContentsLink
+                                item={item}
+                                asChild
+                                isCurrent={item.slug === location.pathname}
+                              >
                                 <Link to={`/docs/${item.slug}`}>
                                   <span>{item.label}</span>
                                 </Link>

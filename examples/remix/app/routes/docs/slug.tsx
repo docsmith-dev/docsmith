@@ -3,19 +3,18 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 
-
 export async function loader({ params }: Route.LoaderArgs) {
   return {
     doc: getDoc(params.slug),
   };
 }
 
-import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
-import {OnThisPage, OnThisPageItem, OnThisPageList} from "@docsmith/react";
-import {useState} from "react";
+import { Route } from "../../../.react-router/types/app/routes/docs/+types/slug";
+import { OnThisPage, OnThisPageItem, OnThisPageList } from "@docsmith/react";
+import { useState } from "react";
 
 export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
-  const { doc } = loaderData
+  const { doc } = loaderData;
   const [activeHeading, setActiveHeading] = useState<string | null>(null);
 
   return (
@@ -23,9 +22,7 @@ export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
       <article>
         <header>
           <h1>{doc.frontmatter?.title || doc.title}</h1>
-          {doc.frontmatter?.description && (
-            <p>{doc.frontmatter.description}</p>
-          )}
+          {doc.frontmatter?.description && <p>{doc.frontmatter.description}</p>}
         </header>
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
@@ -35,9 +32,10 @@ export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
         </ReactMarkdown>
       </article>
       <aside>
-        <OnThisPage doc={doc}
-                    activeId={activeHeading}
-                    onHeadingIntersect={setActiveHeading}
+        <OnThisPage
+          doc={doc}
+          activeId={activeHeading}
+          onHeadingIntersect={setActiveHeading}
         >
           {({ headings, activeId }) => {
             return (
@@ -56,7 +54,6 @@ export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
             );
           }}
         </OnThisPage>
-
       </aside>
     </div>
   );

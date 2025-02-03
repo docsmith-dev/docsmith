@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import type { ViteDevServer } from 'vite'
+import type { ViteDevServer } from "vite";
 import { Docsmith } from "@docsmith/core";
 import path from "path";
 import fs from "fs";
@@ -9,7 +9,9 @@ interface DocsmithPluginOptions {
   exclude?: string | RegExp | Array<string | RegExp>;
 }
 
-function createRuntimeCode(data: ReturnType<typeof Docsmith.prototype.getDocsData>) {
+function createRuntimeCode(
+  data: ReturnType<typeof Docsmith.prototype.getDocsData>
+) {
   // ESM Version (for client)
   const esmCode = `
     export const docs = ${JSON.stringify(data.docs)};
@@ -57,20 +59,17 @@ function createRuntimeCode(data: ReturnType<typeof Docsmith.prototype.getDocsDat
   return { esmCode, cjsCode };
 }
 
-async function writeRuntime(runtimePath: string, data: ReturnType<typeof Docsmith.prototype.getDocsData>) {
+async function writeRuntime(
+  runtimePath: string,
+  data: ReturnType<typeof Docsmith.prototype.getDocsData>
+) {
   const { esmCode, cjsCode } = createRuntimeCode(data);
 
   // Write ESM version
-  await fs.promises.writeFile(
-    path.join(runtimePath, "index.js"),
-    esmCode
-  );
+  await fs.promises.writeFile(path.join(runtimePath, "index.js"), esmCode);
 
   // Write CJS version
-  await fs.promises.writeFile(
-    path.join(runtimePath, "index.cjs"),
-    cjsCode
-  );
+  await fs.promises.writeFile(path.join(runtimePath, "index.cjs"), cjsCode);
 }
 
 async function invalidateModule(server: ViteDevServer, modulePath: string) {
@@ -78,13 +77,15 @@ async function invalidateModule(server: ViteDevServer, modulePath: string) {
   if (module) {
     server.moduleGraph.invalidateModule(module);
     server.ws.send({
-      type: 'update',
-      updates: [{
-        type: 'js-update',
-        path: module.url,
-        acceptedPath: module.url,
-        timestamp: new Date().getTime() // Add timestamp for HMR
-      }]
+      type: "update",
+      updates: [
+        {
+          type: "js-update",
+          path: module.url,
+          acceptedPath: module.url,
+          timestamp: new Date().getTime(), // Add timestamp for HMR
+        },
+      ],
     });
   }
 }
