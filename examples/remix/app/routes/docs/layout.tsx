@@ -1,4 +1,4 @@
-import {Outlet, useLoaderData, useLocation} from "react-router";
+import {Link, Outlet, useLoaderData, useLocation, useNavigate} from "react-router";
 import {
   TableOfContents,
   TableOfContentsGroup,
@@ -6,26 +6,62 @@ import {
   TableOfContentsGroupContent,
   TableOfContentsList,
   TableOfContentsItem,
-  TableOfContentsLink,
+  TableOfContentsLink, Search, SearchInput, SearchResults, SearchResultItem,
 } from "@docsmith/react";
 import {
   getTree,
   getDocs,
 } from "@docsmith/runtime"
+import {useState} from "react";
 
 export const loader = async () => {
   return {
-    docs: getTree(),
+    docs: getDocs(),
     tree: getTree(),
   }
 }
 
 export default function DocsLayout() {
   const location = useLocation();
-  const { tree } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const { tree, docs } = useLoaderData<typeof loader>();
+  const [query, setQuery]= useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   return (
     <div className="grid grid-cols-[240px_1fr] min-h-screen">
+      <Search
+        docs={docs}
+        query={query}
+        onQueryChange={setQuery}
+        activeIndex={activeIndex}
+        onActiveIndexChange={setActiveIndex}
+        onSelect={(doc) => {
+          navigate(`/docs/${doc.slug}`);
+          setQuery("");
+        }}
+      >
+        {({ docs: results, query, setQuery, activeIndex, handleKeyDown }) => (
+          <div onKeyDown={handleKeyDown}>
+            <SearchInput
+              query={query}
+              onQueryChange={setQuery}
+            />
+            <SearchResults>
+              {results.map((doc, index) => (
+                <SearchResultItem
+                  key={doc.slug}
+                  doc={doc}
+                  active={index === activeIndex}
+                >
+                  {doc.title}
+                </SearchResultItem>
+              ))}
+            </SearchResults>
+          </div>
+        )}
+      </Search>
+
       <aside className="border-r">
         <TableOfContents tree={tree} currentPath={location.pathname}>
           {({ tree }) => (
@@ -41,13 +77,10 @@ export default function DocsLayout() {
                         <TableOfContentsList>
                           {section.items.map((item) => (
                             <TableOfContentsItem key={item.slug}>
-                              <TableOfContentsLink item={item} asChild>
-                                <a href={`/docs/${item.slug}`}>
-                                  {item.icon && (
-                                    <item.icon className="mr-2 h-4 w-4" />
-                                  )}
+                              <TableOfContentsLink item={item} asChild isCurrent={item.slug === location.pathname}>
+                                <Link to={`/docs/${item.slug}`}>
                                   <span>{item.label}</span>
-                                </a>
+                                </Link>
                               </TableOfContentsLink>
                             </TableOfContentsItem>
                           ))}
@@ -62,9 +95,6 @@ export default function DocsLayout() {
                     <TableOfContentsItem>
                       <TableOfContentsLink item={section} asChild>
                         <a href={`/docs/${section.slug}`}>
-                          {section.icon && (
-                            <section.icon className="mr-2 h-4 w-4" />
-                          )}
                           <span>{section.label}</span>
                         </a>
                       </TableOfContentsLink>

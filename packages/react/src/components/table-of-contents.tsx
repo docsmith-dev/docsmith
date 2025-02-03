@@ -129,6 +129,7 @@ TableOfContentsItem.displayName = "TableOfContentsItem";
 interface TableOfContentsLinkProps
   extends React.ComponentPropsWithoutRef<"div"> {
   item: TreeItem;
+  isCurrent?: boolean;
   // Instead of asChild, we can just make it accept any element type
   as?: React.ElementType;
   children?: React.ReactNode;
@@ -139,12 +140,13 @@ export function TableOfContentsLink({
   as: Component = "div", // Default to div if no element type specified
   children,
   className,
+  isCurrent,
   ...props
 }: TableOfContentsLinkProps) {
   return (
     <Component
       className={className}
-      aria-current={location.pathname === item.slug ? "page" : undefined}
+      aria-current={isCurrent ? "page" : undefined}
       {...props}
     >
       {children || item.label || item.name}

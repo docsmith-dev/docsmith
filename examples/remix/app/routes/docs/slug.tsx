@@ -1,38 +1,36 @@
-// app/routes/docs.$.tsx
-// import { getDocs } from "@docsmith/runtime";
+import { getDoc } from "@docsmith/runtime";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
-// export async function loader({ params }: Route.LoaderArgs) {
-//   // params.slug is typed correctly
-//   return {
-//     // doc: getDoc(params.slug),
-//     // navigation: getNavigation(params.slug)
-//   };
-// }
+
+export async function loader({ params }: Route.LoaderArgs) {
+  return {
+    doc: getDoc(params.slug),
+  };
+}
 
 import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
 
 export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
-  // const { doc, navigation } = loaderData
+  const { doc } = loaderData
 
   return (
     <div>
-      {/*<OnThisPage*/}
-      {/*  doc={doc}*/}
-      {/*  activeId={activeHeading}*/}
-      {/*  onHeadingIntersect={setActiveHeading}*/}
-      {/*>*/}
-      {/*  {({ headings, activeId }) => (*/}
-      {/*    // Render headings...*/}
-      {/*  )}*/}
-      {/*</OnThisPage>*/}
-
-      {/*<h1>{doc.frontmatter.title}</h1>*/}
-      {/*<nav>*/}
-      {/*  /!* Navigation is fully typed *!/*/}
-      {/*  {navigation.segments.map(segment => (*/}
-      {/*    <span key={segment}>{segment}</span>*/}
-      {/*  ))}*/}
-      {/*</nav>*/}
+      <article>
+        <header>
+          <h1>{doc.frontmatter?.title || doc.title}</h1>
+          {doc.frontmatter?.description && (
+            <p>{doc.frontmatter.description}</p>
+          )}
+        </header>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeHighlight]}
+        >
+          {doc.content}
+        </ReactMarkdown>
+      </article>
     </div>
   );
 }
