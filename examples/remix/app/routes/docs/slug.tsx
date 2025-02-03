@@ -11,9 +11,12 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
+import {OnThisPage, OnThisPageItem, OnThisPageList} from "@docsmith/react";
+import {useState} from "react";
 
 export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
   const { doc } = loaderData
+  const [activeHeading, setActiveHeading] = useState<string | null>(null);
 
   return (
     <div>
@@ -31,6 +34,30 @@ export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
           {doc.content}
         </ReactMarkdown>
       </article>
+      <aside>
+        <OnThisPage doc={doc}
+                    activeId={activeHeading}
+                    onHeadingIntersect={setActiveHeading}
+        >
+          {({ headings, activeId }) => {
+            return (
+              <OnThisPageList>
+                {headings.map((heading) => (
+                  <OnThisPageItem
+                    key={heading.id}
+                    heading={heading}
+                    active={heading.id === activeId}
+                    as={"a"} // For custom routing components
+                  >
+                    {heading.text}
+                  </OnThisPageItem>
+                ))}
+              </OnThisPageList>
+            );
+          }}
+        </OnThisPage>
+
+      </aside>
     </div>
   );
 }
