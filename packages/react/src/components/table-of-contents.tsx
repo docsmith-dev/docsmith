@@ -10,7 +10,7 @@ interface TableOfContentsProps {
   tree: TreeItem[];
   className?: string;
   currentPath?: string;
-  children: (props: RenderProps) => React.ReactNode;
+  children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
 }
 
 export function TableOfContents({
@@ -22,7 +22,9 @@ export function TableOfContents({
 }: TableOfContentsProps) {
   return (
     <nav className={className} aria-label="Table of contents" {...props}>
-      {children({ tree, currentPath })}
+      {typeof children === "function"
+        ? (children as (props: RenderProps) => React.ReactNode)({ tree, currentPath })
+        : children}
     </nav>
   );
 }

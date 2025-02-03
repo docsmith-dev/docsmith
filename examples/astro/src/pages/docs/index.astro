@@ -1,0 +1,66 @@
+---
+import { getTree } from "@docsmith/runtime";
+import {
+	TableOfContents,
+	TableOfContentsGroup,
+	TableOfContentsGroupContent,
+	TableOfContentsGroupLabel,
+	TableOfContentsItem,
+	TableOfContentsLink,
+	TableOfContentsList,
+} from "@docsmith/react";
+import { getDocs } from "@docsmith/runtime";
+import { TreeItem } from "@docsmith/core";
+
+const tree = getTree();
+---
+
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="generator" content={Astro.generator} />
+	<title>Docs</title>
+</head>
+<body>
+<h1>Docs</h1>
+<TableOfContents tree={tree} currentPath={Astro.url.pathname}>
+	{tree.map((section) => (
+		section.type === "group" && section.items ? (
+			<TableOfContentsGroup key={section.name}>
+				<TableOfContentsGroupLabel>
+					{section.label}
+				</TableOfContentsGroupLabel>
+				<TableOfContentsGroupContent>
+					<TableOfContentsList>
+						{section.items.map((item) => (
+							<TableOfContentsItem key={item.slug}>
+								<TableOfContentsLink
+									item={item}
+									isCurrent={`/docs/${item.slug}` === Astro.url.pathname}
+								>
+									<a href={`/docs/${item.slug}`}>
+										<span>{item.label}</span>
+									</a>
+								</TableOfContentsLink>
+							</TableOfContentsItem>
+						))}
+					</TableOfContentsList>
+				</TableOfContentsGroupContent>
+			</TableOfContentsGroup>
+		) : (
+			<TableOfContentsList key={section.name}>
+				<TableOfContentsItem>
+					<TableOfContentsLink item={section}>
+						<a href={`/docs/${section.slug}`}>
+							<span>{section.label}</span>
+						</a>
+					</TableOfContentsLink>
+				</TableOfContentsItem>
+			</TableOfContentsList>
+		)
+	))}
+</TableOfContents>
+</body>
+</html>
