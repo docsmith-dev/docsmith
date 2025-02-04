@@ -3,3 +3,4 @@ dist
 .continue
 .idea
 .vscode
+*.log
