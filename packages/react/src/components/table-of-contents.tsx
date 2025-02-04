@@ -33,8 +33,6 @@ export function TableOfContents({
 }
 TableOfContents.displayName = "TableOfContents";
 
-// Group container
-// Group container using details/summary
 interface TableOfContentsGroupProps
   extends React.ComponentPropsWithoutRef<"details"> {
   children: React.ReactNode;
@@ -55,7 +53,6 @@ export function TableOfContentsGroup({
 }
 TableOfContentsGroup.displayName = "TableOfContentsGroup";
 
-// Group label as summary
 interface TableOfContentsGroupLabelProps
   extends React.ComponentPropsWithoutRef<"summary"> {
   children: React.ReactNode;
@@ -74,7 +71,6 @@ export function TableOfContentsGroupLabel({
 }
 TableOfContentsGroupLabel.displayName = "TableOfContentsGroupLabel";
 
-// Group content container
 interface TableOfContentsGroupContentProps
   extends React.ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
@@ -92,7 +88,7 @@ export function TableOfContentsGroupContent({
   );
 }
 TableOfContentsGroupContent.displayName = "TableOfContentsGroupContent";
-// List container
+
 interface TableOfContentsListProps
   extends React.ComponentPropsWithoutRef<"ul"> {
   children: React.ReactNode;
@@ -111,7 +107,6 @@ export function TableOfContentsList({
 }
 TableOfContentsList.displayName = "TableOfContentsList";
 
-// List item
 interface TableOfContentsItemProps
   extends React.ComponentPropsWithoutRef<"li"> {
   children: React.ReactNode;
@@ -134,14 +129,13 @@ interface TableOfContentsLinkProps
   extends React.ComponentPropsWithoutRef<"div"> {
   item: TreeItem;
   isCurrent?: boolean;
-  // Instead of asChild, we can just make it accept any element type
   as?: React.ElementType;
   children?: React.ReactNode;
 }
 
 export function TableOfContentsLink({
   item,
-  as: Component = "div", // Default to div if no element type specified
+  as: Component = "div",
   children,
   className,
   isCurrent,
@@ -155,5 +149,53 @@ export function TableOfContentsLink({
     >
       {children || item.label || item.name}
     </Component>
+  );
+}
+TableOfContentsLink.displayName = "TableOfContentsLink";
+
+// New Recursive Content Renderer
+interface TableOfContentsTreeProps {
+  items: TreeItem[];
+  currentPath?: string;
+  as?: React.ElementType;
+}
+
+export function TableOfContentsTree({
+  items,
+  currentPath,
+  as: Component = "a",
+}: TableOfContentsTreeProps) {
+  return (
+    <TableOfContentsList>
+      {items.map((item) => {
+        if (item.type === "group") {
+          return (
+            <TableOfContentsItem key={item.name}>
+              <TableOfContentsGroup>
+                <TableOfContentsGroupLabel>
+                  {item.label || item.name}
+                </TableOfContentsGroupLabel>
+                <TableOfContentsGroupContent>
+                  <TableOfContentsTree
+                    items={item.items || []}
+                    currentPath={currentPath}
+                    as={Component}
+                  />
+                </TableOfContentsGroupContent>
+              </TableOfContentsGroup>
+            </TableOfContentsItem>
+          );
+        }
+        return (
+          <TableOfContentsItem key={item.slug}>
+            <TableOfContentsLink
+              item={item}
+              as={Component}
+              isCurrent={item.slug === currentPath}
+            />
+          </TableOfContentsItem>
+        );
+      })}
+    </TableOfContentsList>
   );
 }

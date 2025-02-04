@@ -2,7 +2,13 @@ import * as React from "react";
 import type { Breadcrumb } from "@docsmith/core";
 
 // Base props for the Breadcrumb component
-interface BreadcrumbsBaseProps {
+interface BreadcrumbsRenderProps {
+  items: Breadcrumb[];
+  separator: React.ReactNode;
+  onNavigate?: (breadcrumb: Breadcrumb) => void;
+}
+
+interface BreadcrumbsProps {
   /**
    * Array of breadcrumb items to display
    */
@@ -16,20 +22,17 @@ interface BreadcrumbsBaseProps {
    * Called when a breadcrumb item is clicked
    */
   onNavigate?: (breadcrumb: Breadcrumb) => void;
+  /**
+   * Required children - either render props function or React nodes
+   */
+  children:
+    | React.ReactNode
+    | ((props: BreadcrumbsRenderProps) => React.ReactNode);
+  /**
+   * Optional className
+   */
+  className?: string;
 }
-
-// Props specifically for render props pattern
-interface BreadcrumbsRenderProps {
-  items: Breadcrumb[];
-  separator: React.ReactNode;
-  onNavigate?: (breadcrumb: Breadcrumb) => void;
-}
-
-// Combined props type
-type BreadcrumbsProps = BreadcrumbsBaseProps &
-  Omit<React.ComponentPropsWithoutRef<"nav">, keyof BreadcrumbsBaseProps> & {
-    children: (props: BreadcrumbsRenderProps) => React.ReactNode;
-  };
 
 /**
  * Breadcrumbs component for displaying hierarchical navigation
@@ -44,10 +47,14 @@ export function Breadcrumbs({
 }: BreadcrumbsProps) {
   return (
     <nav aria-label="Breadcrumb" className={className} {...props}>
-      {children({ items, separator, onNavigate })}
+      {typeof children === "function"
+        ? children({ items, separator, onNavigate })
+        : children}
     </nav>
   );
 }
+
+Breadcrumbs.displayName = "Breadcrumbs";
 
 // List container component
 interface BreadcrumbsListProps extends React.ComponentPropsWithoutRef<"ol"> {
@@ -65,6 +72,8 @@ export function BreadcrumbsList({
     </ol>
   );
 }
+
+BreadcrumbsList.displayName = "BreadcrumbsList";
 
 // Individual breadcrumb item component
 interface BreadcrumbsItemBaseProps {
@@ -108,6 +117,8 @@ export function BreadcrumbsItem({
   );
 }
 
+BreadcrumbsItem.displayName = "BreadcrumbsItem";
+
 // Separator component
 interface BreadcrumbsSeparatorProps
   extends React.ComponentPropsWithoutRef<"li"> {
@@ -125,3 +136,5 @@ export function BreadcrumbsSeparator({
     </li>
   );
 }
+
+BreadcrumbsSeparator.displayName = "BreadcrumbsSeparator";
