@@ -18,7 +18,8 @@ import {
   SearchResults,
   SearchResultItem,
 } from "@docsmith/react";
-import { getTree, getDocs } from "@docsmith/runtime";
+import {TreeItem} from "@docsmith/core";
+import {getTree, getDocs} from "@docsmith/runtime";
 import { useState } from "react";
 
 export const loader = async () => {
@@ -72,6 +73,41 @@ export default function DocsLayout() {
             <>
               {tree.map((section) => {
                 if (section.type === "group") {
+                  const renderItems = (items: TreeItem[]) => {
+                    return items?.map((item) => {
+                      if (item.type === "group") {
+                        return (
+                          <TableOfContentsItem key={item.name}>
+                            <TableOfContentsGroup>
+                              <TableOfContentsGroupLabel>
+                                {item.label}
+                              </TableOfContentsGroupLabel>
+                              <TableOfContentsGroupContent>
+                                <TableOfContentsList>
+                                  {renderItems(item.items || [])}
+                                </TableOfContentsList>
+                              </TableOfContentsGroupContent>
+                            </TableOfContentsGroup>
+                          </TableOfContentsItem>
+                        );
+                      }
+
+                      return (
+                        <TableOfContentsItem key={item.slug}>
+                          <TableOfContentsLink
+                            item={item}
+                            asChild
+                            isCurrent={item.slug === location.pathname}
+                          >
+                            <Link to={`/docs/${item.slug}`}>
+                              <span>{item.label}</span>
+                            </Link>
+                          </TableOfContentsLink>
+                        </TableOfContentsItem>
+                      );
+                    });
+                  };
+
                   return (
                     <TableOfContentsGroup key={section.name}>
                       <TableOfContentsGroupLabel>
@@ -79,49 +115,7 @@ export default function DocsLayout() {
                       </TableOfContentsGroupLabel>
                       <TableOfContentsGroupContent>
                         <TableOfContentsList>
-                          {section.items?.map((item) => {
-                            if (item.type === "group") {
-                              return (
-                                <TableOfContentsItem key={item.name}>
-                                  <TableOfContentsGroup>
-                                    <TableOfContentsGroupLabel>
-                                      {item.label}
-                                    </TableOfContentsGroupLabel>
-                                    <TableOfContentsGroupContent>
-                                      <TableOfContentsList>
-                                        {item.items?.map((subItem) => (
-                                          <TableOfContentsItem key={subItem.slug}>
-                                            <TableOfContentsLink
-                                              item={subItem}
-                                              asChild
-                                              isCurrent={subItem.slug === location.pathname}
-                                            >
-                                              <Link to={`/docs/${subItem.slug}`}>
-                                                <span>{subItem.label}</span>
-                                              </Link>
-                                            </TableOfContentsLink>
-                                          </TableOfContentsItem>
-                                        ))}
-                                      </TableOfContentsList>
-                                    </TableOfContentsGroupContent>
-                                  </TableOfContentsGroup>
-                                </TableOfContentsItem>
-                              );
-                            }
-                            return (
-                              <TableOfContentsItem key={item.slug}>
-                                <TableOfContentsLink
-                                  item={item}
-                                  asChild
-                                  isCurrent={item.slug === location.pathname}
-                                >
-                                  <Link to={`/docs/${item.slug}`}>
-                                    <span>{item.label}</span>
-                                  </Link>
-                                </TableOfContentsLink>
-                              </TableOfContentsItem>
-                            );
-                          })}
+                          {renderItems(section.items || [])}
                         </TableOfContentsList>
                       </TableOfContentsGroupContent>
                     </TableOfContentsGroup>

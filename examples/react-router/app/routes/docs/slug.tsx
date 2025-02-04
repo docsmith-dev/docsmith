@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params }) {
   const slug = params["*"];
 
   return {
@@ -12,7 +12,6 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
-import { Route } from "../../../.react-router/types/app/routes/docs/+types/slug";
 import {
   Breadcrumbs, BreadcrumbsItem,
   BreadcrumbsList, BreadcrumbsSeparator,
@@ -22,8 +21,9 @@ import {
 } from "@docsmith/react";
 import {Fragment, useState} from "react";
 import {Link} from "react-router";
+// import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
 
-export default function DocsPage({ params, loaderData }: Route.ComponentProps) {
+export default function DocsPage({ params, loaderData }) {
   const { doc, tree } = loaderData;
   const [activeHeading, setActiveHeading] = useState<string | null>(null);
 
