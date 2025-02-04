@@ -1,38 +1,52 @@
 // packages/source-github/src/index.ts
-
 import type { DocsmithPlugin } from '@docsmith/core';
+import path from 'path';
+
+export interface GithubSourceOptions {
+  owner: string;
+  repo: string;
+  branch?: string;
+  path?: string;
+  token?: string;
+}
 
 interface GithubContent {
   name: string;
   path: string;
-  sha: string;
-  size: number;
-  url: string;
-  html_url: string;
-  git_url: string;
   download_url: string | null;
   type: "file" | "dir";
-  content?: string;
-  encoding?: string;
 }
 
-export interface GithubSourceOptions {
-  /** Repository owner/org */
-  owner: string;
-  /** Repository name */
-  repo: string;
-  /** Branch name (default: main) */
-  branch?: string;
-  /** Path within the repository to load docs from */
-  path?: string;
-  /** GitHub personal access token (optional) */
-  token?: string;
+export function createGithubSourcePlugin(options: GithubSourceOptions): DocsmithPlugin {
+  const plugin: DocsmithPlugin = {
+    name: "docsmith-source-github",
+    hooks: {
+      beforeInitialize: async (docsmith) => {
+        console.log('[GitHub Source] Starting file fetch from GitHub...');
+        const files = await fetchGithubFiles(options);
+        console.log(`[GitHub Source] Fetched ${files.size} files from GitHub`);
+
+        for (const [filePath, content] of files.entries()) {
+          console.log(`[GitHub Source] Processing ${filePath}`);
+          await docsmith.addDocument({
+            content,
+            slug: filePath.replace(/\.mdx?$/, ''),
+            path: filePath,
+            title: path.basename(filePath, path.extname(filePath)),
+            frontmatter: {}, // You might want to parse frontmatter here
+            breadcrumbs: generateBreadcrumbs(filePath),
+            headings: [] // You might want to extract headings here
+          });
+        }
+        console.log('[GitHub Source] Completed adding documents');
+      }
+    }
+  };
+
+  return plugin;
 }
 
-async function fetchGithubContents(
-  options: GithubSourceOptions,
-  path: string = ""
-): Promise<Map<string, string>> {
+async function fetchGithubFiles(options: GithubSourceOptions): Promise<Map<string, string>> {
   const files = new Map<string, string>();
   const headers: Record<string, string> = {
     "Accept": "application/vnd.github.v3+json",
@@ -42,57 +56,57 @@ async function fetchGithubContents(
     headers["Authorization"] = `token ${options.token}`;
   }
 
-  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/contents/${path}?ref=${options.branch || "main"}`;
 
-  const response = await fetch(url, { headers });
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.statusText}`);
-  }
+  async function processContent(currentPath: string) {
+    const encodedPath = currentPath ? encodeURIComponent(currentPath) : '';
+    const url = `https://api.github.com/repos/${options.owner}/${options.repo}/contents/${encodedPath}?ref=${options.branch || "main"}`;
 
-  const contents: GithubContent[] = await response.json() as GithubContent[];
 
-  for (const item of contents) {
-    if (item.type === "dir") {
-      const subFiles = await fetchGithubContents(
-        options,
-        item.path
-      );
-      subFiles.forEach((content, filePath) => {
-        files.set(filePath, content);
-      });
-    } else if (item.type === "file" && item.name.endsWith(".md")) {
-      const fileResponse = await fetch(item.download_url!, { headers });
-      if (!fileResponse.ok) {
-        throw new Error(`Failed to fetch file ${item.path}`);
+    try {
+      const response = await fetch(url, { headers });
+
+      if (!response.ok) {
+        return;
       }
-      const content = await fileResponse.text();
-      files.set(item.path, content);
+
+      const contents: GithubContent[] = await response.json();
+
+      for (const item of contents) {
+        if (item.type === "dir") {
+          await processContent(item.path);
+        } else if (item.type === "file" && (item.name.endsWith(".md") || item.name.endsWith(".mdx"))) {
+          if (!item.download_url) {
+            continue;
+          }
+
+          try {
+            const fileResponse = await fetch(item.download_url, { headers });
+            if (!fileResponse.ok) {
+              continue;
+            }
+
+            const content = await fileResponse.text();
+            files.set(item.path, content);
+          } catch (error) {
+            console.error(`[GitHub Source] Error fetching ${item.download_url}:`, error);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`[GitHub Source] Error processing ${url}:`, error);
+      if (error instanceof Error) {
+        console.error(error.stack);
+      }
     }
   }
 
+  await processContent(options.path || '');
   return files;
 }
 
-export function createGithubSourcePlugin(options: GithubSourceOptions): DocsmithPlugin {
-  let sourceFiles = new Map<string, string>();
-
-  return {
-    name: "docsmith-source-github",
-    hooks: {
-      transformDoc: async (doc) => {
-        // Passthrough transform
-        return doc;
-      },
-      beforeParse: async (content: string) => {
-        // Initialize if not already done
-        if (sourceFiles.size === 0) {
-          sourceFiles = await fetchGithubContents(options, options.path);
-        }
-        return content;
-      },
-      afterParse: async (content: string) => {
-        return content;
-      },
-    }
-  };
+function generateBreadcrumbs(filePath: string) {
+  return filePath.split('/').map((part, index, parts) => ({
+    name: part.replace(/\.mdx?$/, ''),
+    slug: parts.slice(0, index + 1).join('/').replace(/\.mdx?$/, '')
+  }));
 }
