@@ -4,8 +4,10 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 
 export async function loader({ params }: Route.LoaderArgs) {
+  const slug = params["*"];
+
   return {
-    doc: getDoc(params.slug),
+    doc: getDoc(slug),
   };
 }
 
