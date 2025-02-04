@@ -18,12 +18,14 @@ interface OnThisPageRenderProps {
   activeId: string | null;
 }
 
-type OnThisPageRenderFunction = (props: OnThisPageRenderProps) => React.ReactNode;
+type OnThisPageRenderFunction = (
+  props: OnThisPageRenderProps
+) => React.ReactNode;
 
 type OnThisPageProps = OnThisPageBaseProps &
   Omit<React.ComponentPropsWithoutRef<"nav">, keyof OnThisPageBaseProps> & {
-  children: OnThisPageRenderFunction | React.ReactNode;
-};
+    children: OnThisPageRenderFunction | React.ReactNode;
+  };
 
 function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
   const result: NestedHeading[] = [];
@@ -49,15 +51,15 @@ function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
 }
 
 export function OnThisPage({
-                             doc,
-                             children,
-                             className,
-                             minLevel = 2,
-                             maxLevel = 3,
-                             activeId = null,
-                             onHeadingIntersect,
-                             ...props
-                           }: OnThisPageProps) {
+  doc,
+  children,
+  className,
+  minLevel = 2,
+  maxLevel = 3,
+  activeId = null,
+  onHeadingIntersect,
+  ...props
+}: OnThisPageProps) {
   const nestedHeadings = React.useMemo(() => {
     const filteredHeadings =
       doc?.headings?.filter(
@@ -100,8 +102,11 @@ export function OnThisPage({
 
   return (
     <nav className={className} aria-label="On this page" {...props}>
-      {typeof children === 'function'
-        ? (children as OnThisPageRenderFunction)({ headings: nestedHeadings, activeId })
+      {typeof children === "function"
+        ? (children as OnThisPageRenderFunction)({
+            headings: nestedHeadings,
+            activeId,
+          })
         : children}
     </nav>
   );
@@ -132,12 +137,12 @@ type OnThisPageItemProps = OnThisPageItemBaseProps &
   Omit<React.ComponentPropsWithoutRef<"li">, keyof OnThisPageItemBaseProps>;
 
 export function OnThisPageItem({
-                                 heading,
-                                 active,
-                                 as: Component = "a",
-                                 children,
-                                 ...props
-                               }: OnThisPageItemProps) {
+  heading,
+  active,
+  as: Component = "a",
+  children,
+  ...props
+}: OnThisPageItemProps) {
   // Add null checks and default to empty array if children is undefined
   const safeChildren = heading.children || [];
 
