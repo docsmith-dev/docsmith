@@ -71,7 +71,7 @@ export default function DocsLayout() {
           {({ tree }) => (
             <>
               {tree.map((section) => {
-                if (section.type === "group" && section.items) {
+                if (section.type === "group") {
                   return (
                     <TableOfContentsGroup key={section.name}>
                       <TableOfContentsGroupLabel>
@@ -79,19 +79,49 @@ export default function DocsLayout() {
                       </TableOfContentsGroupLabel>
                       <TableOfContentsGroupContent>
                         <TableOfContentsList>
-                          {section.items.map((item) => (
-                            <TableOfContentsItem key={item.slug}>
-                              <TableOfContentsLink
-                                item={item}
-                                asChild
-                                isCurrent={item.slug === location.pathname}
-                              >
-                                <Link to={`/docs/${item.slug}`}>
-                                  <span>{item.label}</span>
-                                </Link>
-                              </TableOfContentsLink>
-                            </TableOfContentsItem>
-                          ))}
+                          {section.items?.map((item) => {
+                            if (item.type === "group") {
+                              return (
+                                <TableOfContentsItem key={item.name}>
+                                  <TableOfContentsGroup>
+                                    <TableOfContentsGroupLabel>
+                                      {item.label}
+                                    </TableOfContentsGroupLabel>
+                                    <TableOfContentsGroupContent>
+                                      <TableOfContentsList>
+                                        {item.items?.map((subItem) => (
+                                          <TableOfContentsItem key={subItem.slug}>
+                                            <TableOfContentsLink
+                                              item={subItem}
+                                              asChild
+                                              isCurrent={subItem.slug === location.pathname}
+                                            >
+                                              <Link to={`/docs/${subItem.slug}`}>
+                                                <span>{subItem.label}</span>
+                                              </Link>
+                                            </TableOfContentsLink>
+                                          </TableOfContentsItem>
+                                        ))}
+                                      </TableOfContentsList>
+                                    </TableOfContentsGroupContent>
+                                  </TableOfContentsGroup>
+                                </TableOfContentsItem>
+                              );
+                            }
+                            return (
+                              <TableOfContentsItem key={item.slug}>
+                                <TableOfContentsLink
+                                  item={item}
+                                  asChild
+                                  isCurrent={item.slug === location.pathname}
+                                >
+                                  <Link to={`/docs/${item.slug}`}>
+                                    <span>{item.label}</span>
+                                  </Link>
+                                </TableOfContentsLink>
+                              </TableOfContentsItem>
+                            );
+                          })}
                         </TableOfContentsList>
                       </TableOfContentsGroupContent>
                     </TableOfContentsGroup>
@@ -102,9 +132,9 @@ export default function DocsLayout() {
                   <TableOfContentsList key={section.name}>
                     <TableOfContentsItem>
                       <TableOfContentsLink item={section} asChild>
-                        <a href={`/docs/${section.slug}`}>
+                        <Link to={`/docs/${section.slug}`}>
                           <span>{section.label}</span>
-                        </a>
+                        </Link>
                       </TableOfContentsLink>
                     </TableOfContentsItem>
                   </TableOfContentsList>
