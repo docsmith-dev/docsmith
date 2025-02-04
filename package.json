@@ -9,7 +9,9 @@
     "vite": "pnpm --filter '@docsmith/vite'",
     "react": "pnpm --filter '@docsmith/react'",
     "runtime": "pnpm --filter '@docsmith/runtime'",
-    "examples:react-router": "pnpm --filter 'examples/react-router'"
+    "source-github": "pnpm --filter '@docsmith/source-github'",
+    "examples:react-router": "pnpm --filter 'examples-react-router'",
+    "examples:astro": "pnpm --filter 'examples-astro'"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",

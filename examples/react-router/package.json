@@ -1,5 +1,5 @@
 {
-  "name": "react-router",
+  "name": "examples-react-router",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "@docsmith/core": "workspace:*",
     "@docsmith/runtime": "workspace:*",
     "@docsmith/vite": "workspace:*",
+    "@docsmith/source-github": "workspace:*",
     "@docsmith/react": "workspace:*",
     "@react-router/node": "^7.1.5",
     "@react-router/serve": "^7.1.5",
