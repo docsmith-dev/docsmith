@@ -18,3 +18,9 @@ export {
   OnThisPageItem,
   OnThisPageList,
 } from "./components/on-this-page";
+export {
+  Breadcrumbs,
+  BreadcrumbsItem,
+  BreadcrumbsList,
+  BreadcrumbsSeparator,
+} from "./components/breadcrumbs";

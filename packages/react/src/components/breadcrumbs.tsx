@@ -28,9 +28,7 @@ interface BreadcrumbsRenderProps {
 // Combined props type
 type BreadcrumbsProps = BreadcrumbsBaseProps &
   Omit<React.ComponentPropsWithoutRef<"nav">, keyof BreadcrumbsBaseProps> & {
-    children?:
-      | React.ReactNode
-      | ((props: BreadcrumbsRenderProps) => React.ReactNode);
+    children: (props: BreadcrumbsRenderProps) => React.ReactNode;
   };
 
 /**
@@ -46,20 +44,7 @@ export function Breadcrumbs({
 }: BreadcrumbsProps) {
   return (
     <nav aria-label="Breadcrumb" className={className} {...props}>
-      {typeof children === "function" ? (
-        children({ items, separator, onNavigate })
-      ) : (
-        <BreadcrumbsList>
-          {items.map((item, index) => (
-            <React.Fragment key={item.slug}>
-              <BreadcrumbsItem item={item} onNavigate={onNavigate} />
-              {index < items.length - 1 && (
-                <BreadcrumbsSeparator>{separator}</BreadcrumbsSeparator>
-              )}
-            </React.Fragment>
-          ))}
-        </BreadcrumbsList>
-      )}
+      {children({ items, separator, onNavigate })}
     </nav>
   );
 }

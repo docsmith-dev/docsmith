@@ -1,44 +1,41 @@
 ---
-title: UFC
+title: Kendrick 
 ---
 
-### 2023
+# 1. Kendrick
+Kendrick Lamar is an American rapper, songwriter, and record producer. He is widely regarded as one of the greatest and most influential rappers of his generation. Born in Compton, California, Lamar began his musical career as a teenager, releasing his debut mixtape, "Section.80," in 2004. He gained widespread attention with his second mixtape, "Overly Dedicated," in 2007, and signed with Top Dawg Entertainment and Interscope Records.
+Lamar's breakthrough came with his debut studio album, "good kid, m.A.A.d city," released in 2012. The album featured the hit single "Swimming Pools (Drank)," which won a Grammy Award for Best Rap Song. His second studio album, "To Pimp a Butterfly," was released in 2015 and won multiple Grammy Awards, including Album of the Year. The album's lead single, "Alright," became a global hit and won a Grammy Award for Best Rap Performance.
 
-#### UFC 293: Holloway vs. Allen
-
-- **Date:** 2023-10-07
-- **Location:** Las Vegas, Nevada, USA
-- **Venue:** T-Mobile Arena
-- **Main Card:**
-  - **Main Event:** **Alexander Volkanovski** vs. **Brandon Moreno**
-  - **Co-Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**
-  - **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**
-  - **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**
-  - **UFC Featherweight Championship:** **Alex Pereira** vs. **Calvin Kattar**
-  - **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**
-  - **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**
-  - **UFC Women's Featherweight Championship:** **Alexa Grasso** vs. **Jessica Eye**
-  - **UFC Light Heavyweight Championship:** **Jan Błachowicz** vs. **Curtis Blaydes**
-  - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**
-  - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**
-  - **UFC Women's Flyweight Championship:** **Deiveson Figueiredo** vs. **Valentina Shevchenko**
- (c)
- - champion coming into the fight
-
-# 2021
-
-## UFC 264
-
-  - **Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**
-  - **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**
-  - **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**
-  - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**
-  - **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**
-  - **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**
-  - **UFC Women's Featherweight Championship:** **Jessica Eye** vs. **Alexa Grasso**
-  - **UFC Light Heavyweight Championship:** **Curtis Blaydes** vs. **Jan Błachowicz**
-  - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**
-    - 155 lbs
+## 1.1. Albums
+Grammy Awards
+Album of the Year
+Best Rap Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
+Best Rap Album
+Best Rap/Sung Performance
+Best Rap Song
 
 
+### 1.1.1. "good kid, m.A.A.d city"
+- Released: 2012
+- Singles: "Swimming Pools (Drank)"
+- Awards: Grammy Award for Best Rap Song
 

@@ -1,123 +1,24 @@
-const docs = [
-  {
-    content:
-      "\nAWS Amplify is a set of tools and services that can be used together or on their own, to help front-end web and mobile developers build scalable fullstack applications, powered by AWS. Amplify includes a JavaScript library with UI components for React, Angular, Ionic, and Vue.js, as well as a CLI toolchain for managing your app's infrastructure.\n\n### AWS Amplify CLI\n",
-    frontmatter: { title: "AWS" },
-    slug: "aws",
-    path: "aws.md",
-    title: "aws",
-    breadcrumbs: [{ name: "aws", slug: "aws" }],
-    headings: [
-      {
-        id: "aws-amplify-cli",
-        text: "AWS Amplify CLI",
-        level: 3,
-        slug: "#aws-amplify-cli",
-      },
-    ],
-  },
-  {
-    content:
-      '\n# Hello, Docsmith!\n\n```ts\nimport { Docsmith } from "docsmith";\n```\n',
-    frontmatter: { title: "Getting Started with Docsmith" },
-    slug: "getting-started",
-    path: "getting-started.md",
-    title: "getting-started",
-    breadcrumbs: [{ name: "getting-started", slug: "getting-started" }],
-    headings: [
-      {
-        id: "hello-docsmith",
-        text: "Hello, Docsmith!",
-        level: 1,
-        slug: "#hello-docsmith",
-      },
-    ],
-  },
-  {
-    content:
-      '\n# This is a tutorial\n\nHello world, to start with the tutorial, you need to have a basic understanding of the following:\n\n- [x] Basic understanding of the command line\n- [ ] Basic understanding of the git command line\n- [x] Basic understanding of the markdown language\n\n## This is the first section\n\nhellow orld, how ya doing\n\n### subsection with note\n\nTHIS IS ANOTEEEE\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\n# Big headings\n\nhello\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.\n\n### FINAL HEADING\n\nThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn\'t anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.\n',
-    frontmatter: { title: "Tutorial" },
-    slug: "tutorial",
-    path: "tutorial.md",
-    title: "tutorial",
-    breadcrumbs: [{ name: "tutorial", slug: "tutorial" }],
-    headings: [
-      {
-        id: "this-is-a-tutorial",
-        text: "This is a tutorial",
-        level: 1,
-        slug: "#this-is-a-tutorial",
-      },
-      {
-        id: "this-is-the-first-section",
-        text: "This is the first section",
-        level: 2,
-        slug: "#this-is-the-first-section",
-      },
-      {
-        id: "subsection-with-note",
-        text: "subsection with note",
-        level: 3,
-        slug: "#subsection-with-note",
-      },
-      {
-        id: "big-headings",
-        text: "Big headings",
-        level: 1,
-        slug: "#big-headings",
-      },
-      {
-        id: "final-heading",
-        text: "FINAL HEADING",
-        level: 3,
-        slug: "#final-heading",
-      },
-    ],
-  },
-];
-const tree = [
-  {
-    type: "doc",
-    name: "aws",
-    slug: "aws",
-    frontmatter: { title: "AWS" },
-    label: "AWS",
-    breadcrumbs: [{ name: "aws", slug: "aws" }],
-  },
-  {
-    type: "doc",
-    name: "getting-started",
-    slug: "getting-started",
-    frontmatter: { title: "Getting Started with Docsmith" },
-    label: "Getting Started with Docsmith",
-    breadcrumbs: [{ name: "getting-started", slug: "getting-started" }],
-  },
-  {
-    type: "doc",
-    name: "tutorial",
-    slug: "tutorial",
-    frontmatter: { title: "Tutorial" },
-    label: "Tutorial",
-    breadcrumbs: [{ name: "tutorial", slug: "tutorial" }],
-  },
-];
 
-function getDoc(slug) {
-  return docs.find((doc) => doc.slug === slug) ?? null;
-}
+    const docs = [{"content":"\nAWS Amplify is a set of tools and services that can be used together or on their own, to help front-end web and mobile developers build scalable fullstack applications, powered by AWS. Amplify includes a JavaScript library with UI components for React, Angular, Ionic, and Vue.js, as well as a CLI toolchain for managing your app's infrastructure.\n\n### AWS Amplify CLI\n","frontmatter":{"title":"AWS"},"slug":"aws","path":"aws.md","title":"aws","breadcrumbs":[{"name":"aws","slug":"aws"}],"headings":[{"id":"aws-amplify-cli","text":"AWS Amplify CLI","level":3,"slug":"#aws-amplify-cli"}]},{"content":"\n# Hello, Docsmith!\n\n```ts\nimport { Docsmith } from \"docsmith\";\n```\n","frontmatter":{"title":"Getting Started with Docsmith"},"slug":"getting-started","path":"getting-started.md","title":"getting-started","breadcrumbs":[{"name":"getting-started","slug":"getting-started"}],"headings":[{"id":"hello-docsmith","text":"Hello, Docsmith!","level":1,"slug":"#hello-docsmith"}]},{"content":"\n# This is a tutorial\n\nHello world, to start with the tutorial, you need to have a basic understanding of the following:\n\n- [x] Basic understanding of the command line\n- [ ] Basic understanding of the git command line\n- [x] Basic understanding of the markdown language\n\n## This is the first section\n\nhellow orld, how ya doing\n\n### subsection with note\n\nTHIS IS ANOTEEEE\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\n\n# Big headings\n\nhello\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32.\n\n### FINAL HEADING\n\nThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.\n","frontmatter":{"title":"Tutorial"},"slug":"tutorial","path":"tutorial.md","title":"tutorial","breadcrumbs":[{"name":"tutorial","slug":"tutorial"}],"headings":[{"id":"this-is-a-tutorial","text":"This is a tutorial","level":1,"slug":"#this-is-a-tutorial"},{"id":"this-is-the-first-section","text":"This is the first section","level":2,"slug":"#this-is-the-first-section"},{"id":"subsection-with-note","text":"subsection with note","level":3,"slug":"#subsection-with-note"},{"id":"big-headings","text":"Big headings","level":1,"slug":"#big-headings"},{"id":"final-heading","text":"FINAL HEADING","level":3,"slug":"#final-heading"}]},{"content":"\n# Drake\n\n## Description\n\nDrake is a C++ library for creating and analyzing dynamic systems and control systems. It aims to be simple to get started with, but powerful and efficient enough to handle the most complex robotics and engineering problems.\nDrake is used in a wide variety of applications, including:\n\n robotics, aerospace, automotive, and mechanical engineering. Drake is used by researchers, educators, and students to model, simulate, and control dynamic systems.\n Drake is open source and is developed by a community of researchers and engineers at the University of Washington and other institutions.\n Drake is licensed under the BSD 3-Clause License. Drake is developed by the Drake team at the University of Washington.\n \n\n# 1. Installation\n\n## 1.1. Prerequisites\n\n### 1.1.1. Ubuntu\nthis is the recommended way to install Drake on Ubuntu. Drake is tested on Ubuntu 18.04 and 20.04. Drake is not tested on other versions of Ubuntu.\n### 1.1.2. Windows\nDrake is not tested on Windows. Drake is not recommended for use on Windows. Drake is not supported on Windows.\n### 1.1.3. MacOS\nDrake is not tested on MacOS. Drake is not recommended for use on MacOS. Drake is not supported on MacOS.\n### 1.1.4. Docker\nDrake is not tested on Docker. Drake is not recommended for use on Docker. Drake is not supported on Docker.\n### 1.1.5. Virtual Machines\nDrake is not tested on Virtual Machines. Drake is not recommended for use on Virtual Machines. Drake is not supported on Virtual Machines.\n### 1.1.6. Cloud\nDrake is not tested on Cloud. Drake is not recommended for use on Cloud. Drake is not supported on Cloud. 1.1.7. Other Linux Distributions\nDrake is not tested on other Linux Distributions. Drake is not recommended for use on other Linux Distributions. Drake is not supported on other Linux Distributions.\n### 1.1.8. Other Operating Systems\nDrake is not tested on other Operating Systems. Drake is not recommended for use on other Operating Systems. Drake is not supported on other Operating Systems.","frontmatter":{"title":"Drake"},"slug":"sections/drake","path":"sections/drake.md","title":"drake","breadcrumbs":[{"name":"sections","slug":"sections"},{"name":"drake","slug":"sections/drake"}],"headings":[{"id":"drake","text":"Drake","level":1,"slug":"#drake"},{"id":"description","text":"Description","level":2,"slug":"#description"},{"id":"1-installation","text":"1. Installation","level":1,"slug":"#1-installation"},{"id":"11-prerequisites","text":"1.1. Prerequisites","level":2,"slug":"#11-prerequisites"},{"id":"111-ubuntu","text":"1.1.1. Ubuntu","level":3,"slug":"#111-ubuntu"},{"id":"112-windows","text":"1.1.2. Windows","level":3,"slug":"#112-windows"},{"id":"113-macos","text":"1.1.3. MacOS","level":3,"slug":"#113-macos"},{"id":"114-docker","text":"1.1.4. Docker","level":3,"slug":"#114-docker"},{"id":"115-virtual-machines","text":"1.1.5. Virtual Machines","level":3,"slug":"#115-virtual-machines"},{"id":"116-cloud","text":"1.1.6. Cloud","level":3,"slug":"#116-cloud"},{"id":"118-other-operating-systems","text":"1.1.8. Other Operating Systems","level":3,"slug":"#118-other-operating-systems"}]},{"content":"\n# 1. Kendrick\nKendrick Lamar is an American rapper, songwriter, and record producer. He is widely regarded as one of the greatest and most influential rappers of his generation. Born in Compton, California, Lamar began his musical career as a teenager, releasing his debut mixtape, \"Section.80,\" in 2004. He gained widespread attention with his second mixtape, \"Overly Dedicated,\" in 2007, and signed with Top Dawg Entertainment and Interscope Records.\nLamar's breakthrough came with his debut studio album, \"good kid, m.A.A.d city,\" released in 2012. The album featured the hit single \"Swimming Pools (Drank),\" which won a Grammy Award for Best Rap Song. His second studio album, \"To Pimp a Butterfly,\" was released in 2015 and won multiple Grammy Awards, including Album of the Year. The album's lead single, \"Alright,\" became a global hit and won a Grammy Award for Best Rap Performance.\n\n## 1.1. Albums\nGrammy Awards\nAlbum of the Year\nBest Rap Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\nBest Rap Album\nBest Rap/Sung Performance\nBest Rap Song\n\n\n### 1.1.1. \"good kid, m.A.A.d city\"\n- Released: 2012\n- Singles: \"Swimming Pools (Drank)\"\n- Awards: Grammy Award for Best Rap Song\n\n","frontmatter":{"title":"Kendrick"},"slug":"sections/deeper-section/kendrick","path":"sections/deeper-section/kendrick.md","title":"kendrick","breadcrumbs":[{"name":"sections","slug":"sections"},{"name":"deeper-section","slug":"sections/deeper-section"},{"name":"kendrick","slug":"sections/deeper-section/kendrick"}],"headings":[{"id":"1-kendrick","text":"1. Kendrick","level":1,"slug":"#1-kendrick"},{"id":"11-albums","text":"1.1. Albums","level":2,"slug":"#11-albums"},{"id":"111-good-kid-maad-city","text":"1.1.1. \"good kid, m.A.A.d city\"","level":3,"slug":"#111-good-kid-maad-city"}]},{"content":"\n### 2023\n\n#### UFC 293: Holloway vs. Allen\n\n- **Date:** 2023-10-07\n- **Location:** Las Vegas, Nevada, USA\n- **Venue:** T-Mobile Arena\n- **Main Card:**\n  - **Main Event:** **Alexander Volkanovski** vs. **Brandon Moreno**\n  - **Co-Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**\n  - **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**\n  - **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**\n  - **UFC Featherweight Championship:** **Alex Pereira** vs. **Calvin Kattar**\n  - **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**\n  - **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**\n  - **UFC Women's Featherweight Championship:** **Alexa Grasso** vs. **Jessica Eye**\n  - **UFC Light Heavyweight Championship:** **Jan Błachowicz** vs. **Curtis Blaydes**\n  - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**\n  - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**\n  - **UFC Women's Flyweight Championship:** **Deiveson Figueiredo** vs. **Valentina Shevchenko**\n (c)\n - champion coming into the fight\n\n# 2021\n\n## UFC 264\n\n  - **Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**\n  - **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**\n  - **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**\n  - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**\n  - **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**\n  - **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**\n  - **UFC Women's Featherweight Championship:** **Jessica Eye** vs. **Alexa Grasso**\n  - **UFC Light Heavyweight Championship:** **Curtis Blaydes** vs. **Jan Błachowicz**\n  - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**\n    - 155 lbs\n\n\n\n","frontmatter":{"title":"UFC"},"slug":"demos/ufc","path":"demos/ufc.md","title":"ufc","breadcrumbs":[{"name":"demos","slug":"demos"},{"name":"ufc","slug":"demos/ufc"}],"headings":[{"id":"2023","text":"2023","level":3,"slug":"#2023"},{"id":"ufc-293-holloway-vs-allen","text":"UFC 293: Holloway vs. Allen","level":4,"slug":"#ufc-293-holloway-vs-allen"},{"id":"2021","text":"2021","level":1,"slug":"#2021"},{"id":"ufc-264","text":"UFC 264","level":2,"slug":"#ufc-264"}]}];
+    const tree = [{"type":"doc","name":"aws","slug":"aws","frontmatter":{"title":"AWS"},"label":"AWS","breadcrumbs":[{"name":"aws","slug":"aws"}]},{"type":"group","name":"demos","items":[{"type":"doc","name":"ufc","slug":"demos/ufc","frontmatter":{"title":"UFC"},"label":"UFC","breadcrumbs":[{"name":"demos","slug":"demos"},{"name":"ufc","slug":"demos/ufc"}]}],"label":"demos"},{"type":"doc","name":"getting-started","slug":"getting-started","frontmatter":{"title":"Getting Started with Docsmith"},"label":"Getting Started with Docsmith","breadcrumbs":[{"name":"getting-started","slug":"getting-started"}]},{"type":"group","name":"sections","items":[{"type":"group","name":"deeper-section","items":[{"type":"doc","name":"kendrick","slug":"sections/deeper-section/kendrick","frontmatter":{"title":"Kendrick"},"label":"Kendrick","breadcrumbs":[{"name":"sections","slug":"sections"},{"name":"deeper-section","slug":"sections/deeper-section"},{"name":"kendrick","slug":"sections/deeper-section/kendrick"}]}],"label":"deeper-section"},{"type":"doc","name":"drake","slug":"sections/drake","frontmatter":{"title":"Drake"},"label":"Drake","breadcrumbs":[{"name":"sections","slug":"sections"},{"name":"drake","slug":"sections/drake"}]}],"label":"sections"},{"type":"doc","name":"tutorial","slug":"tutorial","frontmatter":{"title":"Tutorial"},"label":"Tutorial","breadcrumbs":[{"name":"tutorial","slug":"tutorial"}]}];
 
-function getTree() {
-  return tree;
-}
+    function getDoc(slug) {
+      return docs.find(doc => doc.slug === slug) ?? null;
+    }
 
-function getDocs() {
-  return docs;
-}
+    function getTree() {
+      return tree;
+    }
 
-module.exports = {
-  docs,
-  tree,
-  getDoc,
-  getTree,
-  getDocs,
-};
+    function getDocs() {
+      return docs;
+    }
+
+    module.exports = {
+      docs,
+      tree,
+      getDoc,
+      getTree,
+      getDocs,
+    };
+  
