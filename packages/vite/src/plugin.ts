@@ -1,9 +1,8 @@
 import type { Plugin } from "vite";
 import type { ViteDevServer } from "vite";
-import {Docsmith, DocsmithOptions} from "@docsmith/core";
+import { Docsmith, DocsmithOptions } from "@docsmith/core";
 import path from "path";
 import fs from "fs";
-
 
 function createRuntimeCode(
   data: ReturnType<typeof Docsmith.prototype.getDocsData>

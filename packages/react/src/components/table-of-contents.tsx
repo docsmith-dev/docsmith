@@ -23,7 +23,10 @@ export function TableOfContents({
   return (
     <nav className={className} aria-label="Table of contents" {...props}>
       {typeof children === "function"
-        ? (children as (props: RenderProps) => React.ReactNode)({ tree, currentPath })
+        ? (children as (props: RenderProps) => React.ReactNode)({
+            tree,
+            currentPath,
+          })
         : children}
     </nav>
   );

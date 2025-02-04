@@ -53,12 +53,10 @@ export interface DocsmithPlugin {
   };
 }
 
-
 export interface DocsmithOptions {
   folders?: string[];
   plugins?: DocsmithPlugin[];
 }
-
 
 export interface Breadcrumb {
   name: string;

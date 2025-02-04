@@ -6,7 +6,8 @@ import type {
   DocsData,
   DocsmithConfig,
   DocsmithOptions,
-  DocsmithPlugin, TreeItem
+  DocsmithPlugin,
+  TreeItem,
 } from "./types";
 import { generateBreadcrumbs } from "./utils/breadcrumbs";
 import { buildTree } from "./utils/tree";
@@ -205,10 +206,7 @@ export class Docsmith {
 
   getDocsData(): DocsData {
     const docs = Array.from(this.docsMap.values());
-    let tree = buildTree(
-      docs,
-      this.getConfigForPath.bind(this)
-    );
+    let tree = buildTree(docs, this.getConfigForPath.bind(this));
 
     tree = this.runTransformTree(tree);
 

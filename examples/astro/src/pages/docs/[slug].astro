@@ -1,0 +1,101 @@
+---
+import { getDoc, getTree } from "@docsmith/runtime";
+import {
+  OnThisPage,
+  OnThisPageItem,
+  OnThisPageList,
+} from "@docsmith/react";
+import { TreeItem } from "@docsmith/core";
+
+export async function getStaticPaths() {
+  const tree = getTree();
+
+  const paths = tree.flatMap(section =>
+    section.type === 'doc'
+      ? [{ params: { slug: section.slug }, props: { doc: getDoc(section.slug) } }]
+      : section.items?.map(item => ({
+      params: { slug: item.slug },
+      props: { doc: getDoc(item.slug) }
+    })) || []
+  );
+
+  return paths;
+}
+
+const { slug } = Astro.params;
+const { doc } = Astro.props;
+
+// Handle 404 if no doc found
+if (!doc) {
+  return Astro.redirect('/404');
+}
+
+const tree = getTree();
+---
+
+<html lang="en">
+<!--<head>-->
+<!--    <meta charset="utf-8" />-->
+<!--    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />-->
+<!--    <meta name="viewport" content="width=device-width" />-->
+<!--    <meta name="generator" content={Astro.generator} />-->
+<!--    <title>{doc.frontmatter?.title || doc.title}</title>-->
+<!--</head>-->
+        <body>
+        <main class="grid grid-cols-[240px_1fr]">
+            <aside>
+              {/* Render the same table of contents as the index page */}
+              {tree.map((section) => (
+                section.type === "group" && section.items ? (
+                        <details open>
+                            <summary>{section.label}</summary>
+                            <ul>
+                              {section.items.map((item) => (
+                                      <li>
+                                          <a
+                                                  href={`/docs/${item.slug}`}
+                                                  class={`${`/docs/${item.slug}` === Astro.url.pathname ? 'font-bold' : ''}`}
+                                          >
+                                            {item.label}
+                                          </a>
+                                      </li>
+                              ))}
+                            </ul>
+                        </details>
+                ) : (
+                        <ul>
+                            <li>
+                                <a
+                                        href={`/docs/${section.slug}`}
+                                        class={`${`/docs/${section.slug}` === Astro.url.pathname ? 'font-bold' : ''}`}
+                                >
+                                  {section.label}
+                                </a>
+                            </li>
+                        </ul>
+                )
+              ))}
+            </aside>
+
+            <article class="prose max-w-4xl mx-auto">
+                <header>
+                    <h1>{doc.frontmatter?.title || doc.title}</h1>
+                  {doc.frontmatter?.description && <p>{doc.frontmatter.description}</p>}
+                </header>
+
+                <div set:html={doc.content}></div>
+                <OnThisPage doc={doc}>
+                    <OnThisPageList>
+                      {doc.headings.map((heading) => (
+                              <OnThisPageItem
+                                      key={heading.id}
+                                      heading={heading}
+                                      active={heading.id === Astro.url.hash.slice(1)}
+                              />
+                      ))}
+                    </OnThisPageList>
+                </OnThisPage>
+            </article>
+        </main>
+    </body>
+</html>

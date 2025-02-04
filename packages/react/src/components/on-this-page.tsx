@@ -6,23 +6,24 @@ interface NestedHeading extends DocHeading {
 }
 
 interface OnThisPageBaseProps {
-  children: (props: OnThisPageRenderProps) => React.ReactNode;
+  doc: Doc;
   minLevel?: number;
   maxLevel?: number;
-  doc: Doc;
-  // New: accept activeId as a prop
-  activeId: string | null;
-  // New: optional callback for heading intersection
+  activeId?: string | null;
   onHeadingIntersect?: (headingId: string) => void;
 }
-
-type OnThisPageProps = OnThisPageBaseProps &
-  Omit<React.ComponentPropsWithoutRef<"nav">, keyof OnThisPageBaseProps>;
 
 interface OnThisPageRenderProps {
   headings: NestedHeading[];
   activeId: string | null;
 }
+
+type OnThisPageRenderFunction = (props: OnThisPageRenderProps) => React.ReactNode;
+
+type OnThisPageProps = OnThisPageBaseProps &
+  Omit<React.ComponentPropsWithoutRef<"nav">, keyof OnThisPageBaseProps> & {
+  children: OnThisPageRenderFunction | React.ReactNode;
+};
 
 function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
   const result: NestedHeading[] = [];
@@ -48,15 +49,15 @@ function createHeadingTree(headings: DocHeading[]): NestedHeading[] {
 }
 
 export function OnThisPage({
-  doc,
-  children,
-  className,
-  minLevel = 2,
-  maxLevel = 3,
-  activeId,
-  onHeadingIntersect,
-  ...props
-}: OnThisPageProps) {
+                             doc,
+                             children,
+                             className,
+                             minLevel = 2,
+                             maxLevel = 3,
+                             activeId = null,
+                             onHeadingIntersect,
+                             ...props
+                           }: OnThisPageProps) {
   const nestedHeadings = React.useMemo(() => {
     const filteredHeadings =
       doc?.headings?.filter(
@@ -99,7 +100,9 @@ export function OnThisPage({
 
   return (
     <nav className={className} aria-label="On this page" {...props}>
-      {children({ headings: nestedHeadings, activeId })}
+      {typeof children === 'function'
+        ? (children as OnThisPageRenderFunction)({ headings: nestedHeadings, activeId })
+        : children}
     </nav>
   );
 }
@@ -129,12 +132,15 @@ type OnThisPageItemProps = OnThisPageItemBaseProps &
   Omit<React.ComponentPropsWithoutRef<"li">, keyof OnThisPageItemBaseProps>;
 
 export function OnThisPageItem({
-  heading,
-  active,
-  as: Component = "a",
-  children,
-  ...props
-}: OnThisPageItemProps) {
+                                 heading,
+                                 active,
+                                 as: Component = "a",
+                                 children,
+                                 ...props
+                               }: OnThisPageItemProps) {
+  // Add null checks and default to empty array if children is undefined
+  const safeChildren = heading.children || [];
+
   return (
     <li {...props}>
       <Component
@@ -149,9 +155,9 @@ export function OnThisPageItem({
       >
         {children || heading.text}
       </Component>
-      {heading.children.length > 0 && (
+      {safeChildren.length > 0 && (
         <OnThisPageList>
-          {heading.children.map((childHeading) => (
+          {safeChildren.map((childHeading) => (
             <OnThisPageItem
               key={childHeading.id}
               heading={childHeading}
