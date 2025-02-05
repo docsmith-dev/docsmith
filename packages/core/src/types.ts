@@ -7,6 +7,12 @@ export interface DocHeading {
   slug: string;
 }
 
+interface NavigationItem {
+  title: string;
+  slug: string;
+  label?: string;
+}
+
 export interface Doc {
   content: string;
   frontmatter: Record<string, any>;
@@ -16,6 +22,10 @@ export interface Doc {
   breadcrumbs: Array<{ name: string; slug: string }>;
   headings: DocHeading[];
   lastUpdated: string;
+  navigation: {
+    previous: NavigationItem | null;
+    next: NavigationItem | null;
+  };
 }
 
 export interface TreeItem {

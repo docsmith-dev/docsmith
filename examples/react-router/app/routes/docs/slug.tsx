@@ -16,7 +16,11 @@ import {
   Breadcrumbs,
   BreadcrumbsItem,
   BreadcrumbsList,
-  BreadcrumbsSeparator, LastUpdated,
+  BreadcrumbsSeparator,
+  DocNavigation,
+  DocNavigationLink,
+  DocNavigationList,
+  LastUpdated,
   OnThisPage,
   OnThisPageItem,
   OnThisPageList,
@@ -72,6 +76,33 @@ export default function DocsPage({ params, loaderData }) {
           </p>
         )}
       </LastUpdated>
+      <pre>{JSON.stringify(doc, null, 2)}</pre>
+      <DocNavigation doc={doc}>
+        {({ previous, next }) => (
+          <DocNavigationList>
+            {previous && (
+              <li>
+                <DocNavigationLink
+                  item={previous}
+                  direction="previous"
+                  label="Previous"
+                  as={Link}
+                />
+              </li>
+            )}
+            {next && (
+              <li>
+                <DocNavigationLink
+                  item={next}
+                  direction="next"
+                  label="Next"
+                  as={Link}
+                />
+              </li>
+            )}
+          </DocNavigationList>
+        )}
+      </DocNavigation>
       <aside>
         <OnThisPage
           doc={doc}

@@ -27,3 +27,8 @@ export {
 export {
   LastUpdated,
 } from "./components/last-updated";
+export {
+  DocNavigation,
+  DocNavigationLink,
+  DocNavigationList,
+} from "./components/doc-navigation"

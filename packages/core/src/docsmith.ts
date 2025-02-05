@@ -182,6 +182,7 @@ export class Docsmith {
       breadcrumbs: generateBreadcrumbs(relativePath),
       headings,
       lastUpdated: stats.mtime.toISOString(),
+      navigation: { previous: null, next: null }
     };
 
     doc = await this.runTransformDoc(doc);
@@ -216,11 +217,51 @@ export class Docsmith {
   getDocsData(): DocsData {
     const docs = Array.from(this.docsMap.values());
     let tree = buildTree(docs, this.getConfigForPath.bind(this));
-
     tree = this.runTransformTree(tree);
 
+    const flattenTree = (items: TreeItem[]): TreeItem[] => {
+      const flattened: TreeItem[] = [];
+      for (const item of items) {
+        if (item.type === 'doc') {
+          flattened.push(item);
+        } else if (item.type === 'group' && item.items) {
+          flattened.push(...flattenTree(item.items));
+        }
+      }
+      return flattened;
+    };
+
+    const orderedItems = flattenTree(tree);
+    const docItems = orderedItems.filter(item => item.type === 'doc' && item.slug);
+
+    for (let i = 0; i < docItems.length; i++) {
+      const currentSlug = docItems[i].slug;
+      if (!currentSlug) continue;
+
+      const doc = docs.find(d => d.slug === currentSlug);
+      if (!doc) continue;
+
+      const previousDoc = i > 0 ? docItems[i - 1] : null;
+      const nextDoc = i < docItems.length - 1 ? docItems[i + 1] : null;
+
+      doc.navigation = {
+        previous: previousDoc ? {
+          title: previousDoc.label || previousDoc.name,
+          slug: previousDoc.slug!,
+          label: previousDoc.label
+        } : null,
+        next: nextDoc ? {
+          title: nextDoc.label || nextDoc.name,
+          slug: nextDoc.slug!,
+          label: nextDoc.label
+        } : null
+      };
+
+      this.docsMap.set(currentSlug, doc);
+    }
+
     return {
-      docs,
+      docs: Array.from(this.docsMap.values()),
       tree,
     };
   }
