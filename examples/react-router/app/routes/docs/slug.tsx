@@ -16,7 +16,7 @@ import {
   Breadcrumbs,
   BreadcrumbsItem,
   BreadcrumbsList,
-  BreadcrumbsSeparator,
+  BreadcrumbsSeparator, LastUpdated,
   OnThisPage,
   OnThisPageItem,
   OnThisPageList,
@@ -65,6 +65,13 @@ export default function DocsPage({ params, loaderData }) {
           {doc.content}
         </ReactMarkdown>
       </article>
+      <LastUpdated date={doc.lastUpdated}>
+        {({ formattedDate, relativeTime }) => (
+          <p>
+            Last updated: {formattedDate} ({relativeTime})
+          </p>
+        )}
+      </LastUpdated>
       <aside>
         <OnThisPage
           doc={doc}

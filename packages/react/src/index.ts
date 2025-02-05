@@ -24,3 +24,6 @@ export {
   BreadcrumbsList,
   BreadcrumbsSeparator,
 } from "./components/breadcrumbs";
+export {
+  LastUpdated,
+} from "./components/last-updated";

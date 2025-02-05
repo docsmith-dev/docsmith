@@ -172,7 +172,7 @@ export class Docsmith {
 
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
     const headings = await extractHeadings(processedContent);
-
+    const stats = await fs.promises.stat(filePath)
     let doc: Doc = {
       content: processedContent,
       frontmatter: data,
@@ -181,6 +181,7 @@ export class Docsmith {
       title: path.basename(relativePath, ".md"),
       breadcrumbs: generateBreadcrumbs(relativePath),
       headings,
+      lastUpdated: stats.mtime.toISOString(),
     };
 
     doc = await this.runTransformDoc(doc);

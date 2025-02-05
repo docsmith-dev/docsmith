@@ -15,6 +15,7 @@ export interface Doc {
   title: string;
   breadcrumbs: Array<{ name: string; slug: string }>;
   headings: DocHeading[];
+  lastUpdated: string;
 }
 
 export interface TreeItem {
