@@ -76,7 +76,6 @@ export default function DocsPage({ params, loaderData }) {
           </p>
         )}
       </LastUpdated>
-      <pre>{JSON.stringify(doc, null, 2)}</pre>
       <DocNavigation doc={doc}>
         {({ previous, next }) => (
           <DocNavigationList>

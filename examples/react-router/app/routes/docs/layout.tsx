@@ -38,8 +38,6 @@ export default function DocsLayout() {
 
   return (
     <div className="grid grid-cols-[240px_1fr] min-h-screen">
-      <pre>{JSON.stringify(tree, null, 2)}</pre>
-      <pre>{JSON.stringify(docs, null, 2)}</pre>
       <Search
         docs={docs}
         query={query}

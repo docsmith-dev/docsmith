@@ -231,37 +231,28 @@ export class Docsmith {
       return flattened;
     };
 
-    const orderedItems = flattenTree(tree);
-    const docItems = orderedItems.filter(item => item.type === 'doc' && item.slug);
+    const docItems = flattenTree(tree).filter(item => item.type === 'doc' && item.slug);
 
-    for (let i = 0; i < docItems.length; i++) {
-      const currentSlug = docItems[i].slug;
-      if (!currentSlug) continue;
-
-      const doc = docs.find(d => d.slug === currentSlug);
-      if (!doc) continue;
-
-      const previousDoc = i > 0 ? docItems[i - 1] : null;
-      const nextDoc = i < docItems.length - 1 ? docItems[i + 1] : null;
+    docItems.forEach((item, index) => {
+      const doc = docs.find(d => d.slug === item.slug);
+      if (!doc) return;
 
       doc.navigation = {
-        previous: previousDoc ? {
-          title: previousDoc.label || previousDoc.name,
-          slug: previousDoc.slug!,
-          label: previousDoc.label
+        previous: index > 0 ? {
+          title: docItems[index - 1].label || docItems[index - 1].name,
+          slug: docItems[index - 1].slug!,
+          label: docItems[index - 1].label
         } : null,
-        next: nextDoc ? {
-          title: nextDoc.label || nextDoc.name,
-          slug: nextDoc.slug!,
-          label: nextDoc.label
+        next: index < docItems.length - 1 ? {
+          title: docItems[index + 1].label || docItems[index + 1].name,
+          slug: docItems[index + 1].slug!,
+          label: docItems[index + 1].label
         } : null
       };
-
-      this.docsMap.set(currentSlug, doc);
-    }
+    });
 
     return {
-      docs: Array.from(this.docsMap.values()),
+      docs,
       tree,
     };
   }
