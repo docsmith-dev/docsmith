@@ -80,24 +80,25 @@ export default function DocsPage({ params, loaderData }) {
         {({ previous, next }) => (
           <DocNavigationList>
             {previous && (
-              <li>
+              <Link to={`/docs/${previous.slug}`}>
                 <DocNavigationLink
                   item={previous}
                   direction="previous"
                   label="Previous"
-                  as={Link}
+                  as={'div'}
+                  // as={Link}
                 />
-              </li>
+              </Link>
             )}
             {next && (
-              <li>
+              <Link to={`/docs/${next.slug}`}>
                 <DocNavigationLink
                   item={next}
                   direction="next"
                   label="Next"
-                  as={Link}
+                  as={'div'}
                 />
-              </li>
+              </Link>
             )}
           </DocNavigationList>
         )}
