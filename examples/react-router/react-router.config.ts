@@ -1,5 +1,5 @@
 import type { Config } from "@react-router/dev/config";
-import {getDocs} from "@docsmith/runtime";
+import { getDocs } from "@docsmith/runtime";
 
 export default {
   // Config options...

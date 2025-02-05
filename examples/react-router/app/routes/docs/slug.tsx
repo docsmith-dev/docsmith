@@ -13,14 +13,16 @@ export async function loader({ params }) {
 }
 
 import {
-  Breadcrumbs, BreadcrumbsItem,
-  BreadcrumbsList, BreadcrumbsSeparator,
+  Breadcrumbs,
+  BreadcrumbsItem,
+  BreadcrumbsList,
+  BreadcrumbsSeparator,
   OnThisPage,
   OnThisPageItem,
-  OnThisPageList
+  OnThisPageList,
 } from "@docsmith/react";
-import {Fragment, useState} from "react";
-import {Link} from "react-router";
+import { Fragment, useState } from "react";
+import { Link } from "react-router";
 // import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
 
 export default function DocsPage({ params, loaderData }) {
@@ -38,9 +40,11 @@ export default function DocsPage({ params, loaderData }) {
                   <BreadcrumbsItem
                     item={item}
                     // For directories (non-final items), use a span instead of Link
-                    as={index === items.length - 1 ? Link : 'span'}
+                    as={index === items.length - 1 ? Link : "span"}
                     // Only pass the 'to' prop if it's the final item
-                    {...(index === items.length - 1 ? { to: `/docs/${item.slug}` } : {})}
+                    {...(index === items.length - 1
+                      ? { to: `/docs/${item.slug}` }
+                      : {})}
                   />
                   {index < items.length - 1 && (
                     <BreadcrumbsSeparator>{separator}</BreadcrumbsSeparator>

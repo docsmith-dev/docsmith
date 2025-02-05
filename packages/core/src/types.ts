@@ -1,4 +1,4 @@
-import {Docsmith} from "./docsmith.ts";
+import { Docsmith } from "./docsmith.ts";
 
 export interface DocHeading {
   id: string;
@@ -54,7 +54,6 @@ export interface DocsmithContentPluginHooks {
 
   // Allows restructuring the navigation tree
   transformTree?: (tree: TreeItem[]) => TreeItem[];
-
 }
 
 export interface DocsmithPlugin {

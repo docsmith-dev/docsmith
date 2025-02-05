@@ -7,7 +7,7 @@ export default defineConfig({
     entry: "./src/index.ts",
     resolve: true,
   },
-  external: ['virtual:docsmith'], // Add this line to mark virtual module as external
+  external: ["virtual:docsmith"], // Add this line to mark virtual module as external
   splitting: false,
   clean: true,
   sourcemap: true,

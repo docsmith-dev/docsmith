@@ -1,4 +1,4 @@
-import type {Plugin, ResolvedConfig} from "vite";
+import type { Plugin, ResolvedConfig } from "vite";
 import type { ViteDevServer } from "vite";
 import { Docsmith, DocsmithOptions, Doc, TreeItem } from "@docsmith/core";
 
@@ -12,9 +12,9 @@ async function invalidateModule(server: ViteDevServer, moduleId: string) {
   if (mod) {
     server.moduleGraph.invalidateModule(mod);
     server.ws.send({
-      type: 'custom',
-      event: 'docsmith:update',
-      data: null
+      type: "custom",
+      event: "docsmith:update",
+      data: null,
     });
   }
 }
@@ -36,20 +36,20 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
         await docsmith.initialize(root);
         data = docsmith.getDocsData();
       } catch (error) {
-        console.error('Docsmith Initialization Error:', error);
+        console.error("Docsmith Initialization Error:", error);
         throw error;
       }
     },
 
     resolveId(id: string) {
-      if (id === 'virtual:docsmith' || id === '@docsmith/runtime') {
-        return '\0docsmith-runtime';
+      if (id === "virtual:docsmith" || id === "@docsmith/runtime") {
+        return "\0docsmith-runtime";
       }
       return null;
     },
 
     async load(id: string) {
-      if (id === '\0docsmith-runtime') {
+      if (id === "\0docsmith-runtime") {
         if (!data) {
           await docsmith.initialize(root);
           data = docsmith.getDocsData();
@@ -84,7 +84,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
           await docsmith.initialize(root);
           data = docsmith.getDocsData();
         } catch (error) {
-          console.error('Error initializing Docsmith:', error);
+          console.error("Error initializing Docsmith:", error);
         }
       });
 
@@ -94,7 +94,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
           try {
             await docsmith.initialize(root);
             data = docsmith.getDocsData();
-            await invalidateModule(server, '\0docsmith-runtime');
+            await invalidateModule(server, "\0docsmith-runtime");
           } catch (error) {
             console.error(`Error processing changed file ${filePath}:`, error);
           }
@@ -107,7 +107,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
           try {
             await docsmith.initialize(root);
             data = docsmith.getDocsData();
-            await invalidateModule(server, '\0docsmith-runtime');
+            await invalidateModule(server, "\0docsmith-runtime");
           } catch (error) {
             console.error(`Error processing new file ${filePath}:`, error);
           }
@@ -120,7 +120,7 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
           try {
             await docsmith.initialize(root); // Re-initialize to rebuild without deleted file
             data = docsmith.getDocsData();
-            await invalidateModule(server, '\0docsmith-runtime');
+            await invalidateModule(server, "\0docsmith-runtime");
           } catch (error) {
             console.error(`Error handling deleted file ${filePath}:`, error);
           }
@@ -128,12 +128,12 @@ function createMainPlugin(docsmith: Docsmith): Plugin {
       });
 
       // Listen for manual update events
-      server.ws.on('docsmith:update', async () => {
+      server.ws.on("docsmith:update", async () => {
         try {
           await docsmith.initialize(root);
           data = docsmith.getDocsData();
         } catch (error) {
-          console.error('Error rebuilding docs:', error);
+          console.error("Error rebuilding docs:", error);
         }
       });
     },

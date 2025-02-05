@@ -1,4 +1,4 @@
-import type { Doc, TreeItem } from '@docsmith/core';
+import type { Doc, TreeItem } from "@docsmith/core";
 
 // Export core types that might be needed
 export type { Doc, TreeItem };

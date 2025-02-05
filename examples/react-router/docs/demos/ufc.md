@@ -22,23 +22,20 @@ title: UFC
   - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**
   - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**
   - **UFC Women's Flyweight Championship:** **Deiveson Figueiredo** vs. **Valentina Shevchenko**
- (c)
- - champion coming into the fight
+    (c)
+- champion coming into the fight
 
 # 2021
 
 ## UFC 264
 
-  - **Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**
-  - **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**
-  - **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**
-  - **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**
-  - **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**
-  - **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**
-  - **UFC Women's Featherweight Championship:** **Jessica Eye** vs. **Alexa Grasso**
-  - **UFC Light Heavyweight Championship:** **Curtis Blaydes** vs. **Jan Błachowicz**
-  - **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**
-    - 155 lbs
-
-
-
+- **Main Event:** **Kamaru Usman** vs. **Jan Błachowicz**
+- **UFC Welterweight Championship:** **Geoff Neal** vs. **Leon Edwards**
+- **UFC Women's Bantamweight Championship:** **Amanda Nunes** vs. **Petra Magne**
+- **UFC Featherweight Championship:** **Calvin Kattar** vs. **Alex Pereira**
+- **UFC Women's Flyweight Championship:** **Valentina Shevchenko** vs. **Deiveson Figueiredo**
+- **UFC Middleweight Championship:** **Israel Adesanya** vs. **Ciryl Gane**
+- **UFC Women's Featherweight Championship:** **Jessica Eye** vs. **Alexa Grasso**
+- **UFC Light Heavyweight Championship:** **Curtis Blaydes** vs. **Jan Błachowicz**
+- **UFC Women's Bantamweight Championship:** **Petra Magne** vs. **Amanda Nunes**
+  - 155 lbs

@@ -18,8 +18,8 @@ import {
   SearchResults,
   SearchResultItem,
 } from "@docsmith/react";
-import {TreeItem} from "@docsmith/core";
-import {getTree, getDocs} from "@docsmith/runtime";
+import { TreeItem } from "@docsmith/core";
+import { getTree, getDocs } from "@docsmith/runtime";
 import { useState } from "react";
 
 export const loader = async () => {
