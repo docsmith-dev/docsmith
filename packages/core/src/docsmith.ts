@@ -69,6 +69,13 @@ export class Docsmith {
   }
 
   async initialize(rootDir: string) {
+    // First run beforeInitialize hooks
+    for (const plugin of this.plugins) {
+      if (plugin.hooks?.beforeInitialize) {
+        await plugin.hooks.beforeInitialize(this);
+      }
+    }
+
     await this.loadConfigs(rootDir);
     await this.processAllFiles(rootDir);
     return this;
@@ -129,6 +136,7 @@ export class Docsmith {
       );
     }
   }
+
   private getConfigForPath(itemPath: string): DocsmithConfig {
     const pathParts = itemPath.split(path.sep);
     let currentPath = "";

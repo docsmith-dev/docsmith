@@ -1,3 +1,5 @@
+import {Docsmith} from "./docsmith.ts";
+
 export interface DocHeading {
   id: string;
   text: string;
@@ -37,10 +39,7 @@ export interface DocsmithConfig {
 }
 
 export interface DocsmithSourcePluginHooks {
-  beforeInitialize?: () => Promise<Map<string, string>>;
-  getSourceContent?: (filePath: string) => string | null;
-  resolveFilePath?: (filePath: string) => Promise<string | null>;
-  listFiles?: () => Promise<string[]>;
+  beforeInitialize?: (docsmith: Docsmith) => Promise<void>;
 }
 
 export interface DocsmithContentPluginHooks {
@@ -55,6 +54,7 @@ export interface DocsmithContentPluginHooks {
 
   // Allows restructuring the navigation tree
   transformTree?: (tree: TreeItem[]) => TreeItem[];
+
 }
 
 export interface DocsmithPlugin {
