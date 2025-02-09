@@ -1,0 +1,59 @@
+---
+import MainLayout from "./MainLayout.astro";
+import { getTree } from "@docsmith/runtime";
+import {
+  TableOfContents,
+  TableOfContentsGroup,
+  TableOfContentsGroupContent,
+  TableOfContentsGroupLabel,
+  TableOfContentsItem,
+  TableOfContentsLink,
+  TableOfContentsList,
+} from "@docsmith/react";
+const tree = getTree();
+---
+
+<MainLayout>
+    <div class="flex flex-row items-start">
+        <TableOfContents tree={tree} currentPath={Astro.url.pathname}>
+            {tree.map((section) => (
+              section.type === "group" && section.items ? (
+                <TableOfContentsGroup key={section.name} className="mb-4">
+                    <TableOfContentsGroupLabel className="font-display text-2xl font-medium">
+                        {section.label}
+                    </TableOfContentsGroupLabel>
+                    <TableOfContentsGroupContent>
+                        <TableOfContentsList>
+                            {section.items.map((item) => (
+                              <TableOfContentsItem key={item.slug}>
+                                  <TableOfContentsLink
+                                    item={item}
+                                    isCurrent={`/docs/${item.slug}` === Astro.url.pathname}
+                                    className="font-display text-xl font-medium text-gray-500 hover:text-gray-900 transition"
+                                  >
+                                      <a href={`/docs/${item.slug}`}>
+                                          <span>{item.label}</span>
+                                      </a>
+                                  </TableOfContentsLink>
+                              </TableOfContentsItem>
+                            ))}
+                        </TableOfContentsList>
+                    </TableOfContentsGroupContent>
+                </TableOfContentsGroup>
+              ) : (
+                <TableOfContentsList key={section.name}>
+                    <TableOfContentsItem>
+                        <TableOfContentsLink item={section}>
+                            <a href={`/docs/${section.slug}`}
+                               class="font-display text-2xl font-medium text-gray-500 hover:text-gray-900 transition">
+                                <span>{section.label}</span>
+                            </a>
+                        </TableOfContentsLink>
+                    </TableOfContentsItem>
+                </TableOfContentsList>
+              )
+            ))}
+        </TableOfContents>
+        <slot/>
+    </div>
+</MainLayout>

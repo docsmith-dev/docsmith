@@ -1,0 +1,54 @@
+---
+import { getDoc, getTree } from "@docsmith/runtime";
+import {
+  OnThisPage,
+  OnThisPageItem,
+  OnThisPageList,
+} from "@docsmith/react";
+import { TreeItem } from "@docsmith/core";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  const tree = getTree();
+
+  const paths = tree.flatMap(section =>
+    section.type === 'doc'
+      ? [{ params: { slug: section.slug }, props: { doc: getDoc(section.slug) } }]
+      : section.items?.map(item => ({
+      params: { slug: item.slug },
+      props: { doc: getDoc(item.slug) }
+    })) || []
+  );
+
+  return paths;
+}
+
+const { slug } = Astro.params;
+const { doc } = Astro.props;
+
+// Handle 404 if no doc found
+if (!doc) {
+  return Astro.redirect('/404');
+}
+
+const tree = getTree();
+---
+<DocsLayout>
+    <article class="max-w-2xl font-display" set:html={marked.parse(doc.content)}/>
+    <OnThisPage doc={doc} className='font-display'>
+        <span class="text-lg">
+            On this page
+        </span>
+        <OnThisPageList>
+          {doc.headings.map((heading) => (
+                  <OnThisPageItem
+                          className="text-lg text-gray-500 hover:text-gray-900 transition"
+                          key={heading.id}
+                          heading={heading}
+                          active={heading.id === Astro.url.hash.slice(1)}
+                  />
+          ))}
+        </OnThisPageList>
+    </OnThisPage>
+</DocsLayout>

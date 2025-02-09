@@ -1,0 +1,20 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getTree } from "@docsmith/runtime";
+import {
+    TableOfContents,
+    TableOfContentsGroup,
+    TableOfContentsGroupContent,
+    TableOfContentsGroupLabel,
+    TableOfContentsItem,
+    TableOfContentsLink,
+    TableOfContentsList,
+} from "@docsmith/react";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+const tree = getTree();
+---
+
+<DocsLayout>
+    hello
+
+</DocsLayout>
