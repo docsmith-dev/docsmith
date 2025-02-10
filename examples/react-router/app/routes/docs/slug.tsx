@@ -2,15 +2,8 @@ import { getDoc, getTree } from "@docsmith/runtime";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-
-export async function loader({ params }) {
-  const slug = params["*"];
-
-  return {
-    doc: getDoc(slug),
-    tree: getTree(),
-  };
-}
+import { MDXProvider } from "@mdx-js/react";
+import { compile } from "@mdx-js/mdx";
 
 import {
   Breadcrumbs,
@@ -25,12 +18,30 @@ import {
   OnThisPageItem,
   OnThisPageList,
 } from "@docsmith/react";
-import { Fragment, useState } from "react";
-import { Link } from "react-router";
-// import {Route} from "../../../.react-router/types/app/routes/docs/+types/slug";
+import { Fragment, useMemo, useState } from "react";
+import { Link, useLoaderData } from "react-router";
+import { Button } from "~/components/button";
 
-export default function DocsPage({ params, loaderData }) {
-  const { doc, tree } = loaderData;
+// Create a components map
+const components = {
+  Button,
+  // Add other components that might be used in MDX
+};
+
+export async function loader({ params }) {
+  const slug = params["*"];
+  const doc = getDoc(slug);
+  const tree = getTree();
+
+  console.log("doc", doc);
+  return {
+    doc,
+    tree,
+  };
+}
+
+export default function DocsPage() {
+  const { doc, tree } = useLoaderData();
   const [activeHeading, setActiveHeading] = useState<string | null>(null);
 
   return (
@@ -43,9 +54,7 @@ export default function DocsPage({ params, loaderData }) {
                 <Fragment key={item.slug}>
                   <BreadcrumbsItem
                     item={item}
-                    // For directories (non-final items), use a span instead of Link
                     as={index === items.length - 1 ? Link : "span"}
-                    // Only pass the 'to' prop if it's the final item
                     {...(index === items.length - 1
                       ? { to: `/docs/${item.slug}` }
                       : {})}
@@ -62,12 +71,20 @@ export default function DocsPage({ params, loaderData }) {
           <h1>{doc.frontmatter?.title || doc.title}</h1>
           {doc.frontmatter?.description && <p>{doc.frontmatter.description}</p>}
         </header>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeHighlight]}
-        >
-          {doc.content}
-        </ReactMarkdown>
+        <MDXProvider components={components}>
+          {doc.path.endsWith(".mdx") ? (
+            // For MDX files, doc.content should be a component from Vite's MDX plugin
+            doc.content
+          ) : (
+            // Regular markdown content
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[rehypeHighlight]}
+            >
+              {doc.content}
+            </ReactMarkdown>
+          )}
+        </MDXProvider>
       </article>
       <LastUpdated date={doc.lastUpdated}>
         {({ formattedDate, relativeTime }) => (
@@ -85,8 +102,7 @@ export default function DocsPage({ params, loaderData }) {
                   item={previous}
                   direction="previous"
                   label="Previous"
-                  as={'div'}
-                  // as={Link}
+                  as={"div"}
                 />
               </Link>
             )}
@@ -96,7 +112,7 @@ export default function DocsPage({ params, loaderData }) {
                   item={next}
                   direction="next"
                   label="Next"
-                  as={'div'}
+                  as={"div"}
                 />
               </Link>
             )}
@@ -117,7 +133,7 @@ export default function DocsPage({ params, loaderData }) {
                     key={heading.id}
                     heading={heading}
                     active={heading.id === activeId}
-                    as={"a"} // For custom routing components
+                    as={"a"}
                   >
                     {heading.text}
                   </OnThisPageItem>

@@ -39,9 +39,7 @@ import { Await } from "react-router";
 
 // [previous code]
 
-export default function MyComponent({
-  loaderData,
-}: Route.ComponentProps) {
+export default function MyComponent({ loaderData }: Route.ComponentProps) {
   let { criticalData, nonCriticalData } = loaderData;
 
   return (

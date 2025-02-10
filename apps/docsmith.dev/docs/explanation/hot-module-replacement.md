@@ -61,9 +61,7 @@ React Fast Refresh can only handle component exports. While React Router manages
 // These exports are handled by the React Router Vite plugin
 // to be HMR-compatible
 export const meta = { title: "Home" }; // ✅
-export const links = [
-  { rel: "stylesheet", href: "style.css" },
-]; // ✅
+export const links = [{ rel: "stylesheet", href: "style.css" }]; // ✅
 
 // These exports are removed by the React Router Vite plugin
 // so they never affect HMR

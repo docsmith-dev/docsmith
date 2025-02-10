@@ -18,16 +18,12 @@ When using React Router with a Backend-For-Frontend (BFF) architecture, you migh
 In this scenario, React Router will _not_ call the `clientLoader` on hydration - and will only call it on subsequent navigations.
 
 ```tsx lines=[4,11]
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const data = await fetchApiFromServer({ request }); // (1)
   return data;
 }
 
-export async function clientLoader({
-  request,
-}: Route.ClientLoaderArgs) {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const data = await fetchApiFromClient({ request }); // (2)
   return data;
 }
@@ -43,9 +39,7 @@ Sometimes you need to combine data from both the server and browser (like Indexe
 4. Combine the server data with the client data in `clientLoader`
 
 ```tsx lines=[4-6,19-20,23,26]
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const partialData = await getPartialDataFromDb({
     request,
   }); // (1)
@@ -89,9 +83,7 @@ You can mix data loading strategies across your application, choosing between se
 A route that only depends on a server loader looks like this:
 
 ```tsx filename=app/routes/server-data-route.tsx
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const data = await getServerData(request);
   return data;
 }
@@ -106,9 +98,7 @@ export default function Component({
 A route that only depends on a client loader looks like this.
 
 ```tsx filename=app/routes/client-data-route.tsx
-export async function clientLoader({
-  request,
-}: Route.ClientLoaderArgs) {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
   const clientData = await getClientData(request);
   return clientData;
 }
@@ -139,16 +129,12 @@ You can implement client-side caching (using memory, localStorage, etc.) to opti
 Note that since we are not exporting a `HydrateFallback` component, we will SSR the route component and then run the `clientLoader` on hydration, so it's important that your `loader` and `clientLoader` return the same data on initial load to avoid hydration errors.
 
 ```tsx lines=[4,26,32,39,46]
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const data = await getDataFromDb({ request }); // (1)
   return data;
 }
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   await saveDataToDb({ request });
   return { ok: true };
 }

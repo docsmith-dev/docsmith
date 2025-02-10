@@ -36,11 +36,7 @@ We can test this component with `createRoutesStub`. It takes an array of objects
 
 ```tsx
 import { createRoutesStub } from "react-router";
-import {
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { LoginForm } from "./LoginForm";
 

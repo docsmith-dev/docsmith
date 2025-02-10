@@ -63,12 +63,7 @@ Create a helper function to convert route module definitions into the format exp
 
 ```tsx filename=src/main.tsx
 function convert(m: any) {
-  let {
-    clientLoader,
-    clientAction,
-    default: Component,
-    ...rest
-  } = m;
+  let { clientLoader, clientAction, default: Component, ...rest } = m;
   return {
     ...rest,
     loader: clientLoader,
@@ -165,10 +160,7 @@ For example, if your current `index.html` looks like this:
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My App</title>
   </head>
   <body>
@@ -185,27 +177,14 @@ touch src/root.tsx
 ```
 
 ```tsx filename=src/root.tsx
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
-export function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My App</title>
         <Meta />
         <Links />
@@ -282,9 +261,7 @@ const router = createBrowserRouter([
   // ... route definitions
 ]);
 
-ReactDOM.createRoot(
-  document.getElementById("root")!
-).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <RouterProvider router={router} />;
   </React.StrictMode>

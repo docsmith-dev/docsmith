@@ -58,12 +58,8 @@ export function List() {
   return (
     <div>
       <div>
-        <button onClick={() => setView("list")}>
-          View as List
-        </button>
-        <button onClick={() => setView("details")}>
-          View with Details
-        </button>
+        <button onClick={() => setView("list")}>View as List</button>
+        <button onClick={() => setView("details")}>View with Details</button>
       </div>
       {view === "list" ? <ListView /> : <DetailView />}
     </div>
@@ -79,9 +75,7 @@ import { useNavigate, useSearchParams } from "react-router";
 export function List() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [view, setView] = useState(
-    searchParams.get("view") || "list"
-  );
+  const [view, setView] = useState(searchParams.get("view") || "list");
 
   return (
     <div>
@@ -269,18 +263,14 @@ import type { Route } from "./+types/sidebar";
 import { prefs } from "./prefs-cookie";
 
 // read the state from the cookie
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await prefs.parse(cookieHeader)) || {};
   return data({ sidebarIsOpen: cookie.sidebarIsOpen });
 }
 
 // write the state to the cookie
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const cookieHeader = request.headers.get("Cookie");
   const cookie = (await prefs.parse(cookieHeader)) || {};
   const formData = await request.formData();
@@ -305,17 +295,13 @@ function Sidebar({ loaderData }: Route.ComponentProps) {
 
   // use optimistic UI to immediately change the UI state
   if (fetcher.formData?.has("sidebar")) {
-    sidebarIsOpen =
-      fetcher.formData.get("sidebar") === "open";
+    sidebarIsOpen = fetcher.formData.get("sidebar") === "open";
   }
 
   return (
     <div>
       <fetcher.Form method="post">
-        <button
-          name="sidebar"
-          value={sidebarIsOpen ? "closed" : "open"}
-        >
+        <button name="sidebar" value={sidebarIsOpen ? "closed" : "open"}>
           {sidebarIsOpen ? "Close" : "Open"}
         </button>
       </fetcher.Form>
@@ -454,9 +440,7 @@ Now, let's contrast this with a React Router-based implementation. The action re
 import { useNavigation } from "react-router";
 import type { Route } from "./+types/signup";
 
-export async function action({
-  request,
-}: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const errors = await validateSignupRequest(request);
   if (errors) {
     return { ok: false, errors: errors };
@@ -465,9 +449,7 @@ export async function action({
   return { ok: true, errors: null };
 }
 
-export function Signup({
-  actionData,
-}: Route.ComponentProps) {
+export function Signup({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
 
   const userNameError = actionData?.errors?.userName;

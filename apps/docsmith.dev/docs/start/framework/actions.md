@@ -19,18 +19,14 @@ import type { Route } from "./+types/project";
 import { Form } from "react-router";
 import { someApi } from "./api";
 
-export async function clientAction({
-  request,
-}: Route.ClientActionArgs) {
+export async function clientAction({ request }: Route.ClientActionArgs) {
   let formData = await request.formData();
   let title = formData.get("title");
   let project = await someApi.updateProject({ title });
   return project;
 }
 
-export default function Project({
-  actionData,
-}: Route.ComponentProps) {
+export default function Project({ actionData }: Route.ComponentProps) {
   return (
     <div>
       <h1>Project</h1>
@@ -38,9 +34,7 @@ export default function Project({
         <input type="text" name="title" />
         <button type="submit">Submit</button>
       </Form>
-      {actionData ? (
-        <p>{actionData.title} updated</p>
-      ) : null}
+      {actionData ? <p>{actionData.title} updated</p> : null}
     </div>
   );
 }
@@ -56,18 +50,14 @@ import type { Route } from "./+types/project";
 import { Form } from "react-router";
 import { fakeDb } from "../db";
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   let formData = await request.formData();
   let title = formData.get("title");
   let project = await fakeDb.updateProject({ title });
   return project;
 }
 
-export default function Project({
-  actionData,
-}: Route.ComponentProps) {
+export default function Project({ actionData }: Route.ComponentProps) {
   return (
     <div>
       <h1>Project</h1>
@@ -75,9 +65,7 @@ export default function Project({
         <input type="text" name="title" />
         <button type="submit">Submit</button>
       </Form>
-      {actionData ? (
-        <p>{actionData.title} updated</p>
-      ) : null}
+      {actionData ? <p>{actionData.title} updated</p> : null}
     </div>
   );
 }
@@ -117,10 +105,7 @@ function useQuizTimer() {
   let submit = useSubmit();
 
   let cb = useCallback(() => {
-    submit(
-      { quizTimedOut: true },
-      { action: "/end-quiz", method: "post" }
-    );
+    submit({ quizTimedOut: true }, { action: "/end-quiz", method: "post" });
   }, []);
 
   let tenMinutes = 10 * 60 * 1000;
@@ -144,9 +129,7 @@ function Task() {
   return (
     <fetcher.Form method="post" action="/update-task/123">
       <input type="text" name="title" />
-      <button type="submit">
-        {busy ? "Saving..." : "Save"}
-      </button>
+      <button type="submit">{busy ? "Saving..." : "Save"}</button>
     </fetcher.Form>
   );
 }

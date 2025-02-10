@@ -33,9 +33,7 @@ When the header is dependent on loader data, loaders and actions can also set he
 import { data } from "react-router";
 
 export async function loader({ params }: LoaderArgs) {
-  let [page, ms] = await fakeTimeCall(
-    await getPage(params.id)
-  );
+  let [page, ms] = await fakeTimeCall(await getPage(params.id));
 
   return data(page, {
     headers: {
@@ -50,10 +48,7 @@ export async function loader({ params }: LoaderArgs) {
 Headers from loaders and actions are not sent in a hidden way, you must return them from the `headers` export.
 
 ```tsx
-export function headers({
-  actionHeaders,
-  loaderHeaders,
-}: HeadersArgs) {
+export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
   return actionHeaders ? actionHeaders : loaderHeaders;
 }
 ```
@@ -65,9 +60,7 @@ One notable exception is `Set-Cookie` headers, which are automatically preserved
 Consider these nested routes
 
 ```ts filename=routes.ts
-route("pages", "pages-layout-with-nav.tsx", [
-  route(":slug", "page.tsx"),
-]);
+route("pages", "pages-layout-with-nav.tsx", [route(":slug", "page.tsx")]);
 ```
 
 If both route modules want to set headers, the headers from the deepest matching route will be sent.
@@ -80,9 +73,7 @@ The easiest way is to simply append to the parent headers. This avoids overwriti
 
 ```tsx
 export function headers({ parentHeaders }: HeadersArgs) {
-  parentHeaders.append(
-    "Permissions-Policy: geolocation=()"
-  );
+  parentHeaders.append("Permissions-Policy: geolocation=()");
   return parentHeaders;
 }
 ```
@@ -93,10 +84,7 @@ Sometimes it's important to overwrite the parent header. Do this with `set` inst
 
 ```tsx
 export function headers({ parentHeaders }: HeadersArgs) {
-  parentHeaders.set(
-    "Cache-Control",
-    "max-age=3600, s-maxage=86400"
-  );
+  parentHeaders.set("Cache-Control", "max-age=3600, s-maxage=86400");
   return parentHeaders;
 }
 ```
@@ -116,10 +104,7 @@ export default function handleRequest(
   loadContext
 ) {
   // set, append global headers
-  responseHeaders.set(
-    "X-App-Version",
-    routerContext.manifest.version
-  );
+  responseHeaders.set("X-App-Version", routerContext.manifest.version);
 
   return new Response(await getStream(), {
     headers: responseHeaders,

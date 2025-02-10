@@ -86,9 +86,7 @@ export function AddToCart({ id }) {
     <fetcher.Form method="post" action="/add-to-cart">
       <input name="id" value={id} />
       <button type="submit">
-        {fetcher.state === "submitting"
-          ? "Adding..."
-          : "Add To Cart"}
+        {fetcher.state === "submitting" ? "Adding..." : "Add To Cart"}
       </button>
     </fetcher.Form>
   );
@@ -124,8 +122,7 @@ import { useNavigation } from "react-router";
 
 export function SearchBox() {
   const navigation = useNavigation();
-  const isSearching =
-    navigation.location.pathname === "/search";
+  const isSearching = navigation.location.pathname === "/search";
 
   return (
     <Form method="get" action="/search">

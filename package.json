@@ -5,6 +5,7 @@
     "build": "pnpm -r build",
     "dev": "pnpm --parallel -r run dev",
     "clean": "pnpm -r clean",
+    "docsmith.dev": "pnpm --filter 'docsmith.dev'",
     "core": "pnpm --filter '@docsmith/core'",
     "vite": "pnpm --filter '@docsmith/vite'",
     "react": "pnpm --filter '@docsmith/react'",

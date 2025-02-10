@@ -10,10 +10,7 @@ order: 2
 Routes are configured in `app/routes.ts`. Each route has two required parts: a URL pattern to match the URL, and a file path to the route module that defines its behavior.
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   route("some/path", "./some/file.tsx"),
@@ -52,10 +49,7 @@ export default [
 If you prefer to define your routes via file naming conventions rather than configuration, the `@react-router/fs-routes` package provides a [file system routing convention][file-route-conventions]. You can even combine different routing conventions if you like:
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 import { flatRoutes } from "@react-router/fs-routes";
 
 export default [
@@ -87,9 +81,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 }
 
 // renders after the loader is done
-export default function Component({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Component({ loaderData }: Route.ComponentProps) {
   return <h1>{loaderData.name}</h1>;
 }
 ```
@@ -101,11 +93,7 @@ Route modules have more features like actions, headers, and error boundaries, bu
 Routes can be nested inside parent routes.
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-  index,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route, index } from "@react-router/dev/routes";
 
 export default [
   // parent route
@@ -193,11 +181,7 @@ index(componentFile),
 Index routes render into their parent's [Outlet][outlet] at their parent's URL (like a default child route).
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-  index,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route, index } from "@react-router/dev/routes";
 
 export default [
   // renders into the root.tsx Outlet at /
@@ -255,9 +239,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   //                           ^? { teamId: string }
 }
 
-export default function Component({
-  params,
-}: Route.ComponentProps) {
+export default function Component({ params }: Route.ComponentProps) {
   params.teamId;
   //        ^ string
 }

@@ -94,10 +94,7 @@ For example, if your current `index.html` looks like this:
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My App</title>
   </head>
   <body>
@@ -114,27 +111,14 @@ touch src/root.tsx
 ```
 
 ```tsx filename=src/root.tsx
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
-export function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="UTF-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My App</title>
         <Meta />
         <Links />
@@ -168,9 +152,7 @@ import { BrowserRouter } from "react-router";
 import "./index.css";
 import App from "./App";
 
-ReactDOM.createRoot(
-  document.getElementById("root")!
-).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
@@ -222,10 +204,7 @@ touch src/routes.ts src/catchall.tsx
 ```
 
 ```ts filename=src/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   // * matches all URLs, the ? makes it optional so it will match / as well
@@ -309,10 +288,7 @@ export default function App() {
 **👉 Add the route definition to `routes.ts`**
 
 ```tsx filename=src/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   route("/about", "./pages/about.tsx"),

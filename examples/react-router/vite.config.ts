@@ -4,13 +4,17 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { createPlugin } from "@docsmith/vite";
 // import { createGithubSourcePlugin } from '@docsmith/source-github';
+import mdx from "@mdx-js/rollup";
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
+    mdx({
+      providerImportSource: "@mdx-js/react",
+    }),
     reactRouter(),
     tsconfigPaths(),
-    createPlugin({
+    ...createPlugin({
       folders: ["docs"],
       // plugins: [
       //   createGithubSourcePlugin({

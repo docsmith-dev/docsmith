@@ -19,9 +19,7 @@ The type for the `loaderData` prop is [automatically generated][type-safety].
 // route("products/:pid", "./product.tsx");
 import type { Route } from "./+types/product";
 
-export async function clientLoader({
-  params,
-}: Route.ClientLoaderArgs) {
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const res = await fetch(`/api/products/${params.pid}`);
   const product = await res.json();
   return product;
@@ -32,9 +30,7 @@ export function HydrateFallback() {
   return <div>Loading...</div>;
 }
 
-export default function Product({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Product({ loaderData }: Route.ComponentProps) {
   const { name, description } = loaderData;
   return (
     <div>
@@ -59,9 +55,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return product;
 }
 
-export default function Product({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Product({ loaderData }: Route.ComponentProps) {
   const { name, description } = loaderData;
   return (
     <div>
@@ -87,9 +81,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return product;
 }
 
-export default function Product({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Product({ loaderData }: Route.ComponentProps) {
   const { name, description } = loaderData;
   return (
     <div>
@@ -108,9 +100,7 @@ import type { Config } from "@react-router/dev/config";
 export default {
   async prerender() {
     let products = await readProductsFromCSVFile();
-    return products.map(
-      (product) => `/products/${product.id}`
-    );
+    return products.map((product) => `/products/${product.id}`);
   },
 } satisfies Config;
 ```
@@ -139,9 +129,7 @@ export async function clientLoader({
   return { ...serverData, ...res.json() };
 }
 
-export default function Product({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Product({ loaderData }: Route.ComponentProps) {
   const { name, description } = loaderData;
 
   return (

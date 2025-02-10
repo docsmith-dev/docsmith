@@ -13,9 +13,7 @@ import type { Route } from "./+types/github";
 
 import crypto from "node:crypto";
 
-export const action = async ({
-  request,
-}: Route.ActionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   if (request.method !== "POST") {
     return Response.json(
       { message: "Method not allowed" },
@@ -27,9 +25,7 @@ export const action = async ({
   const payload = await request.json();
 
   /* Validate the webhook */
-  const signature = request.headers.get(
-    "X-Hub-Signature-256"
-  );
+  const signature = request.headers.get("X-Hub-Signature-256");
   const generatedSignature = `sha256=${crypto
     .createHmac("sha256", process.env.GITHUB_WEBHOOK_SECRET)
     .update(JSON.stringify(payload))

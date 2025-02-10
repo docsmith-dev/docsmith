@@ -23,15 +23,11 @@ export async function loader({ params }: Route.LoaderArgs) {
   };
 }
 
-export default function ProductPage({
-  loaderData,
-}: Route.ComponentProps) {
+export default function ProductPage({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       {loaderData.product}
-      <Suspense fallback={<div>loading...</div>}>
-        {loaderData.reviews}
-      </Suspense>
+      <Suspense fallback={<div>loading...</div>}>{loaderData.reviews}</Suspense>
     </div>
   );
 }

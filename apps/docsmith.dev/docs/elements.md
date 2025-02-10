@@ -104,11 +104,7 @@ Normal code:
 ```tsx
 <WhateverRouter initialEntries={["/events/123"]}>
   <Route path="/" element={<Root />} loader={rootLoader}>
-    <Route
-      path="events/:id"
-      element={<Event />}
-      loader={eventLoader}
-    />
+    <Route path="events/:id" element={<Event />} loader={eventLoader} />
   </Route>
 </WhateverRouter>
 ```
@@ -118,11 +114,7 @@ With multiple highlighted lines:
 ```tsx lines=[1-2,5]
 <WhateverRouter initialEntries={["/events/123"]}>
   <Route path="/" element={<Root />} loader={rootLoader}>
-    <Route
-      path="events/:id"
-      element={<Event />}
-      loader={eventLoader}
-    />
+    <Route path="events/:id" element={<Event />} loader={eventLoader} />
   </Route>
 </WhateverRouter>
 ```
@@ -132,11 +124,7 @@ With a filename:
 ```tsx filename=src/main.jsx
 <WhateverRouter initialEntries={["/events/123"]}>
   <Route path="/" element={<Root />} loader={rootLoader}>
-    <Route
-      path="events/:id"
-      element={<Event />}
-      loader={eventLoader}
-    />
+    <Route path="events/:id" element={<Event />} loader={eventLoader} />
   </Route>
 </WhateverRouter>
 ```
@@ -146,11 +134,7 @@ Bad code:
 ```tsx bad
 <WhateverRouter initialEntries={["/events/123"]}>
   <Route path="/" element={<Root />} loader={rootLoader}>
-    <Route
-      path="events/:id"
-      element={<Event />}
-      loader={eventLoader}
-    />
+    <Route path="events/:id" element={<Event />} loader={eventLoader} />
   </Route>
 </WhateverRouter>
 ```
@@ -161,11 +145,7 @@ Bad code with highlighted lines and a filename:
 <WhateverRouter initialEntries={["/events/123"]}>
   <Routes>
     <Route path="/" element={<Root />} loader={rootLoader}>
-      <Route
-        path="events/:id"
-        element={<Event />}
-        loader={eventLoader}
-      />
+      <Route path="events/:id" element={<Event />} loader={eventLoader} />
     </Route>
   </Routes>
 </WhateverRouter>

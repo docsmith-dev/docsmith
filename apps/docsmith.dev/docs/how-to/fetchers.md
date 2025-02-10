@@ -159,9 +159,7 @@ export default function Component() {
         <input type="text" name="title" />
         {fetcher.state !== "idle" && <p>Saving...</p>}
         {fetcher.data?.error && (
-          <p style={{ color: "red" }}>
-            {fetcher.data.error}
-          </p>
+          <p style={{ color: "red" }}>{fetcher.data.error}</p>
         )}
       </fetcher.Form>
     </div>

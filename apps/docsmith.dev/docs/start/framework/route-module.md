@@ -32,9 +32,7 @@ export default function MyRouteComponent() {
   return (
     <div>
       <h1>Look ma!</h1>
-      <p>
-        I'm still using React Router after like 10 years.
-      </p>
+      <p>I'm still using React Router after like 10 years.</p>
     </div>
   );
 }
@@ -186,10 +184,7 @@ See also:
 When other route module APIs throw, the route module `ErrorBoundary` will render instead of the route component.
 
 ```tsx
-import {
-  isRouteErrorResponse,
-  useRouteError,
-} from "react-router";
+import { isRouteErrorResponse, useRouteError } from "react-router";
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -352,9 +347,7 @@ By default, all routes are revalidated after actions. This function allows a rou
 ```tsx
 import type { ShouldRevalidateFunctionArgs } from "react-router";
 
-export function shouldRevalidate(
-  arg: ShouldRevalidateFunctionArgs
-) {
+export function shouldRevalidate(arg: ShouldRevalidateFunctionArgs) {
   return true;
 }
 ```

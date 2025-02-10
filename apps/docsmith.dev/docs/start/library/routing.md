@@ -153,10 +153,7 @@ export default function Team() {
 You can have multiple dynamic segments in one route path:
 
 ```tsx
-<Route
-  path="/c/:categoryId/p/:productId"
-  element={<Product />}
-/>
+<Route path="/c/:categoryId/p/:productId" element={<Product />} />
 ```
 
 ```tsx filename=app/category-product.tsx
@@ -215,12 +212,7 @@ function Header() {
   return (
     <nav>
       {/* NavLink makes it easy to show active states */}
-      <NavLink
-        to="/"
-        className={({ isActive }) =>
-          isActive ? "active" : ""
-        }
-      >
+      <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>
         Home
       </NavLink>
 

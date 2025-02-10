@@ -11,10 +11,7 @@ When using React Router's framework features, your application is automatically 
 Consider this simple route config:
 
 ```tsx filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   route("/contact", "./contact.tsx"),

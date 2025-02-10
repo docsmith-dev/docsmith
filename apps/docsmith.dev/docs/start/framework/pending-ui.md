@@ -40,9 +40,7 @@ function Navbar() {
   return (
     <nav>
       <NavLink to="/home">
-        {({ isPending }) => (
-          <span>Home {isPending && <Spinner />}</span>
-        )}
+        {({ isPending }) => <span>Home {isPending && <Spinner />}</span>}
       </NavLink>
       <NavLink
         to="/about"
@@ -71,9 +69,7 @@ function NewProjectForm() {
     <fetcher.Form method="post">
       <input type="text" name="title" />
       <button type="submit">
-        {fetcher.state !== "idle"
-          ? "Submitting..."
-          : "Submit"}
+        {fetcher.state !== "idle" ? "Submitting..." : "Submit"}
       </button>
     </fetcher.Form>
   );
@@ -92,9 +88,7 @@ function NewProjectForm() {
     <Form method="post" action="/projects/new">
       <input type="text" name="title" />
       <button type="submit">
-        {navigation.formAction === "/projects/new"
-          ? "Submitting..."
-          : "Submit"}
+        {navigation.formAction === "/projects/new" ? "Submitting..." : "Submit"}
       </button>
     </Form>
   );
@@ -118,10 +112,7 @@ function Task({ task }) {
     <div>
       <div>{task.title}</div>
       <fetcher.Form method="post">
-        <button
-          name="status"
-          value={isComplete ? "incomplete" : "complete"}
-        >
+        <button name="status" value={isComplete ? "incomplete" : "complete"}>
           {isComplete ? "Mark Incomplete" : "Mark Complete"}
         </button>
       </fetcher.Form>

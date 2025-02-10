@@ -24,9 +24,7 @@ export default {
   // async function for dependencies like a CMS
   async prerender({ getStaticPaths }) {
     let posts = await fakeGetPostsFromCMS();
-    return ["/", "/blog"].concat(
-      posts.map((post) => post.href)
-    );
+    return ["/", "/blog"].concat(posts.map((post) => post.href));
   },
 } satisfies Config;
 ```

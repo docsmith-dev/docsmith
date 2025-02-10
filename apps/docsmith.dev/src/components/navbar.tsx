@@ -8,9 +8,7 @@ const links = [
 export const Navbar = () => {
   return (
     <nav
-      className={
-        "w-full mx-auto py-4 flex flex-row justify-start items-center"
-      }
+      className={"w-full mx-auto py-4 flex flex-row justify-start items-center"}
     >
       <a href={"/"} className={"text-4xl font-display"}>
         Docsmith

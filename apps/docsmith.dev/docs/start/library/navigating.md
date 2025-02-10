@@ -44,9 +44,7 @@ It also has callback props on `className`, `style`, and `children` with the acti
 // className
 <NavLink
   to="/messages"
-  className={({ isActive }) =>
-    isActive ? "text-red-500" : "text-black"
-  }
+  className={({ isActive }) => (isActive ? "text-red-500" : "text-black")}
 >
   Messages
 </NavLink>
@@ -85,8 +83,7 @@ import { Link } from "react-router";
 export function LoggedOutMessage() {
   return (
     <p>
-      You've been logged out.{" "}
-      <Link to="/login">Login again</Link>
+      You've been logged out. <Link to="/login">Login again</Link>
     </p>
   );
 }

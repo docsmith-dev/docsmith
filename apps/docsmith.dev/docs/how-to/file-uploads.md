@@ -15,10 +15,7 @@ _Thank you to David Adams for [writing an original guide](https://programmingare
 You can setup your routes however you like. This example uses the following structure:
 
 ```ts filename=routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   // ... other routes
@@ -49,24 +46,16 @@ You must set the form's `enctype` to `multipart/form-data` for file uploads to w
 </docs-warning>
 
 ```tsx filename=pages/user-profile.tsx
-import {
-  type FileUpload,
-  parseFormData,
-} from "@mjackson/form-data-parser";
+import { type FileUpload, parseFormData } from "@mjackson/form-data-parser";
 
-export async function action({
-  request,
-}: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const uploadHandler = async (fileUpload: FileUpload) => {
     if (fileUpload.fieldName === "avatar") {
       // process the upload and return a File
     }
   };
 
-  const formData = await parseFormData(
-    request,
-    uploadHandler
-  );
+  const formData = await parseFormData(request, uploadHandler);
   // 'avatar' has already been processed at this point
   const file = formData.get("avatar");
 }
@@ -100,9 +89,7 @@ Create a file that exports a `LocalFileStorage` instance to be used by different
 ```ts filename=avatar-storage.server.ts
 import { LocalFileStorage } from "@mjackson/file-storage/local";
 
-export const fileStorage = new LocalFileStorage(
-  "./uploads/avatars"
-);
+export const fileStorage = new LocalFileStorage("./uploads/avatars");
 
 export function getStorageKey(userId: string) {
   return `user-${userId}-avatar`;
@@ -114,20 +101,11 @@ export function getStorageKey(userId: string) {
 Update the form's `action` to store files in the `fileStorage` instance.
 
 ```tsx filename=pages/user-profile.tsx
-import {
-  type FileUpload,
-  parseFormData,
-} from "@mjackson/form-data-parser";
-import {
-  fileStorage,
-  getStorageKey,
-} from "~/avatar-storage.server";
+import { type FileUpload, parseFormData } from "@mjackson/form-data-parser";
+import { fileStorage, getStorageKey } from "~/avatar-storage.server";
 import type { Route } from "./+types/user-profile";
 
-export async function action({
-  request,
-  params,
-}: Route.ActionArgs) {
+export async function action({ request, params }: Route.ActionArgs) {
   async function uploadHandler(fileUpload: FileUpload) {
     if (
       fileUpload.fieldName === "avatar" &&
@@ -146,16 +124,10 @@ export async function action({
     }
   }
 
-  const formData = await parseFormData(
-    request,
-    uploadHandler
-  );
+  const formData = await parseFormData(request, uploadHandler);
 }
 
-export default function UserPage({
-  actionData,
-  params,
-}: Route.ComponentProps) {
+export default function UserPage({ actionData, params }: Route.ComponentProps) {
   return (
     <div>
       <h1>User {params.id}</h1>
@@ -168,10 +140,7 @@ export default function UserPage({
         <button>Submit</button>
       </form>
 
-      <img
-        src={`/user/${params.id}/avatar`}
-        alt="user avatar"
-      />
+      <img src={`/user/${params.id}/avatar`} alt="user avatar" />
     </div>
   );
 }
@@ -182,10 +151,7 @@ export default function UserPage({
 Create a [resource route][resource-route] that streams the file as a response.
 
 ```tsx filename=api/avatar.tsx
-import {
-  fileStorage,
-  getStorageKey,
-} from "~/avatar-storage.server";
+import { fileStorage, getStorageKey } from "~/avatar-storage.server";
 import type { Route } from "./+types/avatar";
 
 export async function loader({ params }: Route.LoaderArgs) {

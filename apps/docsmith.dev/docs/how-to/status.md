@@ -12,16 +12,11 @@ import type { Route } from "./+types/project";
 import { data } from "react-router";
 import { fakeDb } from "../db";
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   let formData = await request.formData();
   let title = formData.get("title");
   if (!title) {
-    return data(
-      { message: "Invalid title" },
-      { status: 400 }
-    );
+    return data({ message: "Invalid title" }, { status: 400 });
   }
 
   if (!projectExists(title)) {

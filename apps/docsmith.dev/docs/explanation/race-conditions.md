@@ -63,10 +63,7 @@ export function CitySearchCombobox() {
             {fetcher.data.length > 0 ? (
               <ComboboxList>
                 {fetcher.data.map((city) => (
-                  <ComboboxOption
-                    key={city.id}
-                    value={city.name}
-                  />
+                  <ComboboxOption key={city.id} value={city.name} />
                 ))}
               </ComboboxList>
             ) : (

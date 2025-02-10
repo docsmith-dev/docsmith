@@ -50,10 +50,7 @@ export default function ImageGalleryRoute() {
             viewTransition // Enable view transitions for this link
           >
             <p>Image Number {idx}</p>
-            <img
-              className="max-w-full contain-layout"
-              src={src}
-            />
+            <img className="max-w-full contain-layout" src={src} />
           </NavLink>
         ))}
       </div>
@@ -107,9 +104,7 @@ import { Link } from "react-router";
 import { images } from "./home";
 import type { Route } from "./+types/image-details";
 
-export default function ImageDetailsRoute({
-  params,
-}: Route.ComponentProps) {
+export default function ImageDetailsRoute({ params }: Route.ComponentProps) {
   return (
     <div className="image-detail">
       <Link to="/" viewTransition>
@@ -152,9 +147,7 @@ You can control view transitions more precisely using either render props or the
     <>
       <p
         style={{
-          viewTransitionName: isTransitioning
-            ? "image-title"
-            : "none",
+          viewTransitionName: isTransitioning ? "image-title" : "none",
         }}
       >
         Image Number {idx}
@@ -162,9 +155,7 @@ You can control view transitions more precisely using either render props or the
       <img
         src={src}
         style={{
-          viewTransitionName: isTransitioning
-            ? "image-expand"
-            : "none",
+          viewTransitionName: isTransitioning ? "image-expand" : "none",
         }}
       />
     </>
@@ -184,9 +175,7 @@ function NavImage(props: { src: string; idx: number }) {
     <Link to={href} viewTransition>
       <p
         style={{
-          viewTransitionName: isTransitioning
-            ? "image-title"
-            : "none",
+          viewTransitionName: isTransitioning ? "image-title" : "none",
         }}
       >
         Image Number {props.idx}
@@ -194,9 +183,7 @@ function NavImage(props: { src: string; idx: number }) {
       <img
         src={props.src}
         style={{
-          viewTransitionName: isTransitioning
-            ? "image-expand"
-            : "none",
+          viewTransitionName: isTransitioning ? "image-expand" : "none",
         }}
       />
     </Link>

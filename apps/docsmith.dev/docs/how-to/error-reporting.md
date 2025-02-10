@@ -21,10 +21,7 @@ This function is called whenever React Router catches an error in your applicati
 ```tsx filename=entry.server.tsx
 import { type HandleErrorFunction } from "react-router";
 
-export const handleError: HandleErrorFunction = (
-  error,
-  { request }
-) => {
+export const handleError: HandleErrorFunction = (error, { request }) => {
   // React Router may abort some interrupted requests, don't log those
   if (!request.signal.aborted) {
     myReportError(error);

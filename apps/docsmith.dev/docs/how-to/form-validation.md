@@ -11,14 +11,9 @@ This guide walks through a simple signup form implementation. You will likely wa
 We'll start by creating a basic signup route with form.
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
-export default [
-  route("signup", "signup.tsx"),
-] satisfies RouteConfig;
+export default [route("signup", "signup.tsx")] satisfies RouteConfig;
 ```
 
 ```tsx filename=signup.tsx
@@ -55,9 +50,7 @@ export default function Signup(_: Route.ComponentProps) {
   // omitted for brevity
 }
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
@@ -69,8 +62,7 @@ export async function action({
   }
 
   if (password.length < 12) {
-    errors.password =
-      "Password should be at least 12 characters";
+    errors.password = "Password should be at least 12 characters";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -103,9 +95,7 @@ export default function Signup(_: Route.ComponentProps) {
 
       <p>
         <input type="password" name="password" />
-        {errors?.password ? (
-          <em>{errors.password}</em>
-        ) : null}
+        {errors?.password ? <em>{errors.password}</em> : null}
       </p>
 
       <button type="submit">Sign Up</button>

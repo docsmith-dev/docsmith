@@ -11,10 +11,7 @@ React Router generates types for each route in your app to provide type safety f
 For example, let's say you have a `products/:id` route configured:
 
 ```ts filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   route("products/:id", "./routes/product.tsx"),

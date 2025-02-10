@@ -27,6 +27,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@mdx-js/mdx": "^3.1.0",
     "@rollup/pluginutils": "^5.0.0",
     "gray-matter": "^4.0.3"
   },

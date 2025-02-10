@@ -33,40 +33,56 @@ export function TableOfContents({
 }
 TableOfContents.displayName = "TableOfContents";
 
-interface TableOfContentsGroupProps
-  extends React.ComponentPropsWithoutRef<"details"> {
+interface BaseTableOfContentsGroupProps {
   children: React.ReactNode;
-  defaultOpen?: boolean;
+  className?: string;
 }
 
-export function TableOfContentsGroup({
+type TableOfContentsGroupProps<T extends "ul" | "details"> =
+  BaseTableOfContentsGroupProps & {
+    as: T;
+  } & (T extends "ul"
+      ? React.ComponentPropsWithoutRef<"ul">
+      : React.ComponentPropsWithoutRef<"details"> & { defaultOpen?: boolean });
+
+export function TableOfContentsGroup<T extends "ul" | "details">({
   children,
   className,
-  defaultOpen = true,
+  as,
   ...props
-}: TableOfContentsGroupProps) {
+}: TableOfContentsGroupProps<T>) {
+  const Component = as === "ul" ? "ul" : "details";
   return (
-    <details className={className} open={defaultOpen} {...props}>
+    <Component className={className} {...(props as any)}>
       {children}
-    </details>
+    </Component>
   );
 }
 TableOfContentsGroup.displayName = "TableOfContentsGroup";
 
-interface TableOfContentsGroupLabelProps
-  extends React.ComponentPropsWithoutRef<"summary"> {
+interface BaseLabelProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-export function TableOfContentsGroupLabel({
+type TableOfContentsGroupLabelProps<T extends "li" | "summary"> =
+  BaseLabelProps & {
+    as: T;
+  } & (T extends "li"
+      ? React.ComponentPropsWithoutRef<"li">
+      : React.ComponentPropsWithoutRef<"summary">);
+
+export function TableOfContentsGroupLabel<T extends "li" | "summary">({
   children,
   className,
+  as,
   ...props
-}: TableOfContentsGroupLabelProps) {
+}: TableOfContentsGroupLabelProps<T>) {
+  const Component = as === "li" ? "li" : "summary";
   return (
-    <summary className={className} role="button" {...props}>
+    <Component className={className} {...(props as any)}>
       {children}
-    </summary>
+    </Component>
   );
 }
 TableOfContentsGroupLabel.displayName = "TableOfContentsGroupLabel";
@@ -153,7 +169,6 @@ export function TableOfContentsLink({
 }
 TableOfContentsLink.displayName = "TableOfContentsLink";
 
-// New Recursive Content Renderer
 interface TableOfContentsTreeProps {
   items: TreeItem[];
   currentPath?: string;
@@ -171,8 +186,8 @@ export function TableOfContentsTree({
         if (item.type === "group") {
           return (
             <TableOfContentsItem key={item.name}>
-              <TableOfContentsGroup>
-                <TableOfContentsGroupLabel>
+              <TableOfContentsGroup as="ul">
+                <TableOfContentsGroupLabel as="li">
                   {item.label || item.name}
                 </TableOfContentsGroupLabel>
                 <TableOfContentsGroupContent>

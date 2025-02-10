@@ -102,9 +102,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 Components render at their configured URLs from routes.ts with the loader data passed in as a prop:
 
 ```tsx
-export default function Show({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Show({ loaderData }: Route.ComponentProps) {
   const { show, isLiked } = loaderData;
   return (
     <div>
@@ -112,11 +110,7 @@ export default function Show({
       <p>{show.description}</p>
 
       <form method="post">
-        <button
-          type="submit"
-          name="liked"
-          value={isLiked ? 0 : 1}
-        >
+        <button type="submit" name="liked" value={isLiked ? 0 : 1}>
           {isLiked ? "Remove" : "Save"}
         </button>
       </form>
@@ -129,10 +123,7 @@ Actions can update data and trigger a revalidation of all data on
 the page so your UI stays up to date automatically:
 
 ```tsx
-export async function action({
-  request,
-  params,
-}: Route.LoaderArgs) {
+export async function action({ request, params }: Route.LoaderArgs) {
   const formData = await request.formData();
   await fakeSetLikedShow(formData.get("liked"));
   return { ok: true };

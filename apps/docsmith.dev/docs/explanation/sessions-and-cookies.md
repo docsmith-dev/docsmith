@@ -26,27 +26,25 @@ type SessionFlashData = {
 };
 
 const { getSession, commitSession, destroySession } =
-  createCookieSessionStorage<SessionData, SessionFlashData>(
-    {
-      // a Cookie from `createCookie` or the CookieOptions to create one
-      cookie: {
-        name: "__session",
+  createCookieSessionStorage<SessionData, SessionFlashData>({
+    // a Cookie from `createCookie` or the CookieOptions to create one
+    cookie: {
+      name: "__session",
 
-        // all of these are optional
-        domain: "reactrouter.com",
-        // Expires can also be set (although maxAge overrides it when used in combination).
-        // Note that this method is NOT recommended as `new Date` creates only one date on each server deployment, not a dynamic date in the future!
-        //
-        // expires: new Date(Date.now() + 60_000),
-        httpOnly: true,
-        maxAge: 60,
-        path: "/",
-        sameSite: "lax",
-        secrets: ["s3cret1"],
-        secure: true,
-      },
-    }
-  );
+      // all of these are optional
+      domain: "reactrouter.com",
+      // Expires can also be set (although maxAge overrides it when used in combination).
+      // Note that this method is NOT recommended as `new Date` creates only one date on each server deployment, not a dynamic date in the future!
+      //
+      // expires: new Date(Date.now() + 60_000),
+      httpOnly: true,
+      maxAge: 60,
+      path: "/",
+      sameSite: "lax",
+      secrets: ["s3cret1"],
+      secure: true,
+    },
+  });
 
 export { getSession, commitSession, destroySession };
 ```
@@ -60,12 +58,8 @@ You'll use methods to get access to sessions in your `loader` and `action` funct
 After retrieving a session with `getSession`, the returned session object has a handful of methods and properties:
 
 ```tsx
-export async function action({
-  request,
-}: ActionFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   session.get("foo");
   session.has("bar");
   // etc.
@@ -82,17 +76,10 @@ A login form might look something like this:
 import { data, redirect } from "react-router";
 import type { Route } from "./+types/login";
 
-import {
-  getSession,
-  commitSession,
-} from "../sessions.server";
+import { getSession, commitSession } from "../sessions.server";
 
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function loader({ request }: Route.LoaderArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
 
   if (session.has("userId")) {
     // Redirect to the home page if they are already signed in.
@@ -109,20 +96,13 @@ export async function loader({
   );
 }
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function action({ request }: Route.ActionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   const form = await request.formData();
   const username = form.get("username");
   const password = form.get("password");
 
-  const userId = await validateCredentials(
-    username,
-    password
-  );
+  const userId = await validateCredentials(username, password);
 
   if (userId == null) {
     session.flash("error", "Invalid username/password");
@@ -145,9 +125,7 @@ export async function action({
   });
 }
 
-export default function Login({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Login({ loaderData }: Route.ComponentProps) {
   const { error } = loaderData;
 
   return (
@@ -161,8 +139,7 @@ export default function Login({
           Username: <input type="text" name="username" />
         </label>
         <label>
-          Password:{" "}
-          <input type="password" name="password" />
+          Password: <input type="password" name="password" />
         </label>
       </form>
     </div>
@@ -173,18 +150,11 @@ export default function Login({
 And then a logout form might look something like this:
 
 ```tsx filename=app/routes/logout.tsx
-import {
-  getSession,
-  destroySession,
-} from "../sessions.server";
+import { getSession, destroySession } from "../sessions.server";
 import type { Route } from "./+types/logout";
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  );
+export async function action({ request }: Route.ActionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   return redirect("/login", {
     headers: {
       "Set-Cookie": await destroySession(session),
@@ -225,11 +195,7 @@ The following example shows how you could do this using a generic database clien
 ```ts
 import { createSessionStorage } from "react-router";
 
-function createDatabaseSessionStorage({
-  cookie,
-  host,
-  port,
-}) {
+function createDatabaseSessionStorage({ cookie, host, port }) {
   // Configure your database client...
   const db = createDatabaseClient(host, port);
 
@@ -316,21 +282,15 @@ import type { Route } from "./+types/home";
 
 import { userPrefs } from "../cookies.server";
 
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const cookieHeader = request.headers.get("Cookie");
-  const cookie =
-    (await userPrefs.parse(cookieHeader)) || {};
+  const cookie = (await userPrefs.parse(cookieHeader)) || {};
   return { showBanner: cookie.showBanner };
 }
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   const cookieHeader = request.headers.get("Cookie");
-  const cookie =
-    (await userPrefs.parse(cookieHeader)) || {};
+  const cookie = (await userPrefs.parse(cookieHeader)) || {};
   const bodyParams = await request.formData();
 
   if (bodyParams.get("bannerVisibility") === "hidden") {
@@ -344,20 +304,14 @@ export async function action({
   });
 }
 
-export default function Home({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       {loaderData.showBanner ? (
         <div>
           <Link to="/sale">Don't miss our sale!</Link>
           <Form method="post">
-            <input
-              type="hidden"
-              name="bannerVisibility"
-              value="hidden"
-            />
+            <input type="hidden" name="bannerVisibility" value="hidden" />
             <button type="submit">Hide</button>
           </Form>
         </div>
@@ -419,9 +373,7 @@ import { data } from "react-router";
 import { cookie } from "../cookies.server";
 import type { Route } from "./+types/my-route";
 
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const oldCookie = request.headers.get("Cookie");
   // oldCookie may have been signed with "olds3cret", but still parses ok
   const value = await cookie.parse(oldCookie);

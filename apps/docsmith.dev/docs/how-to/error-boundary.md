@@ -19,9 +19,7 @@ All applications should at a minimum export a root error boundary. This one hand
 ```tsx filename=root.tsx
 import { Route } from "./+types/root";
 
-export function ErrorBoundary({
-  error,
-}: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (isRouteErrorResponse(error)) {
     return (
       <>

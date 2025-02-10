@@ -77,11 +77,7 @@ export default function App() {
               placeholder="Search"
               type="search"
             />
-            <div
-              aria-hidden
-              hidden={true}
-              id="search-spinner"
-            />
+            <div aria-hidden hidden={true} id="search-spinner" />
           </Form>
           <Form method="post">
             <button type="submit">New</button>
@@ -105,19 +101,12 @@ export default function App() {
 // The Layout component is a special export for the root route.
 // It acts as your document's "app shell" for all route components, HydrateFallback, and ErrorBoundary
 // For more information, see https://reactrouter.com/explanation/special-files#layout-export
-export function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href={appStylesHref} />
       </head>
       <body>
@@ -131,9 +120,7 @@ export function Layout({
 
 // The top most error boundary for the app, rendered when your app throws an error
 // For more information, see https://reactrouter.com/start/framework/route-module#errorboundary
-export function ErrorBoundary({
-  error,
-}: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -144,11 +131,7 @@ export function ErrorBoundary({
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-  } else if (
-    import.meta.env.DEV &&
-    error &&
-    error instanceof Error
-  ) {
+  } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
@@ -245,9 +228,7 @@ export default function Contact() {
 
         {contact.twitter ? (
           <p>
-            <a
-              href={`https://twitter.com/${contact.twitter}`}
-            >
+            <a href={`https://twitter.com/${contact.twitter}`}>
               {contact.twitter}
             </a>
           </p>
@@ -280,21 +261,13 @@ export default function Contact() {
   );
 }
 
-function Favorite({
-  contact,
-}: {
-  contact: Pick<ContactRecord, "favorite">;
-}) {
+function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
   const favorite = contact.favorite;
 
   return (
     <Form method="post">
       <button
-        aria-label={
-          favorite
-            ? "Remove from favorites"
-            : "Add to favorites"
-        }
+        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
         value={favorite ? "false" : "true"}
       >
@@ -434,9 +407,7 @@ export default function App({ loaderData }) {
                     ) : (
                       <i>No Name</i>
                     )}
-                    {contact.favorite ? (
-                      <span>★</span>
-                    ) : null}
+                    {contact.favorite ? <span>★</span> : null}
                   </Link>
                 </li>
               ))}
@@ -471,9 +442,7 @@ You probably noticed that we didn't assign a type to the `loaderData` prop. Let'
 import type { Route } from "./+types/root";
 // existing imports & exports
 
-export default function App({
-  loaderData,
-}: Route.ComponentProps) {
+export default function App({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
 
   // existing code
@@ -556,10 +525,7 @@ export default function Home() {
       This is a demo for React Router.
       <br />
       Check out{" "}
-      <a href="https://reactrouter.com">
-        the docs at reactrouter.com
-      </a>
-      .
+      <a href="https://reactrouter.com">the docs at reactrouter.com</a>.
     </p>
   );
 }
@@ -604,24 +570,16 @@ export default function About() {
 
       <div>
         <p>
-          This is a demo application showing off some of the
-          powerful features of React Router, including
-          dynamic routing, nested routes, loaders, actions,
-          and more.
+          This is a demo application showing off some of the powerful features
+          of React Router, including dynamic routing, nested routes, loaders,
+          actions, and more.
         </p>
 
         <h2>Features</h2>
-        <p>
-          Explore the demo to see how React Router handles:
-        </p>
+        <p>Explore the demo to see how React Router handles:</p>
         <ul>
-          <li>
-            Data loading and mutations with loaders and
-            actions
-          </li>
-          <li>
-            Nested routing with parent/child relationships
-          </li>
+          <li>Data loading and mutations with loaders and actions</li>
+          <li>Nested routing with parent/child relationships</li>
           <li>URL-based routing with dynamic segments</li>
           <li>Pending and optimistic UI</li>
         </ul>
@@ -629,11 +587,8 @@ export default function About() {
         <h2>Learn More</h2>
         <p>
           Check out the official documentation at{" "}
-          <a href="https://reactrouter.com">
-            reactrouter.com
-          </a>{" "}
-          to learn more about building great web
-          applications with React Router.
+          <a href="https://reactrouter.com">reactrouter.com</a> to learn more
+          about building great web applications with React Router.
         </p>
       </div>
     </div>
@@ -692,11 +647,7 @@ We can define a `layout` route to automatically render the sidebar for all match
 
 ```ts filename=app/routes.ts lines=[4,9,12]
 import type { RouteConfig } from "@react-router/dev/routes";
-import {
-  index,
-  layout,
-  route,
-} from "@react-router/dev/routes";
+import { index, layout, route } from "@react-router/dev/routes";
 
 export default [
   layout("layouts/sidebar.tsx", [
@@ -721,9 +672,7 @@ export async function clientLoader() {
   return { contacts };
 }
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
 
   return (
@@ -741,11 +690,7 @@ export default function SidebarLayout({
               placeholder="Search"
               type="search"
             />
-            <div
-              aria-hidden
-              hidden={true}
-              id="search-spinner"
-            />
+            <div aria-hidden hidden={true} id="search-spinner" />
           </Form>
           <Form method="post">
             <button type="submit">New</button>
@@ -764,9 +709,7 @@ export default function SidebarLayout({
                     ) : (
                       <i>No Name</i>
                     )}
-                    {contact.favorite ? (
-                      <span>★</span>
-                    ) : null}
+                    {contact.favorite ? <span>★</span> : null}
                   </Link>
                 </li>
               ))}
@@ -887,9 +830,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { contact };
 }
 
-export default function Contact({
-  loaderData,
-}: Route.ComponentProps) {
+export default function Contact({ loaderData }: Route.ComponentProps) {
   const { contact } = loaderData;
 
   // existing code
@@ -992,10 +933,7 @@ export default [
   layout("layouts/sidebar.tsx", [
     index("routes/home.tsx"),
     route("contacts/:contactId", "routes/contact.tsx"),
-    route(
-      "contacts/:contactId/edit",
-      "routes/edit-contact.tsx"
-    ),
+    route("contacts/:contactId/edit", "routes/edit-contact.tsx"),
   ]),
   route("about", "routes/about.tsx"),
 ] satisfies RouteConfig;
@@ -1019,9 +957,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { contact };
 }
 
-export default function EditContact({
-  loaderData,
-}: Route.ComponentProps) {
+export default function EditContact({ loaderData }: Route.ComponentProps) {
   const { contact } = loaderData;
 
   return (
@@ -1064,11 +1000,7 @@ export default function EditContact({
       </label>
       <label>
         <span>Notes</span>
-        <textarea
-          defaultValue={contact.notes}
-          name="notes"
-          rows={6}
-        />
+        <textarea defaultValue={contact.notes} name="notes" rows={6} />
       </label>
       <p>
         <button type="submit">Save</button>
@@ -1095,10 +1027,7 @@ import { Form, redirect } from "react-router";
 
 import { getContact, updateContact } from "../data";
 
-export async function action({
-  params,
-  request,
-}: Route.ActionArgs) {
+export async function action({ params, request }: Route.ActionArgs) {
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
   await updateContact(params.contactId, updates);
@@ -1135,10 +1064,7 @@ Without JavaScript, when a form is submitted, the browser will create [`FormData
 Each field in the `form` is accessible with `formData.get(name)`. For example, given the input field from above, you could access the first and last names like this:
 
 ```tsx filename=app/routes/edit-contact.tsx  lines=[6,7] nocopy
-export const action = async ({
-  params,
-  request,
-}: ActionFunctionArgs) => {
+export const action = async ({ params, request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const firstName = formData.get("first");
   const lastName = formData.get("last");
@@ -1159,10 +1085,7 @@ Aside from the `action` function, none of these APIs we're discussing are provid
 After we finished the `action`, note the [`redirect`][redirect] at the end:
 
 ```tsx filename=app/routes/edit-contact.tsx lines=[9]
-export async function action({
-  params,
-  request,
-}: Route.ActionArgs) {
+export async function action({ params, request }: Route.ActionArgs) {
   invariant(params.contactId, "Missing contactId param");
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
@@ -1216,9 +1139,7 @@ import { Form, Link, NavLink, Outlet } from "react-router";
 
 // existing imports and exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
 
   return (
@@ -1230,11 +1151,7 @@ export default function SidebarLayout({
             <li key={contact.id}>
               <NavLink
                 className={({ isActive, isPending }) =>
-                  isActive
-                    ? "active"
-                    : isPending
-                    ? "pending"
-                    : ""
+                  isActive ? "active" : isPending ? "pending" : ""
                 }
                 to={`contacts/${contact.id}`}
               >
@@ -1264,17 +1181,9 @@ React Router is managing all the state behind the scenes and reveals the pieces 
 👉 **Use `useNavigation` to add global pending UI**
 
 ```tsx filename=app/layouts/sidebar.tsx lines=[6,13,19-21]
-import {
-  Form,
-  Link,
-  NavLink,
-  Outlet,
-  useNavigation,
-} from "react-router";
+import { Form, Link, NavLink, Outlet, useNavigation } from "react-router";
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts } = loaderData;
   const navigation = useNavigation();
 
@@ -1282,9 +1191,7 @@ export default function SidebarLayout({
     <>
       {/* existing elements */}
       <div
-        className={
-          navigation.state === "loading" ? "loading" : ""
-        }
+        className={navigation.state === "loading" ? "loading" : ""}
         id="detail"
       >
         <Outlet />
@@ -1309,9 +1216,7 @@ If we review code in the contact route, we can find the delete button looks like
   action="destroy"
   method="post"
   onSubmit={(event) => {
-    const response = confirm(
-      "Please confirm you want to delete this record."
-    );
+    const response = confirm("Please confirm you want to delete this record.");
     if (!response) {
       event.preventDefault();
     }
@@ -1339,10 +1244,7 @@ touch app/routes/destroy-contact.tsx
 ```tsx filename=app/routes.ts lines=[3-6]
 export default [
   // existing routes
-  route(
-    "contacts/:contactId/destroy",
-    "routes/destroy-contact.tsx"
-  ),
+  route("contacts/:contactId/destroy", "routes/destroy-contact.tsx"),
   // existing routes
 ] satisfies RouteConfig;
 ```
@@ -1385,9 +1287,7 @@ We'll need a click handler on the button as well as [`useNavigate`][use-navigate
 import { Form, redirect, useNavigate } from "react-router";
 // existing imports & exports
 
-export default function EditContact({
-  loaderData,
-}: Route.ComponentProps) {
+export default function EditContact({ loaderData }: Route.ComponentProps) {
   const { contact } = loaderData;
   const navigate = useNavigate();
 
@@ -1436,9 +1336,7 @@ Since it's not `<Form method="post">`, React Router emulates the browser by seri
 ```tsx filename=app/layouts/sidebar.tsx lines=[3-8]
 // existing imports & exports
 
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
@@ -1470,18 +1368,14 @@ Let's solve (2) first and start the input with the value from the URL.
 ```tsx filename=app/layouts/sidebar.tsx lines=[9,15,26]
 // existing imports & exports
 
-export async function loader({
-  request,
-}: Route.LoaderArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const contacts = await getContacts(q);
   return { contacts, q };
 }
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
 
@@ -1523,9 +1417,7 @@ import { useEffect } from "react";
 
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
 
@@ -1554,9 +1446,7 @@ import { useEffect, useState } from "react";
 
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
   // the query now needs to be kept in state
@@ -1579,9 +1469,7 @@ export default function SidebarLayout({
               id="q"
               name="q"
               // synchronize user's input to component state
-              onChange={(event) =>
-                setQuery(event.currentTarget.value)
-              }
+              onChange={(event) => setQuery(event.currentTarget.value)}
               placeholder="Search"
               type="search"
               // switched to `value` from `defaultValue`
@@ -1620,9 +1508,7 @@ import {
 } from "react-router";
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
   const submit = useSubmit();
@@ -1636,9 +1522,7 @@ export default function SidebarLayout({
         <div>
           <Form
             id="search-form"
-            onChange={(event) =>
-              submit(event.currentTarget)
-            }
+            onChange={(event) => submit(event.currentTarget)}
             role="search"
           >
             {/* existing elements */}
@@ -1670,17 +1554,13 @@ For a better user experience, let's add some immediate UI feedback for the searc
 ```tsx filename=app/layouts/sidebar.tsx lines=[9-13]
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   const { contacts, q } = loaderData;
   const navigation = useNavigation();
   const submit = useSubmit();
   const searching =
     navigation.location &&
-    new URLSearchParams(navigation.location.search).has(
-      "q"
-    );
+    new URLSearchParams(navigation.location.search).has("q");
 
   // existing code
 }
@@ -1693,9 +1573,7 @@ When nothing is happening, `navigation.location` will be `undefined`, but when t
 ```tsx filename=app/layouts/sidebar.tsx lines=[22,31]
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   // existing code
 
   return (
@@ -1705,9 +1583,7 @@ export default function SidebarLayout({
         <div>
           <Form
             id="search-form"
-            onChange={(event) =>
-              submit(event.currentTarget)
-            }
+            onChange={(event) => submit(event.currentTarget)}
             role="search"
           >
             <input
@@ -1719,11 +1595,7 @@ export default function SidebarLayout({
               placeholder="Search"
               type="search"
             />
-            <div
-              aria-hidden
-              hidden={!searching}
-              id="search-spinner"
-            />
+            <div aria-hidden hidden={!searching} id="search-spinner" />
           </Form>
           {/* existing elements */}
         </div>
@@ -1740,9 +1612,7 @@ Bonus points, avoid fading out the main screen when searching:
 ```tsx filename=app/layouts/sidebar.tsx lines=[13]
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   // existing code
 
   return (
@@ -1750,9 +1620,7 @@ export default function SidebarLayout({
       {/* existing elements */}
       <div
         className={
-          navigation.state === "loading" && !searching
-            ? "loading"
-            : ""
+          navigation.state === "loading" && !searching ? "loading" : ""
         }
         id="detail"
       >
@@ -1781,9 +1649,7 @@ We can avoid this by _replacing_ the current entry in the history stack with the
 ```tsx filename=app/layouts/sidebar.tsx lines=[16-19]
 // existing imports & exports
 
-export default function SidebarLayout({
-  loaderData,
-}: Route.ComponentProps) {
+export default function SidebarLayout({ loaderData }: Route.ComponentProps) {
   // existing code
 
   return (
@@ -1830,22 +1696,14 @@ import { Form, useFetcher } from "react-router";
 
 // existing imports & exports
 
-function Favorite({
-  contact,
-}: {
-  contact: Pick<ContactRecord, "favorite">;
-}) {
+function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
   const fetcher = useFetcher();
   const favorite = contact.favorite;
 
   return (
     <fetcher.Form method="post">
       <button
-        aria-label={
-          favorite
-            ? "Remove from favorites"
-            : "Add to favorites"
-        }
+        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
         value={favorite ? "false" : "true"}
       >
@@ -1865,10 +1723,7 @@ This form will no longer cause a navigation, but simply fetch to the `action`. S
 import { getContact, updateContact } from "../data";
 // existing imports
 
-export async function action({
-  params,
-  request,
-}: Route.ActionArgs) {
+export async function action({ params, request }: Route.ActionArgs) {
   const formData = await request.formData();
   return updateContact(params.contactId, {
     favorite: formData.get("favorite") === "true",
@@ -1899,11 +1754,7 @@ The fetcher knows the [`FormData`][form-data] being submitted to the `action`, s
 ```tsx filename=app/routes/contact.tsx lines=[9-11]
 // existing code
 
-function Favorite({
-  contact,
-}: {
-  contact: Pick<ContactRecord, "favorite">;
-}) {
+function Favorite({ contact }: { contact: Pick<ContactRecord, "favorite"> }) {
   const fetcher = useFetcher();
   const favorite = fetcher.formData
     ? fetcher.formData.get("favorite") === "true"
@@ -1912,11 +1763,7 @@ function Favorite({
   return (
     <fetcher.Form method="post">
       <button
-        aria-label={
-          favorite
-            ? "Remove from favorites"
-            : "Add to favorites"
-        }
+        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         name="favorite"
         value={favorite ? "false" : "true"}
       >

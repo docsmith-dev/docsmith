@@ -32,13 +32,7 @@ Because the root route manages your document, it is the proper place to render a
 
 ```tsx filename=app/root.tsx
 import type { LinksFunction } from "react-router";
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 
 import "./global-styles.css";
 
@@ -47,10 +41,7 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         {/* All `meta` exports on all routes will render here */}
         <Meta />
@@ -90,10 +81,7 @@ export function Layout({ children }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
@@ -123,11 +111,7 @@ Because your `Layout` component is used in both success and error flows, this sa
 <docs-warn>Because your `<Layout>` component is used for rendering the `ErrorBoundary`, you should be _very defensive_ to ensure that you can render your `ErrorBoundary` without encountering any render errors. If your `Layout` throws another error trying to render the boundary, then it can't be used and your UI will fall back to the very minimal built-in default `ErrorBoundary`.</docs-warn>
 
 ```tsx filename=app/root.tsx lines=[6-7,19-29,32-34]
-export function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData("root");
   const error = useRouteError();
 
@@ -135,28 +119,21 @@ export function Layout({
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
         <style
           dangerouslySetInnerHTML={{
             __html: `
               :root {
-                --themeVar: ${
-                  data?.themeVar || defaultThemeVar
-                }
+                --themeVar: ${data?.themeVar || defaultThemeVar}
               }
             `,
           }}
         />
       </head>
       <body>
-        {data ? (
-          <Analytics token={data.analyticsToken} />
-        ) : null}
+        {data ? <Analytics token={data.analyticsToken} /> : null}
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -173,10 +150,7 @@ export function Layout({
 The `routes.ts` file is used to configure which url patterns are matched to which route modules.
 
 ```tsx filename=app/routes.ts
-import {
-  type RouteConfig,
-  route,
-} from "@react-router/dev/routes";
+import { type RouteConfig, route } from "@react-router/dev/routes";
 
 export default [
   route("some/path", "./some/file.tsx"),
@@ -262,11 +236,7 @@ You can export an optional `handleDataRequest` function that will allow you to m
 ```tsx
 export function handleDataRequest(
   response: Response,
-  {
-    request,
-    params,
-    context,
-  }: LoaderFunctionArgs | ActionFunctionArgs
+  { request, params, context }: LoaderFunctionArgs | ActionFunctionArgs
 ) {
   response.headers.set("X-Custom-Header", "value");
   return response;
@@ -280,11 +250,7 @@ By default, React Router will log encountered server-side errors to the console.
 ```tsx
 export function handleError(
   error: unknown,
-  {
-    request,
-    params,
-    context,
-  }: LoaderFunctionArgs | ActionFunctionArgs
+  { request, params, context }: LoaderFunctionArgs | ActionFunctionArgs
 ) {
   if (!request.signal.aborted) {
     sendErrorToErrorReportingService(error);
@@ -332,8 +298,7 @@ While uncommon, you may have a file or dependency that uses module side effects 
 
 ```ts filename=feature-check.client.ts
 // this would break the server
-export const supportsVibrationAPI =
-  "vibrate" in window.navigator;
+export const supportsVibrationAPI = "vibrate" in window.navigator;
 ```
 
 Note that values exported from this module will all be `undefined` on the server, so the only places to use them are in [`useEffect`][use_effect] and user events like click handlers.
