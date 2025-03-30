@@ -17,8 +17,8 @@ export class Docsmith {
   private docsMap = new Map<string, Doc>();
   private globalConfig: DocsmithConfig = {};
   private directoryConfigs = new Map<string, DocsmithConfig>();
-  private plugins: DocsmithPlugin[] = [];
-  //
+  private readonly plugins: DocsmithPlugin[] = [];
+
   constructor(private readonly options: DocsmithOptions = {}) {
     this.options = {
       folders: options.folders ?? ["docs"],
@@ -164,15 +164,8 @@ export class Docsmith {
   async processFile(
     rootDir: string,
     filePath: string,
-    transformedContent?: string
   ) {
-    let content: string;
-
-    if (transformedContent) {
-      content = transformedContent;
-    } else {
-      content = await fs.promises.readFile(filePath, "utf-8");
-    }
+    let content = await fs.promises.readFile(filePath, "utf-8");
 
     content = await this.runBeforeParse(content);
     const { content: markdownContent, data } = matter(content);

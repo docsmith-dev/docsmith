@@ -1,6 +1,5 @@
-import type { Plugin, ResolvedConfig } from "vite";
-import type { ViteDevServer } from "vite";
-import { Docsmith, DocsmithOptions, Doc, TreeItem } from "@docsmith/core";
+import type {Plugin, ResolvedConfig, ViteDevServer} from "vite";
+import {Doc, Docsmith, DocsmithOptions, TreeItem} from "@docsmith/core";
 
 interface DocsmithData {
   docs: Doc[];
@@ -86,15 +85,6 @@ function createMainPlugin(docsmith: Docsmith): Plugin[] {
         }
       },
 
-      async transform(code, id) {
-        // Capture the transformed MDX content
-        if (id.endsWith(".mdx")) {
-          await docsmith.processFile(root, id, code);
-          return null; // Let Vite handle the transformation
-        }
-        return null;
-      },
-
       configureServer(server: ViteDevServer) {
         // Initialize on server start
         server.httpServer?.once("listening", async () => {
@@ -164,8 +154,5 @@ function createMainPlugin(docsmith: Docsmith): Plugin[] {
 
 export function createPlugin(options: DocsmithOptions = {}): Plugin[] {
   const docsmith = new Docsmith(options);
-  const plugins = createMainPlugin(docsmith);
-
-
-  return plugins;
+  return createMainPlugin(docsmith);
 }

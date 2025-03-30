@@ -9,8 +9,8 @@ export interface DocHeading {
 
 
 export interface Doc {
-  content: string;        // Processed content without frontmatter
-  rawContent: string;     // Original content with frontmatter
+  content: string;
+  rawContent: string;
   frontmatter: Record<string, any>;
   slug: string;
   path: string;
@@ -18,8 +18,8 @@ export interface Doc {
   breadcrumbs: Array<{ name: string; slug: string }>;
   headings: DocHeading[];
   lastUpdated: string;
-  isMarkdown: boolean;    // Is it a .md file?
-  isMDX: boolean;         // Is it a .mdx file?
+  isMarkdown: boolean;
+  isMDX: boolean;
   navigation: {
     previous: {
       title: string;
