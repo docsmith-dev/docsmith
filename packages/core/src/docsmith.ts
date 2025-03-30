@@ -168,7 +168,7 @@ export class Docsmith {
   ) {
     let content: string;
 
-    if (transformedContent && filePath.endsWith(".mdx")) {
+    if (transformedContent) {
       content = transformedContent;
     } else {
       content = await fs.promises.readFile(filePath, "utf-8");
@@ -182,27 +182,26 @@ export class Docsmith {
     const headings = await extractHeadings(processedContent);
     const stats = await fs.promises.stat(filePath);
 
-    console.log("transofmred", transformedContent);
     // @ts-ignore
     let doc: Doc = {
-      // @ts-ignore
-      content: filePath.endsWith(".mdx")
-        ? transformedContent
-        : processedContent,
+      content: processedContent,
+      rawContent: content, // Store the original content with frontmatter
       frontmatter: data,
       slug: relativePath.replace(/\.(md|mdx)$/, ""),
       path: relativePath,
-      title: path.basename(relativePath).replace(/\.(md|mdx)$/, ""),
+      title: data.title || path.basename(relativePath).replace(/\.(md|mdx)$/, ""),
       breadcrumbs: generateBreadcrumbs(relativePath),
       headings,
       lastUpdated: stats.mtime.toISOString(),
+      isMarkdown: filePath.endsWith('.md'),
+      isMDX: filePath.endsWith('.mdx'),
       navigation: { previous: null, next: null },
     };
+    console.log('docccc', doc)
 
     doc = await this.runTransformDoc(doc);
     this.docsMap.set(relativePath, doc);
   }
-
   private async processAllFiles(rootDir: string) {
     const folders = this.options.folders ?? ["docs"];
 

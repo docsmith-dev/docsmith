@@ -19,6 +19,7 @@ async function invalidateModule(server: ViteDevServer, moduleId: string) {
   }
 }
 
+
 function createMainPlugin(docsmith: Docsmith): Plugin[] {
   let root: string;
   let data: DocsmithData | null = null;
@@ -163,5 +164,8 @@ function createMainPlugin(docsmith: Docsmith): Plugin[] {
 
 export function createPlugin(options: DocsmithOptions = {}): Plugin[] {
   const docsmith = new Docsmith(options);
-  return createMainPlugin(docsmith);
+  const plugins = createMainPlugin(docsmith);
+
+
+  return plugins;
 }

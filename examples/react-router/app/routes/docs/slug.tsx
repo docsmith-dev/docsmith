@@ -1,9 +1,13 @@
+// In your DOC component (e.g., DocsPage.tsx)
+import { useState, Fragment, useMemo } from "react";
 import { getDoc, getTree } from "@docsmith/runtime";
+import { Link, useLoaderData } from "react-router";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { MDXProvider } from "@mdx-js/react";
-import { compile } from "@mdx-js/mdx";
+import { evaluate } from "@mdx-js/mdx";
+import * as runtime from "react/jsx-runtime"; // For mdx-js/mdx v2
 
 import {
   Breadcrumbs,
@@ -18,8 +22,6 @@ import {
   OnThisPageItem,
   OnThisPageList,
 } from "@docsmith/react";
-import { Fragment, useMemo, useState } from "react";
-import { Link, useLoaderData } from "react-router";
 import { Button } from "~/components/button";
 
 // Create a components map
@@ -28,21 +30,52 @@ const components = {
   // Add other components that might be used in MDX
 };
 
+import { bundleMDX } from "mdx-bundler";
+import { getMDXComponent } from "mdx-bundler/client";
+
+
 export async function loader({ params }) {
   const slug = params["*"];
   const doc = getDoc(slug);
   const tree = getTree();
 
-  console.log("doc", doc);
+  // For MDX files, compile the content on the server
+  let mdxCode = null;
+  if (doc?.isMDX) {
+    try {
+      const result = await bundleMDX({
+        source: doc.content,
+        mdxOptions(options) {
+          options.remarkPlugins = [...(options.remarkPlugins || []), remarkGfm];
+          options.rehypePlugins = [...(options.rehypePlugins || []), rehypeHighlight];
+          return options;
+        }
+      });
+
+      mdxCode = result.code;
+    } catch (error) {
+      console.error("Failed to compile MDX:", error);
+    }
+  }
+
   return {
     doc,
     tree,
+    mdxCode
   };
 }
 
 export default function DocsPage() {
-  const { doc, tree } = useLoaderData();
-  const [activeHeading, setActiveHeading] = useState<string | null>(null);
+  const { doc, tree, mdxCode } = useLoaderData();
+  const [activeHeading, setActiveHeading] = useState(null);
+
+  // For MDX files, create a component from the compiled MDX
+  const MDXContent = useMemo(() => {
+    if (doc?.isMDX && mdxCode) {
+      return getMDXComponent(mdxCode);
+    }
+    return null;
+  }, [doc?.isMDX, mdxCode]);
 
   return (
     <div>
@@ -71,10 +104,10 @@ export default function DocsPage() {
           <h1>{doc.frontmatter?.title || doc.title}</h1>
           {doc.frontmatter?.description && <p>{doc.frontmatter.description}</p>}
         </header>
+
         <MDXProvider components={components}>
-          {doc.path.endsWith(".mdx") ? (
-            // For MDX files, doc.content should be a component from Vite's MDX plugin
-            doc.content
+          {doc.isMDX ? (
+            MDXContent ? <MDXContent components={components} /> : <div>Loading MDX content...</div>
           ) : (
             // Regular markdown content
             <ReactMarkdown
@@ -86,6 +119,7 @@ export default function DocsPage() {
           )}
         </MDXProvider>
       </article>
+
       <LastUpdated date={doc.lastUpdated}>
         {({ formattedDate, relativeTime }) => (
           <p>
@@ -93,6 +127,7 @@ export default function DocsPage() {
           </p>
         )}
       </LastUpdated>
+
       <DocNavigation doc={doc}>
         {({ previous, next }) => (
           <DocNavigationList>
@@ -119,6 +154,7 @@ export default function DocsPage() {
           </DocNavigationList>
         )}
       </DocNavigation>
+
       <aside>
         <OnThisPage
           doc={doc}

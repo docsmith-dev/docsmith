@@ -7,14 +7,10 @@ export interface DocHeading {
   slug: string;
 }
 
-interface NavigationItem {
-  title: string;
-  slug: string;
-  label?: string;
-}
 
 export interface Doc {
-  content: string;
+  content: string;        // Processed content without frontmatter
+  rawContent: string;     // Original content with frontmatter
   frontmatter: Record<string, any>;
   slug: string;
   path: string;
@@ -22,12 +18,21 @@ export interface Doc {
   breadcrumbs: Array<{ name: string; slug: string }>;
   headings: DocHeading[];
   lastUpdated: string;
+  isMarkdown: boolean;    // Is it a .md file?
+  isMDX: boolean;         // Is it a .mdx file?
   navigation: {
-    previous: NavigationItem | null;
-    next: NavigationItem | null;
+    previous: {
+      title: string;
+      slug: string;
+      label?: string;
+    } | null;
+    next: {
+      title: string;
+      slug: string;
+      label?: string;
+    } | null;
   };
 }
-
 export interface TreeItem {
   type: "group" | "doc";
   name: string;
