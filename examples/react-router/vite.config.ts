@@ -12,18 +12,10 @@ export default defineConfig({
     mdx({
       providerImportSource: "@mdx-js/react",
     }),
-    reactRouter(),
     tsconfigPaths(),
     ...createPlugin({
       folders: ["docs"],
-      // plugins: [
-      //   createGithubSourcePlugin({
-      //     owner: 'remix-run',
-      //     repo: 'react-router',
-      //     path: 'docs',
-      //     branch: 'main',
-      //   })
-      // ],
     }),
+    reactRouter(),
   ],
 });
