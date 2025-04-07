@@ -190,7 +190,6 @@ export class Docsmith {
       isMDX: filePath.endsWith('.mdx'),
       navigation: { previous: null, next: null },
     };
-    console.log('docccc', doc)
 
     doc = await this.runTransformDoc(doc);
     this.docsMap.set(relativePath, doc);

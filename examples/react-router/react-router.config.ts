@@ -1,5 +1,5 @@
 import type { Config } from "@react-router/dev/config";
-import { getDocs } from "@docsmith/runtime";
+import {getDocs} from "@docsmith/runtime";
 
 export default {
   ssr: true,
@@ -11,6 +11,7 @@ export default {
       "/docs",           // Docs index
     ];
 
+    console.log('docs', docs)
     // Add a route for each doc
     docs.forEach(doc => {
       routes.push(`/docs/${doc.slug}`);
