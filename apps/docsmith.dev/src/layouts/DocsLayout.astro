@@ -1,0 +1,130 @@
+---
+import MainLayout from "./MainLayout.astro";
+import { getTree } from "@docsmith/runtime";
+import {
+    TableOfContents,
+    TableOfContentsGroup,
+    TableOfContentsGroupContent,
+    TableOfContentsGroupLabel,
+    TableOfContentsItem,
+    TableOfContentsLink,
+    TableOfContentsList,
+} from "@docsmith/react";
+
+const tree = getTree();
+const currentPath = Astro.url.pathname;
+
+function getGroupTitleClass(depth) {
+    switch(depth) {
+        case 0: return "text-2xl font-medium";
+        case 1: return "text-xl font-medium";
+        default: return "text-lg font-medium";
+    }
+}
+
+function getLinkClass(depth) {
+    switch(depth) {
+        case 0: return "text-xl";
+        default: return "text-base";
+    }
+}
+---
+
+<MainLayout>
+    <div class="flex flex-row items-start">
+        <TableOfContents tree={tree} currentPath={currentPath}>
+            <TableOfContentsList>
+                {tree.map((section) => (
+                  <TableOfContentsItem>
+                      {section.type === "group" && section.items ? (
+                        <TableOfContentsGroup as="details" defaultOpen>
+                            <TableOfContentsGroupLabel
+                              as="summary"
+                              className={`font-display ${getGroupTitleClass(0)} text-gray-900`}
+                            >
+                                {section.label}
+                            </TableOfContentsGroupLabel>
+                            <TableOfContentsGroupContent>
+                                <TableOfContentsList>
+                                    {section.items.map((item) => (
+                                      <TableOfContentsItem>
+                                          {item.type === "group" && item.items ? (
+                                            <TableOfContentsGroup as="details" defaultOpen>
+                                                <TableOfContentsGroupLabel
+                                                  as="summary"
+                                                  className={`font-display ${getGroupTitleClass(1)} text-gray-900`}
+                                                >
+                                                    {item.label}
+                                                </TableOfContentsGroupLabel>
+                                                <TableOfContentsGroupContent>
+                                                    <TableOfContentsList>
+                                                        {item.items.map((subItem) => (
+                                                          <TableOfContentsItem>
+                                                              {subItem.type === "group" && subItem.items ? (
+                                                                <TableOfContentsGroup as="details" defaultOpen>
+                                                                    <TableOfContentsGroupLabel
+                                                                      as="summary"
+                                                                      className={`font-display ${getGroupTitleClass(2)} text-gray-900`}
+                                                                    >
+                                                                        {subItem.label}
+                                                                    </TableOfContentsGroupLabel>
+                                                                    <TableOfContentsGroupContent>
+                                                                        <TableOfContentsList>
+                                                                            {subItem.items.map((leafItem) => (
+                                                                              <TableOfContentsItem>
+                                                                                  <TableOfContentsLink
+                                                                                    item={leafItem}
+                                                                                    as="a"
+                                                                                    href={`/docs/${leafItem.slug}`}
+                                                                                    isCurrent={`/docs/${leafItem.slug}` === currentPath}
+                                                                                    className={`block py-1 font-display ${getLinkClass(2)} text-gray-500 hover:text-gray-900 transition`}
+                                                                                  />
+                                                                              </TableOfContentsItem>
+                                                                            ))}
+                                                                        </TableOfContentsList>
+                                                                    </TableOfContentsGroupContent>
+                                                                </TableOfContentsGroup>
+                                                              ) : (
+                                                                <TableOfContentsLink
+                                                                  item={subItem}
+                                                                  as="a"
+                                                                  href={`/docs/${subItem.slug}`}
+                                                                  isCurrent={`/docs/${subItem.slug}` === currentPath}
+                                                                  className={`block py-1 font-display ${getLinkClass(1)} text-gray-500 hover:text-gray-900 transition`}
+                                                                />
+                                                              )}
+                                                          </TableOfContentsItem>
+                                                        ))}
+                                                    </TableOfContentsList>
+                                                </TableOfContentsGroupContent>
+                                            </TableOfContentsGroup>
+                                          ) : (
+                                            <TableOfContentsLink
+                                              item={item}
+                                              as="a"
+                                              href={`/docs/${item.slug}`}
+                                              isCurrent={`/docs/${item.slug}` === currentPath}
+                                              className={`block py-1 font-display ${getLinkClass(0)} text-gray-500 hover:text-gray-900 transition`}
+                                            />
+                                          )}
+                                      </TableOfContentsItem>
+                                    ))}
+                                </TableOfContentsList>
+                            </TableOfContentsGroupContent>
+                        </TableOfContentsGroup>
+                      ) : (
+                        <TableOfContentsLink
+                          item={section}
+                          as="a"
+                          href={`/docs/${section.slug}`}
+                          isCurrent={`/docs/${section.slug}` === currentPath}
+                          className={`block py-1 font-display text-2xl font-medium text-gray-500 hover:text-gray-900 transition`}
+                        />
+                      )}
+                  </TableOfContentsItem>
+                ))}
+            </TableOfContentsList>
+        </TableOfContents>
+        <slot/>
+    </div>
+</MainLayout>

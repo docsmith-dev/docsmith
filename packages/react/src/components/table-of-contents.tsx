@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { TreeItem } from "@docsmith/core";
 
+// Root container with render props
 interface RenderProps {
   tree: TreeItem[];
   currentPath?: string;
@@ -23,54 +24,98 @@ export function TableOfContents({
   return (
     <nav className={className} aria-label="Table of contents" {...props}>
       {typeof children === "function"
-        ? (children as (props: RenderProps) => React.ReactNode)({
-            tree,
-            currentPath,
-          })
+        ? children({ tree, currentPath })
         : children}
     </nav>
   );
 }
-TableOfContents.displayName = "TableOfContents";
 
-interface TableOfContentsGroupProps
-  extends React.ComponentPropsWithoutRef<"details"> {
+// Group container (can be rendered as ul or details)
+interface BaseTableOfContentsGroupProps {
   children: React.ReactNode;
-  defaultOpen?: boolean;
+  className?: string;
 }
 
-export function TableOfContentsGroup({
+type TableOfContentsGroupProps<T extends "ul" | "details"> =
+  BaseTableOfContentsGroupProps & {
+    as: T;
+  } & (T extends "ul"
+      ? Omit<
+          React.ComponentPropsWithoutRef<"ul">,
+          keyof BaseTableOfContentsGroupProps
+        >
+      : Omit<
+          React.ComponentPropsWithoutRef<"details">,
+          keyof BaseTableOfContentsGroupProps
+        > & { defaultOpen?: boolean });
+
+export function TableOfContentsGroup<T extends "ul" | "details">({
   children,
   className,
-  defaultOpen = true,
+  as,
   ...props
-}: TableOfContentsGroupProps) {
+}: TableOfContentsGroupProps<T>) {
+  const Component = as;
+  if (as === "ul") {
+    return (
+      <ul
+        className={className}
+        {...(props as React.ComponentPropsWithoutRef<"ul">)}
+      >
+        {children}
+      </ul>
+    );
+  }
   return (
-    <details className={className} open={defaultOpen} {...props}>
+    <details
+      className={className}
+      {...(props as React.ComponentPropsWithoutRef<"details">)}
+    >
       {children}
     </details>
   );
 }
-TableOfContentsGroup.displayName = "TableOfContentsGroup";
 
-interface TableOfContentsGroupLabelProps
-  extends React.ComponentPropsWithoutRef<"summary"> {
+// Group label (can be rendered as li or summary)
+interface BaseLabelProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-export function TableOfContentsGroupLabel({
+type TableOfContentsGroupLabelProps<T extends "li" | "summary"> =
+  BaseLabelProps & {
+    as: T;
+  } & (T extends "li"
+      ? Omit<React.ComponentPropsWithoutRef<"li">, keyof BaseLabelProps>
+      : Omit<React.ComponentPropsWithoutRef<"summary">, keyof BaseLabelProps>);
+
+export function TableOfContentsGroupLabel<T extends "li" | "summary">({
   children,
   className,
+  as,
   ...props
-}: TableOfContentsGroupLabelProps) {
+}: TableOfContentsGroupLabelProps<T>) {
+  if (as === "li") {
+    return (
+      <li
+        className={className}
+        {...(props as React.ComponentPropsWithoutRef<"li">)}
+      >
+        {children}
+      </li>
+    );
+  }
   return (
-    <summary className={className} role="button" {...props}>
+    <summary
+      className={className}
+      {...(props as React.ComponentPropsWithoutRef<"summary">)}
+    >
       {children}
     </summary>
   );
 }
-TableOfContentsGroupLabel.displayName = "TableOfContentsGroupLabel";
 
+// Group content container
 interface TableOfContentsGroupContentProps
   extends React.ComponentPropsWithoutRef<"div"> {
   children: React.ReactNode;
@@ -87,8 +132,8 @@ export function TableOfContentsGroupContent({
     </div>
   );
 }
-TableOfContentsGroupContent.displayName = "TableOfContentsGroupContent";
 
+// List container
 interface TableOfContentsListProps
   extends React.ComponentPropsWithoutRef<"ul"> {
   children: React.ReactNode;
@@ -105,8 +150,8 @@ export function TableOfContentsList({
     </ul>
   );
 }
-TableOfContentsList.displayName = "TableOfContentsList";
 
+// List item
 interface TableOfContentsItemProps
   extends React.ComponentPropsWithoutRef<"li"> {
   children: React.ReactNode;
@@ -118,15 +163,15 @@ export function TableOfContentsItem({
   ...props
 }: TableOfContentsItemProps) {
   return (
-    <li className={className} role="listitem" {...props}>
+    <li className={className} {...props}>
       {children}
     </li>
   );
 }
-TableOfContentsItem.displayName = "TableOfContentsItem";
 
+// Link item
 interface TableOfContentsLinkProps
-  extends React.ComponentPropsWithoutRef<"div"> {
+  extends Omit<React.ComponentPropsWithoutRef<"div">, "as"> {
   item: TreeItem;
   isCurrent?: boolean;
   as?: React.ElementType;
@@ -149,53 +194,5 @@ export function TableOfContentsLink({
     >
       {children || item.label || item.name}
     </Component>
-  );
-}
-TableOfContentsLink.displayName = "TableOfContentsLink";
-
-// New Recursive Content Renderer
-interface TableOfContentsTreeProps {
-  items: TreeItem[];
-  currentPath?: string;
-  as?: React.ElementType;
-}
-
-export function TableOfContentsTree({
-  items,
-  currentPath,
-  as: Component = "a",
-}: TableOfContentsTreeProps) {
-  return (
-    <TableOfContentsList>
-      {items.map((item) => {
-        if (item.type === "group") {
-          return (
-            <TableOfContentsItem key={item.name}>
-              <TableOfContentsGroup>
-                <TableOfContentsGroupLabel>
-                  {item.label || item.name}
-                </TableOfContentsGroupLabel>
-                <TableOfContentsGroupContent>
-                  <TableOfContentsTree
-                    items={item.items || []}
-                    currentPath={currentPath}
-                    as={Component}
-                  />
-                </TableOfContentsGroupContent>
-              </TableOfContentsGroup>
-            </TableOfContentsItem>
-          );
-        }
-        return (
-          <TableOfContentsItem key={item.slug}>
-            <TableOfContentsLink
-              item={item}
-              as={Component}
-              isCurrent={item.slug === currentPath}
-            />
-          </TableOfContentsItem>
-        );
-      })}
-    </TableOfContentsList>
   );
 }

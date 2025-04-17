@@ -17,8 +17,8 @@ export class Docsmith {
   private docsMap = new Map<string, Doc>();
   private globalConfig: DocsmithConfig = {};
   private directoryConfigs = new Map<string, DocsmithConfig>();
-  private plugins: DocsmithPlugin[] = [];
-  //
+  private readonly plugins: DocsmithPlugin[] = [];
+
   constructor(private readonly options: DocsmithOptions = {}) {
     this.options = {
       folders: options.folders ?? ["docs"],
@@ -161,35 +161,39 @@ export class Docsmith {
     return currentConfig;
   }
 
-  async processFile(rootDir: string, filePath: string) {
+  async processFile(
+    rootDir: string,
+    filePath: string,
+  ) {
     let content = await fs.promises.readFile(filePath, "utf-8");
 
     content = await this.runBeforeParse(content);
-
     const { content: markdownContent, data } = matter(content);
-
     const processedContent = await this.runAfterParse(markdownContent);
 
     const relativePath = path.relative(path.join(rootDir, "docs"), filePath);
     const headings = await extractHeadings(processedContent);
-    const stats = await fs.promises.stat(filePath)
+    const stats = await fs.promises.stat(filePath);
+
+    // @ts-ignore
     let doc: Doc = {
       content: processedContent,
+      rawContent: content, // Store the original content with frontmatter
       frontmatter: data,
-      slug: relativePath.replace(/\.md$/, ""),
+      slug: relativePath.replace(/\.(md|mdx)$/, ""),
       path: relativePath,
-      title: path.basename(relativePath, ".md"),
+      title: data.title || path.basename(relativePath).replace(/\.(md|mdx)$/, ""),
       breadcrumbs: generateBreadcrumbs(relativePath),
       headings,
       lastUpdated: stats.mtime.toISOString(),
-      navigation: { previous: null, next: null }
+      isMarkdown: filePath.endsWith('.md'),
+      isMDX: filePath.endsWith('.mdx'),
+      navigation: { previous: null, next: null },
     };
 
     doc = await this.runTransformDoc(doc);
-
     this.docsMap.set(relativePath, doc);
   }
-
   private async processAllFiles(rootDir: string) {
     const folders = this.options.folders ?? ["docs"];
 
@@ -204,7 +208,7 @@ export class Docsmith {
         if (!files) continue;
 
         for (const file of files) {
-          if (file.endsWith(".md")) {
+          if (file.endsWith(".md") || file.endsWith(".mdx")) {
             await this.processFile(rootDir, path.join(folderPath, file));
           }
         }
@@ -222,32 +226,40 @@ export class Docsmith {
     const flattenTree = (items: TreeItem[]): TreeItem[] => {
       const flattened: TreeItem[] = [];
       for (const item of items) {
-        if (item.type === 'doc') {
+        if (item.type === "doc") {
           flattened.push(item);
-        } else if (item.type === 'group' && item.items) {
+        } else if (item.type === "group" && item.items) {
           flattened.push(...flattenTree(item.items));
         }
       }
       return flattened;
     };
 
-    const docItems = flattenTree(tree).filter(item => item.type === 'doc' && item.slug);
+    const docItems = flattenTree(tree).filter(
+      (item) => item.type === "doc" && item.slug
+    );
 
     docItems.forEach((item, index) => {
-      const doc = docs.find(d => d.slug === item.slug);
+      const doc = docs.find((d) => d.slug === item.slug);
       if (!doc) return;
 
       doc.navigation = {
-        previous: index > 0 ? {
-          title: docItems[index - 1].label || docItems[index - 1].name,
-          slug: docItems[index - 1].slug!,
-          label: docItems[index - 1].label
-        } : null,
-        next: index < docItems.length - 1 ? {
-          title: docItems[index + 1].label || docItems[index + 1].name,
-          slug: docItems[index + 1].slug!,
-          label: docItems[index + 1].label
-        } : null
+        previous:
+          index > 0
+            ? {
+                title: docItems[index - 1].label || docItems[index - 1].name,
+                slug: docItems[index - 1].slug!,
+                label: docItems[index - 1].label,
+              }
+            : null,
+        next:
+          index < docItems.length - 1
+            ? {
+                title: docItems[index + 1].label || docItems[index + 1].name,
+                slug: docItems[index + 1].slug!,
+                label: docItems[index + 1].label,
+              }
+            : null,
       };
     });
 

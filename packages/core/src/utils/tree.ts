@@ -17,16 +17,16 @@ export function buildTree(
       const currentConfig = getConfigForPath(currentPath);
 
       if (index === parts.length - 1) {
-        // This is a file
+        const baseName = part.replace(/\.(md|mdx)$/, "");
         currentNode.items?.push({
           type: "doc",
-          name: part.replace(".md", ""),
+          name: baseName,
           slug: file.slug,
           frontmatter: file.frontmatter,
           label:
             file.frontmatter.title ||
-            currentConfig.directoryLabels[part.replace(".md", "")] ||
-            part.replace(".md", ""),
+            currentConfig.directoryLabels[baseName] ||
+            baseName,
           breadcrumbs: file.breadcrumbs,
         });
       } else {

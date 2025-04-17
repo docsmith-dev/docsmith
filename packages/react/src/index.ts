@@ -24,11 +24,9 @@ export {
   BreadcrumbsList,
   BreadcrumbsSeparator,
 } from "./components/breadcrumbs";
-export {
-  LastUpdated,
-} from "./components/last-updated";
+export { LastUpdated } from "./components/last-updated";
 export {
   DocNavigation,
   DocNavigationLink,
   DocNavigationList,
-} from "./components/doc-navigation"
+} from "./components/doc-navigation";

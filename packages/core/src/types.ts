@@ -7,14 +7,10 @@ export interface DocHeading {
   slug: string;
 }
 
-interface NavigationItem {
-  title: string;
-  slug: string;
-  label?: string;
-}
 
 export interface Doc {
   content: string;
+  rawContent: string;
   frontmatter: Record<string, any>;
   slug: string;
   path: string;
@@ -22,12 +18,21 @@ export interface Doc {
   breadcrumbs: Array<{ name: string; slug: string }>;
   headings: DocHeading[];
   lastUpdated: string;
+  isMarkdown: boolean;
+  isMDX: boolean;
   navigation: {
-    previous: NavigationItem | null;
-    next: NavigationItem | null;
+    previous: {
+      title: string;
+      slug: string;
+      label?: string;
+    } | null;
+    next: {
+      title: string;
+      slug: string;
+      label?: string;
+    } | null;
   };
 }
-
 export interface TreeItem {
   type: "group" | "doc";
   name: string;
