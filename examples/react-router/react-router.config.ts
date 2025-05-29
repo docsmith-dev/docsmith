@@ -11,8 +11,6 @@ export default {
       "/docs",           // Docs index
     ];
 
-    console.log('docs', docs)
-    // Add a route for each doc
     docs.forEach(doc => {
       routes.push(`/docs/${doc.slug}`);
     });
